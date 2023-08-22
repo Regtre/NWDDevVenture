@@ -1,0 +1,21 @@
+{
+    "name": "NWDUnityTreat",
+    "rootNamespace": "",
+    "references": [
+        "GUID:7336d6760e5e27c40b491718ba3a1cb4",
+        "GUID:56a4efb804655914c98404e56f510dc7",
+        "GUID:427467386bc7a00459a1e49377c76463",
+        "GUID:7d147c508e543004d8994101d9165182"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

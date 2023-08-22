@@ -1,0 +1,22 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<div class="alert alert-warning border-2 " role="alert">
+    <div class="row mb-3">
+        <div class="col d-flex align-items-center">
+            <div class="bg-warning me-3 icon-item"><span class="fas fa-exclamation-circle text-white fs-3"></span></div>
+            <p class="mb-0 flex-1">
+                You're not admin!
+            </p>
+            <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            The reasons can be many:
+            <ul>
+                <li>You are not authentified</li>
+                <li>You use bad account</li>
+            </ul>
+        </div>
+    </div>
+</div>

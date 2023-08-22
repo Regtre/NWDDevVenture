@@ -1,0 +1,48 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Title>NWDStandardModels</Title>
+    <Authors>idéMobi</Authors>
+    <Copyright>idéMobi</Copyright>
+    <PackageTags>Net-Worked-Data  Runtime</PackageTags>
+    <PackageVersion>1.1.181</PackageVersion>
+    <PackageProjectUrl>https://gitlab.hephaiscode.com/NetWorkedData/NWDStandardModels</PackageProjectUrl>
+    <PackageLicense>https://gitlab.hephaiscode.com/NetWorkedData/NWDStandardModels/-/blob/main/LICENSE.md</PackageLicense>
+    <RepositoryUrl>https://gitlab.hephaiscode.com/NetWorkedData/NWDStandardModels</RepositoryUrl>
+    <RepositoryType>GitLab CE</RepositoryType>
+    <LangVersion>9.0</LangVersion>
+    <AssemblyVersion>1.1.181</AssemblyVersion>
+    <FileVersion>1.1.181</FileVersion>
+    <NeutralLanguage>en</NeutralLanguage>
+    <PackageIcon>NWDStandardModels.png</PackageIcon>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
+    <RunAnalyzersDuringLiveAnalysis>true</RunAnalyzersDuringLiveAnalysis>
+    <RunAnalyzers>true</RunAnalyzers>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Update="NWDStandardModels.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- <PackageReference Include="NWDFoundation" Version="1.1.181" /> -->
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NWDFoundation\NWDFoundation.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\NWDUnity\Assets\NWDNuGet\NWDStandardModels\Models\*.cs">
+      <Link>Models-from-Unity/%(FileName)%(Extension)</Link>
+    </Compile>
+    <Compile Include="..\..\NWDUnity\Assets\NWDNuGet\NWDStandardModels\NWDVersionDll.cs">
+      <Link>NWDVersionDll.cs</Link>
+    </Compile>
+  </ItemGroup>
+</Project>

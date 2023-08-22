@@ -1,0 +1,74 @@
+@using NWDFoundation.Configuration.Environments
+@using NWDFoundation.Tools
+@using NWDWebRuntime.Configuration
+
+
+<div class="row">
+    <div class="col-lg-6 mb-3">
+        <div class="card-title">
+            Parameter Net-Worked-Data with your project!
+        </div>
+        <div class="card-body m-0">
+            In <b>appsetting.json</b> file add a section <b>@nameof(NWDWebRuntimeConfiguration)</b>.
+            <br/>
+            Inside this section add :
+            <ul>
+                <li> <span class="text-primary">@nameof(NWDWebRuntimeConfiguration.MyProjectId)</span> (example : @NWDRandom.UnsignedIntNumeric(8) )</li>
+                <li> <span class="text-primary">@nameof(NWDWebRuntimeConfiguration.MyEnvironment)</span> 
+                    <ul>
+                        @foreach (NWDEnvironmentKind tEnum in Enum.GetValues<NWDEnvironmentKind>())
+                        {
+                            <li> @tEnum.ToString() : @((int)tEnum)</li>
+                        }
+                    </ul></li>
+                <li> <span class="text-primary">@nameof(NWDWebRuntimeConfiguration.MyProjectKey)</span> (example : @NWDRandom.RandomStringToken(32) )</li>
+                <li> <span class="text-primary">@nameof(NWDWebRuntimeConfiguration.MySecretKey)</span> (example : @NWDRandom.RandomStringToken(32) )</li>
+                @* <li> <span class="text-primary">@nameof(NWDWebRuntimeConfiguration.AdminEmail)</span> (example : me@professionnel.com )</li> *@
+                @* <li> <span class="text-primary">@nameof(NWDWebRuntimeConfiguration.AdminService)</span> (example : 123456 )</li> *@
+            </ul>
+        </div>
+    </div>
+    <div class="col-lg-6 mb-3">
+        <div class="card bg-dark border-primary">
+            <div class="card-header border-bottom">
+                appsettings.json
+            </div>
+            <div class="card-body m-0">
+                <pre><code>
+{
+    "Logging": {
+        "LogLevel": {
+          "Default": "Information",
+          "Microsoft": "Warning",
+          "Microsoft.Hosting.Lifetime": "Information"
+        }
+      },
+      "AllowedHosts": "*",
+      "Kestrel": {
+        "EndPoints": {
+          "Http": {
+            "Url": "http://localhost:4050"
+          },
+          "Https": {
+            "Url": "https://localhost:4051"
+          }
+        }
+      },
+    ...
+    <span class="text-primary">"@nameof(NWDWebRuntimeConfiguration)": {</span>
+        <span class="text-primary"> "@nameof(NWDWebRuntimeConfiguration.MyProjectId)": "<span class="text-warning">your-project-@nameof(NWDWebRuntimeConfiguration.MyProjectId)</span>",</span>
+        <span class="text-primary"> "@nameof(NWDWebRuntimeConfiguration.MyEnvironment)": "<span class="text-warning">5</span>",</span>
+        <span class="text-primary"> "@nameof(NWDWebRuntimeConfiguration.MyProjectKey)": "<span class="text-warning">your-project-@nameof(NWDWebRuntimeConfiguration.MyProjectKey)</span>",</span>
+        <span class="text-primary"> "@nameof(NWDWebRuntimeConfiguration.MySecretKey)": "<span class="text-warning">your-project-@nameof(NWDWebRuntimeConfiguration.MySecretKey)</span>",</span>
+        @* <span class="text-primary"> "@nameof(NWDWebRuntimeConfiguration.AdminEmail)": "<span class="text-warning">me@professionnel.com</span>",</span> *@
+        @* <span class="text-primary"> "@nameof(NWDWebRuntimeConfiguration.AdminService)": "<span class="text-warning">123456</span>",</span> *@
+        ...
+    <span class="text-primary">},</span>
+    ...
+}
+                        </code></pre>
+            </div>
+        </div>
+    </div>
+</div>
+

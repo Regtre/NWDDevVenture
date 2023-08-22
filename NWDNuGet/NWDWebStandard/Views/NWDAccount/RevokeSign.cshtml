@@ -1,0 +1,97 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using NWDFoundation.Models
+@using NWDFoundation.Models.Enums
+@using NWDWebRuntime.Models
+@using NWDWebRuntime.Tools
+@using NWDWebStandard.Extensions
+@using NWDWebStandard.Models
+@using  NWDWebStandard.Controllers
+
+@model NWDWebRuntime.Models.NWDAccountRevokeSign
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    NWDPageStandard? tPageStandard = ViewData[nameof(NWDPageStandard)] as NWDPageStandard;
+    NWDAccountRevokeSign? tAccountRevokeSign = ViewData[nameof(NWDAccountRevokeSign)] as NWDAccountRevokeSign;
+    NWDAccountSign? tSign = ViewData[nameof(NWDAccountSign)] as NWDAccountSign;
+    string tRefDelete = NWDToolBox.RandomString(32);
+}
+<div class="card mb-3">
+    <div class="card-header bg-danger border-bottom"><h5 class="text-white">Revoke this sign @tSign.DecryptName()</h5></div>
+    <div class="card-body border-bottom">
+        <p class="mb-3">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor.</p>
+    </div>
+    <div class="card-footer border-bottom">
+        <!-- Button trigger modal -->
+
+        <a class="btn btn-secondary" asp-area="" asp-controller="NWDAccount" asp-action="Index"><span data-bs-toggle="tooltip" data-bs-placement="top" title="Cancel" data-bs-original-title="Cancel" aria-label="Cancel"><span class="far fa-arrow-alt-circle-left"></span> Cancel</span></a>
+
+        <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#@tRefDelete">
+            <span data-bs-toggle="tooltip" data-bs-placement="top" title="Revoke" data-bs-original-title="Revoke" aria-label="Revoke"><span class="far fa-trash-alt"></span> Revoke</span>
+        </button>
+        <!-- Modal -->
+        <div class="modal fade" id="@tRefDelete" tabindex="-1" aria-labelledby="" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-danger border-bottom">
+                        <h5 class="modal-title text-white">Revoke sign</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        @if (tSign != null)
+                        {
+                            @switch (tSign.SignType)
+                            {
+                                case NWDAccountSignType.DeviceId:
+                                    <span>You will revoke @tSign.DecryptName() <b>device sign</b>! Are-you sure?</span>
+                                    break;
+                                case NWDAccountSignType.EmailPassword:
+                                    <span>You will revoke @tSign.DecryptName() <b>email/password sign</b>! Are-you sure?</span>
+                                    break;
+                                case NWDAccountSignType.LoginPassword:
+                                    <span>You will revoke @tSign.DecryptName() <b>login/password sign</b>! Are-you sure?</span>
+                                    break;
+                                case NWDAccountSignType.LoginEmailPassword:
+                                    <span>You will revoke @tSign.DecryptName() <b>login/password/email sign</b>! Are-you sure?</span>
+                                    break;
+                                case NWDAccountSignType.Apple:
+                                    <span>You will revoke <b>AppleID sign</b>! Are-you sure?</span>
+                                    break;
+                                case NWDAccountSignType.Microsoft:
+                                    <span>You will revoke <b>MicrosoftID sign</b>! Are-you sure?</span>
+                                    break;
+                                case NWDAccountSignType.Facebook:
+                                    <span>You will revoke <b>Facebook sign</b>! Are-you sure?</span>
+                                    break;
+                                case NWDAccountSignType.Twitter:
+                                    <span>You will revoke <b>Twitter sign</b>! Are-you sure?</span>
+                                    break;
+                                case NWDAccountSignType.Google:
+                                    <span>You will revoke <b>Google sign</b>! Are-you sure?</span>
+                                    break;
+                                case NWDAccountSignType.LinkedIn:
+                                    <span>You will revoke <b>LinkedIn sign</b>! Are-you sure?</span>
+                                    break;
+                            }
+                        }
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><span class="far fa-arrow-alt-circle-left"></span> Cancel</button>
+                        @using (Html.BeginForm(nameof(NWDAccountController.RevokeSign), NWDAccountController.ASP_Controller()))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.HiddenFor(m => m.Reference, new { })
+                            @Html.HiddenFor(m => m.SignName, new { })
+                            <button type="submit" class="btn btn-danger"><span class="far fa-trash-alt"></span> Delete</button>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

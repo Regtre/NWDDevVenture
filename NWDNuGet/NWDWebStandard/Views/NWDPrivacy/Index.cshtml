@@ -1,0 +1,11 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@using NWDWebStandard.Controllers
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    await Html.RenderPartialAsync("/Views/"+NWDPrivacyController.ASP_Controller()+"/_LegalNotice.cshtml");
+    await Html.RenderPartialAsync("/Views/"+NWDPrivacyController.ASP_Controller()+"/_TermsAndConditions.cshtml");
+    await Html.RenderPartialAsync("/Views/"+NWDPrivacyController.ASP_Controller()+"/_TermsofService.cshtml");
+    await Html.RenderPartialAsync("/Views/"+NWDPrivacyController.ASP_Controller()+"/_PrivacyPolicy.cshtml");
+}

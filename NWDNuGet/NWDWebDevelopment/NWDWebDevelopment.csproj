@@ -1,0 +1,91 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <EnableDefaultRazorGenerateItems>true</EnableDefaultRazorGenerateItems>
+    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+    <IncludeRazorContentInPack>true</IncludeRazorContentInPack>
+    <EmbedRazorGenerateSources>true</EmbedRazorGenerateSources>
+    <Title>NWDWebDevelopment</Title>
+    <Authors>idéMobi</Authors>
+    <Description>Web Studio demo controllers and views to use Net-Worked-Data in asp website</Description>
+    <Copyright>idéMobi</Copyright>
+    <PackageProjectUrl>https://gitlab.hephaiscode.com/NetWorkedData/NWDWebDevelopment</PackageProjectUrl>
+    <PackageLicense>https://gitlab.hephaiscode.com/NetWorkedData/NWDWebDevelopment/-/blob/main/LICENSE.md</PackageLicense>
+    <RepositoryUrl>https://gitlab.hephaiscode.com/NetWorkedData/NWDWebDevelopment</RepositoryUrl>
+    <RepositoryType>GitLab CE</RepositoryType>
+    <PackageTags>Net-Worked-Data Web Studio Demo</PackageTags>
+    <PackageVersion>1.1.181</PackageVersion>
+    <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
+    <AssemblyVersion>1.1.181</AssemblyVersion>
+    <FileVersion>1.1.181</FileVersion>
+    <NeutralLanguage>en</NeutralLanguage>
+    <PackageIcon>NWDWebDevelopment.png</PackageIcon>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
+    <RunAnalyzersDuringLiveAnalysis>true</RunAnalyzersDuringLiveAnalysis>
+    <RunAnalyzers>true</RunAnalyzers>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="7.0.5" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="7.0.5" />
+    <!-- <PackageReference Include="NWDWebEditor" Version="1.1.181" /> -->
+    <!-- <PackageReference Include="NWDServerMiddle" Version="1.1.181" /> -->
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NWDFoundation\NWDFoundation.csproj" />
+    <ProjectReference Include="..\NWDHub\NWDHub.csproj" />
+    <ProjectReference Include="..\NWDRuntime\NWDRuntime.csproj" />
+    <ProjectReference Include="..\NWDEditor\NWDEditor.csproj" />
+    <ProjectReference Include="..\NWDServerFront\NWDServerFront.csproj" />
+    <ProjectReference Include="..\NWDStandardModels\NWDStandardModels.csproj" />
+    <ProjectReference Include="..\NWDCustomModels\NWDCustomModels.csproj" />
+    <ProjectReference Include="..\NWDWebRuntime\NWDWebRuntime.csproj" />
+    <ProjectReference Include="..\NWDWebStandard\NWDWebStandard.csproj" />
+    <ProjectReference Include="..\NWDWebEditor\NWDWebEditor.csproj" />
+    <ProjectReference Include="..\NWDServerMiddle\NWDServerMiddle.csproj" />
+    <ProjectReference Include="..\NWDServerShared\NWDServerShared.csproj" />
+    <ProjectReference Include="..\NWDServerBack\NWDServerBack.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Views\*">
+      <Generator>RazorGenerator</Generator>
+    </Content>
+    <Content Remove="Views\Shared\_Layout.cshtml" />
+    <None Update="NWDWebDevelopment.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <Content Update="Views\WebHtmlLayout\HtmlLayout.cshtml">
+      <Pack>false</Pack>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="**\*.cshtml" Pack="false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="wwwroot\**\*" />
+    <EmbeddedResource Include="wwwroot\**\*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="**\*.resx">
+      <ExcludeFromManifest>true</ExcludeFromManifest>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Views\NWDWebStudioPlayerManagement\Index.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\NWDWebStudioPlayerManagement\OfferServices.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\NWDWebStudioPlayerManagement\Statistics.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\NWDWebStudioPlayerManagement\_SideBar_Tools.cshtml" />
+  </ItemGroup>
+  
+</Project>

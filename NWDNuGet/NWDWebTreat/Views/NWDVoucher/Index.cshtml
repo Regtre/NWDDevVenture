@@ -1,0 +1,236 @@
+﻿@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using NWDFoundation.WebEdition.Enums
+@using NWDWebRuntime.Configuration
+@using NWDWebRuntime.Managers
+@using NWDWebRuntime.Models
+@using NWDWebRuntime.Tools
+@using NWDWebTreat.Controllers
+@using NWDWebTreat.Models
+@using NWDWebTreat.Models.Enums
+
+@model NWDVoucher
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    NWDPageStandard? tPageInformation = ViewData[nameof(NWDPageStandard)] as NWDPageStandard;
+    if (tPageInformation == null)
+    {
+        tPageInformation = new NWDPageStandard();
+    }
+    List<NWDVoucherServiceName>? tVoucherServiceList = (List<NWDVoucherServiceName>?)ViewData["VoucherList"];
+    Dictionary<string, long> tVoucherDico = new Dictionary<string, long>();
+    if (tVoucherServiceList != null)
+    {
+        foreach (NWDVoucherServiceName tVoucher in tVoucherServiceList)
+        {
+            tVoucherDico.TryAdd(tVoucher.Name, tVoucher.Id);
+        }
+    }
+    if (NWDWebRuntimeConfiguration.KConfig.IsDevelopment)
+    {
+        if (HttpContextAccessor.HttpContext != null)
+        {
+            string tCaptcha = NWDCaptcha.GetStoredCaptcha(HttpContextAccessor.HttpContext);
+            Model.CaptchaValue = tCaptcha;
+        }
+    }
+}
+<div class="container p-0 m-0">
+    <div class="row g-3">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+            <div class="card">
+                <div class="card-header background-corner-2 border-bottom">
+                    <div class="row">
+                        <div class="col-8">
+                            <h3><span class="fas fa-ticket-alt me-1"></span>Send voucher to active service</h3>
+                            <p class="mb-0">You can offer service to everyone!</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body position-relative">
+                    This page allows you to generate vouchers that will activate a service for the user who consumes this voucher. Once a used coupon is a service activate you could no longer deactivate it. A coupon can be used by any user. A coupon can only be used once.
+                </div>
+            </div>
+        </div>
+
+        @if (HttpContextAccessor.HttpContext != null)
+        {
+            if (NWDAccountWebManager.AccountIsConnected(HttpContextAccessor.HttpContext))
+            {
+                <div class="col-12 col-sm-12 col-md-12 col-lg-8 col-xl-8 col-xxl-8">
+                    @using (Html.BeginForm(nameof(NWDVoucherController.SendVoucher), NWDToolBox.GetController(HttpContextAccessor.HttpContext)))
+                    {
+                        <script>
+                        tinymce.remove();
+                        </script>
+                        @Html.AntiForgeryToken()
+                        <div class="card">
+                            <div class="card-header bg-light background-corner-2 border-bottom">
+                                <div class="card-title">
+                                    <h3>
+                                        <span class="fas fa-ticket-alt me-1"></span>Voucher sender
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="card-body position-relative border-bottom bg-light">
+                                <div class="row">
+                                    <div class="col-12">
+                                        @Html.LabelFor(sM => sM.Email, new { @class = "form-label" })
+                                        @Html.TextBoxFor(sM => sM.Email, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(sM => sM.Email, null, new { @class = "hide-if-empty alert alert-warning mt-1 p-3 pt-1 pb-1" }, "div")
+                                    </div>
+                                    <div class="col-12">
+                                        @Html.LabelFor(sM => sM.Message, new { @class = "form-label" })
+                                        @Html.TextAreaFor(sM => sM.Message, new { @class = "tinymce d-none" })
+                                        @Html.ValidationMessageFor(sM => sM.Message, null, new { @class = "hide-if-empty alert alert-warning mt-1 p-3 pt-1 pb-1" }, "div")
+                                    </div>
+                                    <script>
+                                            tinymce.init({selector: "#@nameof(NWDVoucher.Message)"});
+                                        </script>
+                                    <div class="col-12">
+                                        @Html.LabelFor(sM => sM.Service, new { @class = "form-label" })
+                                        @* @Html.TextBoxFor(m => m.Service, new { @class = "form-control", type = "number" }) *@
+                                        @Html.DropDownList(nameof(NWDVoucher.Service), new SelectList(tVoucherDico, "Value", "Key"), "", new { @class = "form-select" })
+                                        @Html.ValidationMessageFor(sM => sM.Service, null, new { @class = "hide-if-empty alert alert-warning mt-1 p-3 pt-1 pb-1" }, "div")
+
+                                    </div>
+                                    <div class="col-12">
+                                        @Html.LabelFor(sM => sM.AlertStyle, new { @class = "form-label" })
+                                        @* @Html.TextBoxFor(m => m.Service, new { @class = "form-control", type = "number" }) *@
+                                        @Html.DropDownListFor(sM => sM.AlertStyle, Enum.GetValues(typeof(NWDBootstrapKindOfStyle)).Cast<NWDBootstrapKindOfStyle>().Select(sX => new SelectListItem { Text = sX.ToString(), Value = ((int)sX).ToString() }), new { @class = "form-select" })
+                                        @Html.ValidationMessageFor(sM => sM.AlertStyle, null, new { @class = "hide-if-empty alert alert-warning mt-1 p-3 pt-1 pb-1" }, "div")
+
+                                    </div>
+                                    <div class="col-12">
+                                        @Html.LabelFor(sM => sM.Alert, new { @class = "form-label" })
+                                        @Html.TextBoxFor(sM => sM.Alert, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(sM => sM.Alert, null, new { @class = "hide-if-empty alert alert-warning mt-1 p-3 pt-1 pb-1" }, "div")
+                                    </div>
+
+                                    <script>
+                                            tinymce.init(
+                                                {
+                                                selector: "#@nameof(NWDVoucher.Message)",
+                                                skin: 'oxide-dark',
+                                                }
+                                                );
+                                        </script>
+                                    <div class="col-12">
+                                        <script>
+                                            function VoucherOption(val)
+                                            {
+                                                if (val==@Html.Raw((int)NWDVoucherKind.DateToDate))
+                                                    {
+                                                        var tSelectedVal = document.getElementById("VoucherDuration").hidden = true;
+                                                        var tSelectedVal = document.getElementById("VoucherStart").hidden = false;
+                                                        var tSelectedVal = document.getElementById("VoucherEnd").hidden = false;
+                                                    }
+                                                else 
+                                                {
+                                                        var tSelectedVal = document.getElementById("VoucherDuration").hidden = false;
+                                                        var tSelectedVal = document.getElementById("VoucherStart").hidden = true;
+                                                        var tSelectedVal = document.getElementById("VoucherEnd").hidden = true;
+                                                    }
+                                            }
+                                            </script>
+                                        @Html.LabelFor(sM => sM.Kind, new { @class = "form-label" })
+                                        @* @Html.TextBoxFor(m => m.Service, new { @class = "form-control", type = "number" }) *@
+                                        @Html.DropDownListFor(sM => sM.Kind, Enum.GetValues(typeof(NWDVoucherKind)).Cast<NWDVoucherKind>().Select(sX => new SelectListItem { Text = sX.ToString(), Value = ((int)sX).ToString() }), new { @class = "form-select", @onchange = "VoucherOption(this.value)" })
+                                        @Html.ValidationMessageFor(sM => sM.Kind, null, new { @class = "hide-if-empty alert alert-warning mt-1 p-3 pt-1 pb-1" }, "div")
+                                    </div>
+                                    <div class="col-12" id="VoucherDuration" hidden>
+                                        @Html.LabelFor(sM => sM.Duration, new { @class = "form-label" })
+                                        @Html.TextBoxFor(sM => sM.Duration, new { @type = "number", @min = "1", @class = "form-control" })
+                                        @Html.ValidationMessageFor(sM => sM.Duration, null, new { @class = "hide-if-empty alert alert-warning mt-1 p-3 pt-1 pb-1" }, "div")
+                                    </div>
+                                    <div class="col-6" id="VoucherStart">
+                                        @Html.LabelFor(sM => sM.StartDate, new { @class = "form-label" }) @Model.StartDate.ToString("f")
+                                        
+                                        @Html.TextBoxFor(sM => sM.StartDate,"{0:yyyy-M-d}", new { @type = "date", textmode="Date", @class = "form-control datetimepicker", disableMobile="true"}) 
+                                        
+                                        @* @Html.TextBoxFor(sM => sM.StartDate,"{0:dd/MM/yyyy}", new { @type = "date", textmode="Date", @class = "form-control ", disableMobile="true", dateFormat = "d-m-Y"}) *@
+                                        @* <input asp-for="StartDate" class="form-control datetimepicker" type="date" data-options='{"disableMobile":true,"dateFormat" : "d-m-Y"}'/> *@
+                                        @Html.ValidationMessageFor(sM => sM.StartDate, null, new { @class = "hide-if-empty alert alert-warning mt-1 p-3 pt-1 pb-1" }, "div")
+
+                                    </div>
+                                    <div class="col-6"id="VoucherEnd">
+                                        @Html.LabelFor(sM => sM.EndDate, new { @class = "form-label" }) @Model.EndDate.ToString("f")
+                                        @* *@
+                                        @* @Html.TextBox("", String.Format("{0:d}", Model.ToShortDateString()), *@
+                                        @*   new { @class = "datefield", type = "date"  }) *@
+                                        @* @Html.EditorFor(sM => sM.EndDate, "{0:d}") *@
+                                        @* <script> *@
+                                        @*     $(function () { *@
+                                        @*         $("#EndDate").datepicker(); *@
+                                        @*     }); *@
+                                        @* </script> *@
+                                        
+                                         @Html.TextBoxFor(sM => sM.EndDate,"{0:yyyy-M-d}", new { @type = "date", textmode="Date", @class = "form-control datetimepicker", disableMobile="true"}) 
+                                        @* <input asp-for="EndDate" class="form-control datetimepicker" type="date" data-options='{"disableMobile":true,"dateFormat" : "d-m-Y"}'/> *@
+                                        @Html.ValidationMessageFor(sM => sM.EndDate, null, new { @class = "hide-if-empty alert alert-warning mt-1 p-3 pt-1 pb-1" }, "div")
+
+                                    </div>
+                                    <div class="col-12">
+                                        @Html.LabelFor(sM => sM.CaptchaValue, new { @class = "form-label" })
+                                        <div class="input-group">
+                                            <label class="input-group-text form-label-fix">
+                                                <img id="img-captcha" src="data:image/png;base64,@tPageInformation.CaptchaSixtyFour" height="30" alt="Captcha"/>
+                                            </label>
+                                            @Html.TextBoxFor(sM => sM.CaptchaValue, new { @class = "form-control", @placeholder = "Captcha" })
+                                        </div>
+                                        @Html.ValidationMessageFor(sM => sM.CaptchaValue, null, new { @class = "hide-if-empty alert alert-warning mt-1 p-3 pt-1 pb-1" }, "div")
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn btn-primary" type="submit"><span class="bi bi-envelope"></span> send voucher by email</button>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="col-12 col-sm-12 col-md-12 col-lg-4 col-xl-4 col-xxl-4">
+                    <div class="card">
+                        <div class="card-header bg-light background-corner-2 border-bottom">
+                            <div class="card-title">
+                                <h3>
+                                    <span class="bi bi-info-circle me-1"></span>Instructions
+                                </h3>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <p>Fill form and submit! The email sent to your recipient will contain a link with token that can add service to new or existing account!</p>
+                            <p>
+                            </p><h5 class="fs-0">Emails addresses</h5>
+                            <p class="fs--1">Fill with your recipient's emails addressess separated by comma.</p>
+                            <h5 class="fs-0">Message</h5>
+                            <p class="fs--1">Write message to insert in email.
+                            <h5 class="fs-0">Service</h5>
+                            <p class="fs--1">Select a service to be awarded by the voucher.</p>
+                            <h5 class="fs-0">Alert</h5>
+                            <p class="fs--1">Select alert style and text to show. Alert always appear on top of page. If you don't fill the alert field, no alert will be used.</p>
+                            <h5 class="fs-0">Kind of voucher</h5>
+                            <p class="fs--1"><b>@NWDVoucherKind.DateToDate.ToString()</b> : Determine the validity date interval of the voucher.</p>
+                            <p class="fs--1"><b>@NWDVoucherKind.AddDuration.ToString()</b> : Determine the duration in day to add at the moment of voucher consumption.</p>
+                            <h5 class="fs-0">Add duration in day</h5>
+                            <p class="fs--1">Determine the duration in day to add.</p>
+                            <h5 class="fs-0">Start date and end date</h5>
+                            <p class="fs--1">Determine the validity date interval of the voucher.</p>
+                            <h5 class="fs-0">Captcha</h5>
+                            <p class="fs--1">Copy the text in image to valid this form.</p>
+                            <p>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+<script src="~/assets/js/flatpickr.js"></script>
+<link href="~/vendors/flatpickr/flatpickr.min.css" rel="stylesheet"/>

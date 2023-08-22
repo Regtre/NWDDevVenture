@@ -1,0 +1,94 @@
+@using System.Reflection
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using NWDFoundation.Models
+@using NWDFoundation.Tools
+@using NWDFoundation.WebEdition.Attributes
+@using NWDFoundation.WebEdition.Models
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    string? tControllerName = ViewData["ControllerName"] as string;
+    string? tModelToUse = ViewData["ModelToUse"] as string;
+    Type? tModel = null;
+    if (tModelToUse != null)
+    {
+        tModel = Type.GetType(tModelToUse);
+    }
+    object? tResultToUse = ViewData["ResultToUse"];
+
+    PropertyInfo? tReferenceProp = tModel?.GetProperty("Reference");
+    ulong tReference = (ulong)(tReferenceProp?.GetValue(tResultToUse) ?? 0);
+
+    string tFormId = NWDSecurityTools.GenerateSha(tControllerName + tModelToUse)+ NWDRandom.RandomStringToken(16);
+}
+
+<form method="post" id="@tFormId">
+    <div class="card-body">
+        <script>
+            tinymce.remove();
+        </script>
+        @Html.AntiForgeryToken()
+        @Html.Hidden("Reference", tReference)
+        @foreach (PropertyInfo tProp in tModel?.GetProperties(BindingFlags.Public | BindingFlags.Instance)!)
+        {
+            if (tProp.Name != nameof(NWDBasicModel.Reference))
+            {
+                NWDWebPropertyDescriptionAttribute? tAttribute = tProp.GetCustomAttribute<NWDWebPropertyDescriptionAttribute>();
+                ViewData["Attribute"] = tAttribute;
+                ViewData["Item"] = tResultToUse;
+                ViewData["InputName"] = tProp.Name;
+                <partial name="_NWDWebEditionStyleSwitch" model="tProp"/>
+            }
+        }
+    </div>
+
+    <div class="modal-footer d-flex justify-content-between">
+        <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-dismiss="modal">
+            <i class="bi bi-arrow-left"></i>
+        </button>
+        <submit type="submit" class="btn btn-sm btn-outline-primary align-self-center mr-1" onclick="tinyMCE.triggerSave();if ($('#@tFormId').valid()){postRequestAndRefresh( '@tControllerName', '@Url.Action("SaveInDiv", tControllerName)','@tFormId');}" data-bs-dismiss="modal">
+            @if (tReference != 0)
+            {
+                <i class="bi bi-save"></i> @* Save*@
+            }
+            else
+            {
+                <i class="bi bi-plus-square"></i>
+            }
+        </submit>
+    </div>
+</form>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+<script src="~/vendors/jquery/jquery.min.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+<script src="~/js/site.js"></script>
+<script src="~/js/NWDWebRuntime.js"></script>
+<script src="~/js/NWDWebStandard.js"></script>
+<script src="~/js/jquery.unobtrusive-ajax.js"></script>
+<script src="~/vendors/overlayscrollbars/OverlayScrollbars.min.js"></script>
+<script src="~/vendors/tinymce/tinymce.min.js"></script>
+<script src="~/vendors/simplebar/simplebar.min.js"></script>
+
+<script src="~/assets/js/theme.js"></script> @*error theme.js.map *@
+
+<link href="~/vendors/select2-bootstrap-5-theme/select2-bootstrap-5-theme.min.css" rel="stylesheet"/>
+
+<script src="~/vendors/choices/choices.min.js"></script>
+<link href="~/vendors/choices/choices.min.css" rel="stylesheet"/>
+
+<script src="~/vendors/simplebar/simplebar.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+<script>
+$("#@tFormId").submit(function (e) {
+    e.preventDefault();
+    tinyMCE.triggerSave();
+    if ($('#@tFormId').valid())
+    {
+        postRequestAndRefresh( '@tControllerName', '@Url.Action("SaveInDiv", tControllerName)','@tFormId');
+    }
+})
+
+</script>
+@Html.Raw("<script>" + (ViewData["Javascript"] as string ?? string.Empty) + "</script>")

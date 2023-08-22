@@ -1,0 +1,34 @@
+@using NWDFoundation.Configuration
+@using NWDFoundation.Tools
+@using NWDWebRuntime.Configuration
+@using NWDWebStandard.Models
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+
+@{
+    Layout = "";
+    string tDivContainer = "\n@using NWDWebRuntime.Configuration\n\n@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers\n\n@{\n  Layout =\"~/Views/Shared/_Layout.cshtml\";\n}\n\n@if (NWDWebRuntimeConfiguration.KConfig.IsDevelopment == true)\n{\n\t<div class=\"text-end mb-3\">\n\t\t<span class=\"ms-2 badge rounded-pill badge-subtle-success bi-check-circle\"> Kortex</span>\n\t\t@* <span class=\"ms-2 badge rounded-pill badge-subtle-danger bi-x-circle\"> Kortex</span> *@\n\t</div>\n}\n\t" +
+                           "\n<div class=\"container p-0 m-0\">\n\t<div class=\"row g-3\">\n\t\t<div class=\"col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12\">\n\t\t...\n\t\t</div>\n\t\t<div class=\"col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 col-xxl-6\">\n\t\t...\n\t\t</div>\n\t</div>\n</div>";
+}
+<div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+    <div class="card">
+        <div class="card-header background-corner-2 border-bottom">
+            <div class="row">
+                <div class="col-8">
+                    <h3><span class="fas fa-shield-alt"></span> List of templates to use! </h3>
+                    <p class="mb-0 text-warning">Double click for javascript interactivity!</p>
+                </div>
+            </div>
+        </div>
+        <div class="card-body position-relative">
+            Use this container everywhere! 
+        </div>
+        <div class="card-body bg-dark position-relative">
+            <code class="scrollbar-overlay">
+                <pre>
+@tDivContainer
+                        </pre>
+            </code>
+        </div>
+    </div>
+</div>

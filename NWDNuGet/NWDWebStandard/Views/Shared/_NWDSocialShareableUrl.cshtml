@@ -1,0 +1,545 @@
+﻿@using NWDWebRuntime.Configuration
+@using NWDWebRuntime.Models
+@using NWDWebRuntime.Tools
+@using NWDWebStandard.Configuration
+@using NWDWebStandard.Controllers
+@using Org.BouncyCastle.Crypto.Engines
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@model NWDSocialShareableUrl
+@if (Model != null)
+{
+    if (
+        NWDWebStandardConfiguration.KConfig.ShareableByEmail == true ||
+        NWDWebStandardConfiguration.KConfig.ShareableOnFacebook == true ||
+        NWDWebStandardConfiguration.KConfig.ShareableOnGooglePlus == true ||
+        NWDWebStandardConfiguration.KConfig.ShareableOnWhatsApp == true ||
+        NWDWebStandardConfiguration.KConfig.ShareableOnInstagram == true ||
+        NWDWebStandardConfiguration.KConfig.ShareableOnWeibo == true ||
+        NWDWebStandardConfiguration.KConfig.ShareableOnRenren == true ||
+        NWDWebStandardConfiguration.KConfig.ShareableOnBaidu == true ||
+        NWDWebStandardConfiguration.KConfig.ShareableOnReddIt == true ||
+        NWDWebStandardConfiguration.KConfig.ShareableOnTwitter == true ||
+        NWDWebStandardConfiguration.KConfig.ShareableOnPinterest == true ||
+        NWDWebStandardConfiguration.KConfig.ShareableOnLinkedIn == true ||
+        NWDWebStandardConfiguration.KConfig.ShareableOnDiscord == true ||
+        NWDWebStandardConfiguration.KConfig.ShareableOnTwitch == true ||
+        NWDWebStandardConfiguration.KConfig.ShareableOnTumblr == true ||
+        string.IsNullOrEmpty(NWDWebStandardConfiguration.KConfig.PageUrlOnFacebook) == false ||
+        string.IsNullOrEmpty(NWDWebStandardConfiguration.KConfig.PageUrlOnGooglePlus) == false ||
+        string.IsNullOrEmpty(NWDWebStandardConfiguration.KConfig.PageUrlOnInstagram) == false ||
+        string.IsNullOrEmpty(NWDWebStandardConfiguration.KConfig.PageUrlOnWeibo) == false ||
+        string.IsNullOrEmpty(NWDWebStandardConfiguration.KConfig.PageUrlOnReddIt) == false ||
+        string.IsNullOrEmpty(NWDWebStandardConfiguration.KConfig.PageUrlOnTwitter) == false ||
+        string.IsNullOrEmpty(NWDWebStandardConfiguration.KConfig.PageUrlOnPinterest) == false ||
+        string.IsNullOrEmpty(NWDWebStandardConfiguration.KConfig.PageUrlOnLinkedIn) == false ||
+        string.IsNullOrEmpty(NWDWebStandardConfiguration.KConfig.PageUrlOnDiscord) == false ||
+        string.IsNullOrEmpty(NWDWebStandardConfiguration.KConfig.PageUrlOnTwitch) == false
+        )
+    {
+    NWDSocialShareableStyle tStyle = Model.Style;
+    if (tStyle == NWDSocialShareableStyle.Inherited)
+    {
+        tStyle = (NWDSocialShareableStyle)NWDWebStandardConfiguration.KConfig.ShareableStyle;
+    }
+    string tIconShare ="fas fa-share-alt";
+    @if (string.IsNullOrEmpty(Model.UrlEncoded) == false)
+    {
+        string tUniqueID = "Shareable_"+NWDToolBox.UniqueRandomString(8);
+        @switch (tStyle)
+        {
+            case NWDSocialShareableStyle.Inline:
+                <div class="border-top mt-3 mb-6">
+                    <div class="text-gray small mb-1">
+                        @if (string.IsNullOrEmpty(Model.Title) == true)
+                        {
+                            switch (Model.Kind)
+                            {
+                                case NWDSocialShareableKind.Html:
+                                    <span><span class="@tIconShare"></span> Share this page</span>
+                                    break;
+                                case NWDSocialShareableKind.Image:
+                                    <span><span class="@tIconShare"></span> Share this image</span>
+                                    break;
+                                case NWDSocialShareableKind.Sound:
+                                    <span><span class="@tIconShare"></span> Share this sound</span>
+                                    break;
+                                case NWDSocialShareableKind.Video:
+                                    <span><span class="@tIconShare"></span> Share this video</span>
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            <span>
+                                <span class="@tIconShare"></span> @Model.Title
+                            </span>
+                        }
+
+                    </div>
+                    <div class="">
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableByEmail)
+                        {
+                            <a class="btn btn-sm btn-outline-secondary" href="mailto:?subject=@NWDWebRuntimeConfiguration.KConfig.GetDnsHttps()&body=@Model.UrlEncoded" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Share by email">
+                                <span class="far fa-envelope"></span>
+                            </a>
+                        }
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableOnFacebook)
+                        {
+                            <a class="btn btn-sm btn-outline-secondary" href="https://www.facebook.com/share.php?u=@Model.UrlEncoded" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Share on Facebook">
+                                <span class="fab fa-facebook-f"></span>
+                            </a>
+                        }
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableOnGooglePlus)
+                        {
+                            <a class="btn btn-sm btn-outline-secondary" href="https://plus.google.com/share?url=@Model.UrlEncoded" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Share on Google+">
+                                <span class="fab fa-google-plus-g"></span>
+                            </a>
+                        }
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableOnWhatsApp)
+                        {
+                            <a class="btn btn-sm btn-outline-secondary" href="https://wa.me/whatsappphonenumber/?text=@Model.UrlEncoded" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Share on WhatsApp">
+                                <span class="fab fa-whatsapp"></span>
+                            </a>
+                        }
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableOnInstagram && Model.Kind == NWDSocialShareableKind.Image)
+                        {
+                            <a class="btn btn-sm btn-outline-warning" href="@Model.UrlEncoded" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Share on Instagram">
+                                <span class="fab fa-instagram"></span>
+                            </a>
+                        }
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableOnWeibo)
+                        {
+                            <a class="btn btn-sm btn-outline-secondary" href="http://service.weibo.com/share/share.php?url=@Model.UrlEncoded" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Share on Weibo">
+                                <span class="fab fa-weibo"></span>
+                            </a>
+                        }
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableOnRenren)
+                        {
+                            <a class="btn btn-sm btn-outline-secondary" href="http://share.renren.com/share/buttonshare.do?link=@Model.UrlEncoded" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Share on Renren">
+                                <span class="fab fa-renren"></span>
+                            </a>
+                        }
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableOnBaidu)
+                        {
+                            <a class="btn btn-sm btn-outline-secondary" href="http://apps.hi.baidu.com/share/?url=@Model.UrlEncoded" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Share on Baidu">
+                                <span class="fab fa-baidu"></span>
+                            </a>
+                        }
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableOnReddIt)
+                        {
+                            <a class="btn btn-sm btn-outline-secondary" href="https://reddit.com/submit?url=@Model.UrlEncoded" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Share on Reddit">
+                                <span class="fab fa-reddit"></span>
+                            </a>
+                        }
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableOnTwitter)
+                        {
+                            <a class="btn btn-sm btn-outline-secondary" href="https://twitter.com/intent/tweet?url=@Model.UrlEncoded" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Share on Twitter">
+                                <span class="fab fa-twitter"></span>
+                            </a>
+                        }
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableOnPinterest && Model.Kind == NWDSocialShareableKind.Image)
+                        {
+                            <a class="btn btn-sm btn-outline-warning" href="@Model.UrlEncoded" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Share on Pinterest">
+                                <span class="fab fa-pinterest"></span>
+                            </a>
+                        }
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableOnLinkedIn)
+                        {
+                            <a class="btn btn-sm btn-outline-secondary" href="https://www.linkedin.com/shareArticle?mini=true&url=@Model.UrlEncoded" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Share on LinkedIn">
+                                <span class="fab fa-linkedin-in"></span>
+                            </a>
+                        }
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableOnDiscord)
+                        {
+                            <a class="btn btn-sm btn-outline-warning" href="@Model.UrlEncoded" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Share on Discord">
+                                <span class="fab fa-discord"></span>
+                            </a>
+                        }
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableOnTwitch && Model.Kind == NWDSocialShareableKind.Video)
+                        {
+                            <a class="btn btn-sm btn-outline-warning" href="@Model.UrlEncoded" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Share on Twitch">
+                                <span class="fab fa-twitch"></span>
+                            </a>
+                        }
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableOnTumblr)
+                        {
+                            <a class="btn btn-sm btn-outline-secondary" href="https://www.tumblr.com/share?v=3&u=@Model.UrlEncoded" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Share on Tumblr">
+                                <span class="fab fa-tumblr"></span>
+                            </a>
+                        }
+                    </div>
+                </div>
+                break;
+            case NWDSocialShareableStyle.Carded:
+                <div class="card mt-3 mb-6">
+                    <div class="card-header border-bottom text-gray small mb-1 pb-2 pt-2 bg-card background-corner-2">
+                        @if (string.IsNullOrEmpty(Model.Title) == true)
+                        {
+                            switch (Model.Kind)
+                            {
+                                case NWDSocialShareableKind.Html:
+                                    <span><span class="@tIconShare"></span> Share this page</span>
+                                    break;
+                                case NWDSocialShareableKind.Image:
+                                    <span><span class="@tIconShare"></span> Share this image</span>
+                                    break;
+                                case NWDSocialShareableKind.Sound:
+                                    <span><span class="@tIconShare"></span> Share this sound</span>
+                                    break;
+                                case NWDSocialShareableKind.Video:
+                                    <span><span class="@tIconShare"></span> Share this video</span>
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            <span>
+                                <span class="@tIconShare"></span> @Model.Title
+                            </span>
+                        }
+
+                    </div>
+                    <div class="card-body pb-2 pt-2">
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableByEmail)
+                        {
+                            <a class="btn btn-sm btn-outline-secondary" href="mailto:?subject=@NWDWebRuntimeConfiguration.KConfig.GetDnsHttps()&body=@Model.UrlEncoded" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Share by email">
+                                <span class="far fa-envelope"></span>
+                            </a>
+                        }
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableOnFacebook)
+                        {
+                            <a class="btn btn-sm btn-outline-secondary" href="https://www.facebook.com/share.php?u=@Model.UrlEncoded" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Share on Facebook">
+                                <span class="fab fa-facebook-f"></span>
+                            </a>
+                        }
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableOnGooglePlus)
+                        {
+                            <a class="btn btn-sm btn-outline-secondary" href="https://plus.google.com/share?url=@Model.UrlEncoded" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Share on Google+">
+                                <span class="fab fa-google-plus-g"></span>
+                            </a>
+                        }
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableOnWhatsApp)
+                        {
+                            <a class="btn btn-sm btn-outline-secondary" href="https://wa.me/whatsappphonenumber/?text=@Model.UrlEncoded" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Share on WhatsApp">
+                                <span class="fab fa-whatsapp"></span>
+                            </a>
+                        }
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableOnInstagram && Model.Kind == NWDSocialShareableKind.Image)
+                        {
+                            <a class="btn btn-sm btn-outline-warning" href="@Model.UrlEncoded" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Share on Instagram">
+                                <span class="fab fa-instagram"></span>
+                            </a>
+                        }
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableOnWeibo)
+                        {
+                            <a class="btn btn-sm btn-outline-secondary" href="http://service.weibo.com/share/share.php?url=@Model.UrlEncoded" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Share on Weibo">
+                                <span class="fab fa-weibo"></span>
+                            </a>
+                        }
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableOnRenren)
+                        {
+                            <a class="btn btn-sm btn-outline-secondary" href="http://share.renren.com/share/buttonshare.do?link=@Model.UrlEncoded" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Share on Renren">
+                                <span class="fab fa-renren"></span>
+                            </a>
+                        }
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableOnBaidu)
+                        {
+                            <a class="btn btn-sm btn-outline-secondary" href="http://apps.hi.baidu.com/share/?url=@Model.UrlEncoded" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Share on Baidu">
+                                <span class="fab fa-baidu"></span>
+                            </a>
+                        }
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableOnReddIt)
+                        {
+                            <a class="btn btn-sm btn-outline-secondary" href="https://reddit.com/submit?url=@Model.UrlEncoded" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Share on Reddit">
+                                <span class="fab fa-reddit"></span>
+                            </a>
+                        }
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableOnTwitter)
+                        {
+                            <a class="btn btn-sm btn-outline-secondary" href="https://twitter.com/intent/tweet?url=@Model.UrlEncoded" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Share on Twitter">
+                                <span class="fab fa-twitter"></span>
+                            </a>
+                        }
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableOnPinterest && Model.Kind == NWDSocialShareableKind.Image)
+                        {
+                            <a class="btn btn-sm btn-outline-warning" href="@Model.UrlEncoded" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Share on Pinterest">
+                                <span class="fab fa-pinterest"></span>
+                            </a>
+                        }
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableOnLinkedIn)
+                        {
+                            <a class="btn btn-sm btn-outline-secondary" href="https://www.linkedin.com/shareArticle?mini=true&url=@Model.UrlEncoded" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Share on LinkedIn">
+                                <span class="fab fa-linkedin-in"></span>
+                            </a>
+                        }
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableOnDiscord)
+                        {
+                            <a class="btn btn-sm btn-outline-warning" href="@Model.UrlEncoded" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Share on Discord">
+                                <span class="fab fa-discord"></span>
+                            </a>
+                        }
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableOnTwitch && Model.Kind == NWDSocialShareableKind.Video)
+                        {
+                            <a class="btn btn-sm btn-outline-warning" href="@Model.UrlEncoded" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Share on Twitch">
+                                <span class="fab fa-twitch"></span>
+                            </a>
+                        }
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableOnTumblr)
+                        {
+                            <a class="btn btn-sm btn-outline-secondary" href="https://www.tumblr.com/share?v=3&u=@Model.UrlEncoded" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Share on Tumblr">
+                                <span class="fab fa-tumblr"></span>
+                            </a>
+                        }
+                    </div>
+                </div>
+                break;
+            case NWDSocialShareableStyle.MenuDropdown :
+                <div class="border-top mt-3 mb-6">
+                <div class="dropend d-inline-block mb-2 mt-2">
+                    <button class="btn btn-sm btn-outline-primary dropdown-toggle" id="@tUniqueID" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        @if (string.IsNullOrEmpty(Model.Title) == true)
+                        {
+                            switch (Model.Kind)
+                            {
+                                case NWDSocialShareableKind.Html:
+                                    <span><span class="@tIconShare"></span> Share this page</span>
+                                    break;
+                                case NWDSocialShareableKind.Image:
+                                    <span><span class="@tIconShare"></span> Share this image</span>
+                                    break;
+                                case NWDSocialShareableKind.Sound:
+                                    <span><span class="@tIconShare"></span> Share this sound</span>
+                                    break;
+                                case NWDSocialShareableKind.Video:
+                                    <span><span class="@tIconShare"></span> Share this video</span>
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            <span><span class="@tIconShare"></span> @Model.Title</span>
+                        }
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end py-0" aria-labelledby="@tUniqueID">
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableByEmail)
+                        {
+                            <a class="dropdown-item" href="mailto:?subject=@NWDWebRuntimeConfiguration.KConfig.GetDnsHttps()&body=@Model.UrlEncoded">
+                                <span class="far fa-envelope"></span> by email
+                            </a>
+                            <div class="dropdown-divider"></div>
+                        }
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableOnFacebook)
+                        {
+                            <a class="dropdown-item" href="https://www.facebook.com/share.php?u=@Model.UrlEncoded">
+                                <span class="fab fa-facebook-f"></span> Facebook
+                            </a>
+                        }
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableOnGooglePlus)
+                        {
+                            <a class="dropdown-item" href="https://plus.google.com/share?url=@Model.UrlEncoded">
+                                <span class="fab fa-google-plus-g"></span> Google+
+                            </a>
+                        }
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableOnWhatsApp)
+                        {
+                            <a class="dropdown-item" href="https://wa.me/whatsappphonenumber/?text=@Model.UrlEncoded">
+                                <span class="fab fa-whatsapp"></span> WhatsApp
+                            </a>
+                        }
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableOnInstagram)
+                        {
+                            <a class="dropdown-item" href="@Model.UrlEncoded">
+                                <span class="fab fa-instagram"></span> Instagram
+                            </a>
+                        }
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableOnWeibo)
+                        {
+                            <a class="dropdown-item" href="http://service.weibo.com/share/share.php?url=@Model.UrlEncoded">
+                                <span class="fab fa-weibo"></span> Weibo
+                            </a>
+                        }
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableOnRenren)
+                        {
+                            <a class="dropdown-item" href="http://share.renren.com/share/buttonshare.do?link=@Model.UrlEncoded">
+                                <span class="fab fa-renren"></span> Renren
+                            </a>
+                        }
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableOnBaidu)
+                        {
+                            <a class="dropdown-item" href="http://apps.hi.baidu.com/share/?url=@Model.UrlEncoded">
+                                <span class="fab fa-baidu"></span> Baidu
+                            </a>
+                        }
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableOnReddIt)
+                        {
+                            <a class="dropdown-item" href="https://reddit.com/submit?url=@Model.UrlEncoded">
+                                <span class="fab fa-reddit"></span> Reddit
+                            </a>
+                        }
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableOnTwitter)
+                        {
+                            <a class="dropdown-item" href="https://twitter.com/intent/tweet?url=@Model.UrlEncoded">
+                                <span class="fab fa-twitter"></span> Twitter
+                            </a>
+                        }
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableOnPinterest && Model.Kind == NWDSocialShareableKind.Image)
+                        {
+                            <a class="dropdown-item" href="@Model.UrlEncoded">
+                                <span class="fab fa-pinterest"></span> Pinterest
+                            </a>
+                        }
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableOnLinkedIn)
+                        {
+                            <a class="dropdown-item" href="https://www.linkedin.com/shareArticle?mini=true&url=@Model.UrlEncoded">
+                                <span class="fab fa-linkedin-in"></span> LinkedIn
+                            </a>
+                        }
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableOnDiscord)
+                        {
+                            <a class="dropdown-item" href="@Model.UrlEncoded">
+                                <span class="fab fa-discord"></span> Discord
+                            </a>
+                        }
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableOnTwitch && Model.Kind == NWDSocialShareableKind.Video)
+                        {
+                            <a class="dropdown-item" href="@Model.UrlEncoded">
+                                <span class="fab fa-twitch"></span> Twitch
+                            </a>
+                        }
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableOnTumblr)
+                        {
+                            <a class="dropdown-item" href="https://www.tumblr.com/share?v=3&u=@Model.UrlEncoded">
+                                <span class="fab fa-tumblr"></span> Tumblr
+                            </a>
+                        }
+                    </div>
+                </div>
+                </div>
+                break;
+            case NWDSocialShareableStyle.Toolbar:
+                <div class="border-top mt-3 mb-6">
+                    <div class="btn-group btn-sm mt-2" role="group">
+                    <div class="btn btn-sm btn-outline-secondary ps-2 pe-3 disabled">
+                        @if (string.IsNullOrEmpty(Model.Title) == true)
+                        {
+                            switch (Model.Kind)
+                            {
+                                case NWDSocialShareableKind.Html:
+                                    <span><span class="@tIconShare"></span> Share this page</span>
+                                    break;
+                                case NWDSocialShareableKind.Image:
+                                    <span><span class="@tIconShare"></span> Share this image</span>
+                                    break;
+                                case NWDSocialShareableKind.Sound:
+                                    <span><span class="@tIconShare"></span> Share this sound</span>
+                                    break;
+                                case NWDSocialShareableKind.Video:
+                                    <span><span class="@tIconShare"></span> Share this video</span>
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            <span><span class="@tIconShare"></span> @Model.Title</span>
+                        }
+
+                    </div>
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableByEmail)
+                        {
+                            <a class="btn btn-sm btn-outline-secondary" href="mailto:?subject=@NWDWebRuntimeConfiguration.KConfig.GetDnsHttps()&body=@Model.UrlEncoded" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Share by email">
+                                <span class="far fa-envelope"></span>
+                            </a>
+                        }
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableOnFacebook)
+                        {
+                            <a class="btn btn-sm btn-outline-secondary" href="https://www.facebook.com/share.php?u=@Model.UrlEncoded" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Share on Facebook">
+                                <span class="fab fa-facebook-f"></span>
+                            </a>
+                        }
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableOnGooglePlus)
+                        {
+                            <a class="btn btn-sm btn-outline-secondary" href="https://plus.google.com/share?url=@Model.UrlEncoded" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Share on Google+">
+                                <span class="fab fa-google-plus-g"></span>
+                            </a>
+                        }
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableOnWhatsApp)
+                        {
+                            <a class="btn btn-sm btn-outline-secondary" href="https://wa.me/whatsappphonenumber/?text=@Model.UrlEncoded" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Share on WhatsApp">
+                                <span class="fab fa-whatsapp"></span>
+                            </a>
+                        }
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableOnInstagram && Model.Kind == NWDSocialShareableKind.Image)
+                        {
+                            <a class="btn btn-sm btn-outline-warning" href="@Model.UrlEncoded" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Share on Instagram">
+                                <span class="fab fa-instagram"></span>
+                            </a>
+                        }
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableOnWeibo)
+                        {
+                            <a class="btn btn-sm btn-outline-secondary" href="http://service.weibo.com/share/share.php?url=@Model.UrlEncoded" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Share on Weibo">
+                                <span class="fab fa-weibo"></span>
+                            </a>
+                        }
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableOnRenren)
+                        {
+                            <a class="btn btn-sm btn-outline-secondary" href="http://share.renren.com/share/buttonshare.do?link=@Model.UrlEncoded" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Share on Renren">
+                                <span class="fab fa-renren"></span>
+                            </a>
+                        }
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableOnBaidu)
+                        {
+                            <a class="btn btn-sm btn-outline-secondary" href="http://apps.hi.baidu.com/share/?url=@Model.UrlEncoded" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Share on Baidu">
+                                <span class="fab fa-baidu"></span>
+                            </a>
+                        }
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableOnReddIt)
+                        {
+                            <a class="btn btn-sm btn-outline-secondary" href="https://reddit.com/submit?url=@Model.UrlEncoded" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Share on Reddit">
+                                <span class="fab fa-reddit"></span>
+                            </a>
+                        }
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableOnTwitter)
+                        {
+                            <a class="btn btn-sm btn-outline-secondary" href="https://twitter.com/intent/tweet?url=@Model.UrlEncoded" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Share on Twitter">
+                                <span class="fab fa-twitter"></span>
+                            </a>
+                        }
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableOnPinterest && Model.Kind == NWDSocialShareableKind.Image)
+                        {
+                            <a class="btn btn-sm btn-outline-warning" href="@Model.UrlEncoded" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Share on Pinterest">
+                                <span class="fab fa-pinterest"></span>
+                            </a>
+                        }
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableOnLinkedIn)
+                        {
+                            <a class="btn btn-sm btn-outline-secondary" href="https://www.linkedin.com/shareArticle?mini=true&url=@Model.UrlEncoded" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Share on LinkedIn">
+                                <span class="fab fa-linkedin-in"></span>
+                            </a>
+                        }
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableOnDiscord)
+                        {
+                            <a class="btn btn-sm btn-outline-warning" href="@Model.UrlEncoded" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Share on Discord">
+                                <span class="fab fa-discord"></span>
+                            </a>
+                        }
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableOnTwitch && Model.Kind == NWDSocialShareableKind.Video)
+                        {
+                            <a class="btn btn-sm btn-outline-warning" href="@Model.UrlEncoded" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Share on Twitch">
+                                <span class="fab fa-twitch"></span>
+                            </a>
+                        }
+                        @if (NWDWebStandardConfiguration.KConfig.ShareableOnTumblr)
+                        {
+                            <a class="btn btn-sm btn-outline-secondary" href="https://www.tumblr.com/share?v=3&u=@Model.UrlEncoded" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Share on Tumblr">
+                                <span class="fab fa-tumblr"></span>
+                            </a>
+                        }
+                    </div>
+                </div>
+                break;
+        }
+    }
+}
+}

@@ -1,0 +1,93 @@
+@using NWDFoundation.Configuration
+@using NWDFoundation.Tools
+@using NWDWebDevelopment.Controllers
+@using NWDWebRuntime.Configuration
+@using NWDWebRuntime.Facades
+@using NWDWebRuntime.Models
+@using NWDWebStandard.Models
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (NWDWebRuntimeConfiguration.KConfig.IsDevelopment == true)
+{
+    <div class="text-end mb-3">
+        <span class="ms-2 badge rounded-pill badge-subtle-success bi-check-circle"> Kortex</span>
+        @* <span class="ms-2 badge rounded-pill badge-subtle-danger bi-x-circle"> Kortex</span> *@
+    </div>
+}
+<!-- TITLE With background -->
+<div class="container p-0 m-0" NavBar>
+    <div class="row g-3">
+        <div class="col-sx-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+            <div class="card" NavBar>
+                <div class="card-header bg-light border-bottom">
+                    <div class="card-title">
+                        <h1><span class="fas fa-shield-alt"></span> @nameof(INWDNavFooter) generation from controller</h1>
+                    </div>
+                </div>
+                <div class="card-body position-relative border-bottom">
+                    <div class="row g-3">
+                        <div class="col-sx-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 col-xxl-6">
+                            Here is an example of inserting a specific sidebar via a method from a controller in an action.
+                        </div>
+                        <div class="col-sx-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 col-xxl-6">
+<pre><code class="language-csharp">
+public class NWDWebHtmlLayoutController : NWDBasicController&lt;NWDWebHtmlLayoutController&gt;
+{
+    public @nameof(NWDNavBarCategory) ?[] AddNavFooterIndex()
+    {
+         @nameof(NWDNavBarCategory) tCategory = new @nameof(NWDNavBarCategory) ()
+            {
+                 ...
+            };
+         return new []{tCategory};
+    }
+    public IActionResult Index()
+    {
+            PageInformation.AddNavFooter(AddNavFooterIndex(), null, HttpContext);
+            return View();
+    }
+...
+}
+</code></pre>
+                        </div>
+                        <div class="col-sx-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 col-xxl-6">
+                            Here is an example of inserting a specific static sidebar for a controller as a whole.
+                        </div>
+                        <div class="col-sx-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 col-xxl-6">
+<pre><code class="language-csharp">
+public class NWDWebHtmlLayoutController : NWDBasicController&lt;NWDWebHtmlLayoutController&gt;
+{
+    private static @nameof(NWDNavBarCategory) ?[] KNavFooterCategories;
+    public @nameof(NWDNavBarCategory) ?[] AddNavFooterCategories()
+    {
+        if (KNavFooterCategories == null)
+             {
+                @nameof(NWDNavBarCategory) tCategory = new @nameof(NWDNavBarCategory) ()
+                {
+                    ...
+                };
+            KNavFooterCategories = new []{tCategory};
+        }
+        return KNavFooterCategories;
+    }
+    public override void OnActionExecuting(ActionExecutingContext sContext)
+    {
+        base.OnActionExecuting(sContext);
+        PageInformation.SetNavFooter(AddNavFooterCategories(), null, HttpContext);
+        ...
+    }
+...
+}
+</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+        </div>
+    </div>
+</div>

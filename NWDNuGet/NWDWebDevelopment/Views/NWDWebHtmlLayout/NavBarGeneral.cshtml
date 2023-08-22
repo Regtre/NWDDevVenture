@@ -1,0 +1,173 @@
+@using NWDFoundation.Configuration
+@using NWDFoundation.Tools
+@using NWDWebRuntime.Configuration
+@using NWDWebRuntime.Facades
+@using NWDWebRuntime.Models
+@using NWDWebStandard.Models
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (NWDWebRuntimeConfiguration.KConfig.IsDevelopment == true)
+{
+    <div class="text-end mb-3" xmlns="http://www.w3.org/1999/html">
+        <span class="ms-2 badge rounded-pill badge-subtle-success bi-check-circle"> Kortex</span>
+        @* <span class="ms-2 badge rounded-pill badge-subtle-danger bi-x-circle"> Kortex</span> *@
+    </div>
+}
+
+
+<!-- TITLE With background -->
+<div class="container p-0 m-0" >
+    <div class="row g-3">
+
+        <div class="col-sx-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+            <div class="card" >
+                <div class="card-header bg-light background-corner-1 border-bottom">
+                    <div class="card-title">
+                        <h1><span class="fas fa-shield-alt"></span>@nameof(INWDNavBar)</h1>
+                    </div>
+                </div>
+                <div class="card-body position-relative border-bottom">
+                    The management of the navigation bar is done directly in the code. You can add menus from a controller or from an interface class <span class="text-primary">@nameof(INWDNavBar)</span>. The <span class="text-primary">@nameof(NWDNavBarMenu)</span> class is the starting point for inserting a navigation bar menu.
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-sx-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+            <div class="card" >
+                <div class="card-header bg-light background-corner-1 border-bottom">
+                    <div class="card-title">
+                        <h1><span class="fas fa-shield-alt"></span> Classes</h1>
+                    </div>
+                </div>
+                <div class="card-body position-relative border-bottom">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                        <tr>
+                            <th scope="col"></th>
+                            <th scope="col">Class</th>
+                            <th scope="col">Usage</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>
+                                <span class="fas fa-shield-alt"></span>
+                            </td>
+                            <td>
+                                <span class="text-primary">@nameof(INWDNavBar)</span>
+                            </td>
+                            <td>
+                                Interface to declare a class to inject at <span class=" text-primary"> NWDWebRuntimeConfiguration.KConfig.@nameof(NWDWebRuntimeConfiguration.KConfig.NavBarInterfaceAdd) (INWDNavBar sNavBar)</span> 
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="fas fa-shield-alt"></span>
+                            </td>
+                            <td>
+                                <span class="text-primary">@nameof(NWDNavBarMenu)</span>
+                            </td>
+                            <td>
+                                Menu 
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="fas fa-shield-alt"></span>
+                            </td>
+                            <td>
+                                <span class="text-primary">@nameof(NWDNavBarCategory)</span>
+                            </td>
+                            <td>
+                                Category in menu
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="fas fa-shield-alt"></span>
+                            </td>
+                            <td>
+                                <span class="text-primary">@nameof(NWDNavBarElement)</span>
+                            </td>
+                            <td>
+                                Element in category
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-sx-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+            <div class="card" >
+                <div class="card-header bg-light background-corner-1 border-bottom">
+                    <div class="card-title">
+                        <h1><span class="fas fa-shield-alt"></span> Methods</h1>
+                    </div>
+                </div>
+                <div class="card-body position-relative border-bottom">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                        <tr>
+                            <th scope="col"></th>
+                            <th scope="col">Class</th>
+                            <th scope="col">Method</th>
+                            <th scope="col">Usage</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>
+                                <span class="fas fa-shield-alt"></span>
+                            </td>
+                            <td>
+                                <span class="text-primary">@nameof(NWDWebRuntimeConfiguration)</span>
+                            </td>
+                            <td>
+                                @nameof(NWDWebRuntimeConfiguration.NavBarInterfaceAdd) (@nameof(INWDNavBar) sNavBarManager)
+                            </td>
+                            <td>
+                                Add sub-manager to general footer manager generation process.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="fas fa-shield-alt"></span>
+                            </td>
+                            <td>
+                                <span class="text-primary">@nameof(NWDPageStandard)</span>
+                            </td>
+                            <td>
+                                @nameof(NWDPageStandard.SetNavBarKind) (NWDNavBarKind sNavBarStyle, NWDNavBarMenu[]? sMenus, HttpContext sHttpContext)
+                            </td>
+                            <td>
+                                Replace footer by style result of general footer manager and add specific categories for this page.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="fas fa-shield-alt"></span>
+                            </td>
+                            <td>
+                                <span class="text-primary">@nameof(NWDPageStandard)</span>
+                            </td>
+                            <td>
+                                @nameof(NWDPageStandard.AddNavBar) (NWDNavBarMenu[]? sMenus, HttpContext sHttpContext)
+                            </td>
+                            <td>
+                                Add specific categories this page to result of general footer manager.
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

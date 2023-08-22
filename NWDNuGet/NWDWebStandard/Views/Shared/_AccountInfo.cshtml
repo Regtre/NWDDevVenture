@@ -1,0 +1,48 @@
+﻿@using Microsoft.AspNetCore.Http
+@model NWDWebRuntime.Models.NWDAccountInfo
+
+@inject IHttpContextAccessor HttpContextAccessor
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@if (HttpContextAccessor.HttpContext != null)
+{
+    <div class="container p-0 m-0 mb-3">
+        <div class="row g-3">
+            <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+                <div class="card">
+                    <div class="card-header bg-light border-bottom">
+                        <h5>Account Information</h5>
+                    </div>
+                    <div class="card-body">
+                        @using (Html.BeginForm("ModifyAccountInfo", "NWDAccount"))
+                        {
+                            @Html.HiddenFor(m => m.Reference)
+                            <div class="mb-3">
+                                <div class="input-group mb-3">
+                                    @Html.LabelFor(m => m.GravatarAccount, new { @class = "input-group-text form-label-fix" })
+                                    @Html.TextBoxFor(m => m.GravatarAccount, new { @class = "form-control", placeholder = "insert email to use for gravatar" })
+                                    <span class="input-group-text text-secondary">
+                                        @Model.GravatarHash
+                                        @Html.HiddenFor(m => m.GravatarHash)
+                                    </span>
+                                </div>
+                                @Html.ValidationMessageFor(m => m.GravatarAccount, null, new { @class = "hide-if-empty alert alert-warning mt-1 p-3 pt-1 pb-1" }, "div")
+
+                            </div>
+                            <div class="input-group mb-3">
+                                @Html.LabelFor(m => m.Nickname, new { @class = "input-group-text form-label-fix" })
+                                @Html.TextBoxFor(m => m.Nickname, new { @class = "form-control", placeholder = "Nickname" })
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Nickname, null, new { @class = "hide-if-empty alert alert-warning mt-1 p-3 pt-1 pb-1" }, "div")
+
+                            <div class="justify-content-between">
+                                <button class="mt-2 btn btn-outline-primary" type="submit"><span class="bi bi-save me-2"></span>Save</button>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

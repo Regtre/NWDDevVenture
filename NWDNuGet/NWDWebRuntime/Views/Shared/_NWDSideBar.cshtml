@@ -1,0 +1,16 @@
+﻿@using NWDWebRuntime.Models
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@model NWDSideBar
+
+@foreach (NWDSideBarBlock tBlock in Model.Blocks)
+{
+    <ul class="navbar-nav flex-column mb-3" id="navbarVerticalNav">
+        <partial name="_NWDSideBarBlock.cshtml" model="@tBlock"/>
+    </ul>
+}
+@foreach (NWDSideBarAnnexe tAnnexe in Model.Annexes)
+{
+    <partial name="_NWDSideBarAnnexe.cshtml" model="@tAnnexe"/>
+}

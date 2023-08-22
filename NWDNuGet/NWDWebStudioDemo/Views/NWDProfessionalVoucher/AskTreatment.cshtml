@@ -1,0 +1,197 @@
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using NWDFoundation.Localization
+@using NWDFoundation.Tools
+@using NWDWebRuntime.Extensions
+@using NWDWebStudioDemo.Controllers
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    NWDProfessionalVoucherModel? tModelObject = ViewData[nameof(NWDProfessionalVoucherModel)] as NWDProfessionalVoucherModel;
+}
+
+@model NWDProfessionalTreatmentModel
+
+<div class="container p-0 m-0">
+    <div class="row g-3">
+
+        <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 col-xxl-6">
+            <div class="card">
+                @using (Html.BeginForm(nameof(NWDProfessionalVoucherController.AskOperation), NWDProfessionalVoucherController.ASP_Controller(), FormMethod.Post))
+                {
+                    <div class="card-header background-corner-2 border-bottom">
+                        <div class="card-title">
+                            <h1><span class="far fa-envelope-open"></span> Message receipt</h1>
+                        </div>
+                    </div>
+                    <div class="card-body position-relative">
+                        @if (@tModelObject != null)
+                        {
+                            <table class="table table-hover mb-0">
+                                <thead>
+                                <tr>
+                                    <th scope="col">Key</th>
+                                    <th scope="col">Value</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="form-label">
+                                            Account ID
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="form-field">
+                                            @tModelObject.Account.ToString()
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="form-label">
+                                            Kind
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="form-field">
+                                            @tModelObject.Kind.ToString()
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="form-label">
+                                            @Html.LabelFor(m => tModelObject.Consent, new { @class = "form-label" })
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="form-field">
+                                            @tModelObject.Consent.ToYesNoString()
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="form-label">
+                                            Identite
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="form-field">
+                                            @tModelObject.SenderName
+                                            <p class="fs--2">
+                                            @tModelObject.Job</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="form-label">
+                                            Email
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="form-field">
+                                            @tModelObject.SenderEmail
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="form-label">
+                                            Phone
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="form-field">
+                                            @tModelObject.Phone
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="form-label">
+                                            address
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="form-field">
+                                            @tModelObject.Address @tModelObject.ZipCode @NWDCountryISO.GetFromThreeLetterCode(tModelObject.Country).Name 
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="form-label">
+                                            Message
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="form-field">
+                                            @tModelObject.Message
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        }
+                    </div>
+                    <div class="card-body position-relative border-bottom">
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(m => m.Account)
+                        @Html.HiddenFor(m => m.Kind)
+
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.Game, new { @class = "form-label" })
+                            @Html.TextBoxFor(m => m.Game, new { @class = "form-control", @placeholder = "Name" })
+                            @Html.ValidationMessageFor(m => m.Game, null, new { @class = "hide-if-empty alert alert-warning mt-1 p-3 pt-1 pb-1" }, "div")
+                        </div>
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.School, new { @class = "form-label" })
+                            @Html.TextBoxFor(m => m.School, new { @class = "form-control", @placeholder = "Name" })
+                            @Html.ValidationMessageFor(m => m.School, null, new { @class = "hide-if-empty alert alert-warning mt-1 p-3 pt-1 pb-1" }, "div")
+                        </div>
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.Medical, new { @class = "form-label" })
+                            @Html.TextBoxFor(m => m.Medical, new { @class = "form-control", @placeholder = "Name" })
+                            @Html.ValidationMessageFor(m => m.Medical, null, new { @class = "hide-if-empty alert alert-warning mt-1 p-3 pt-1 pb-1" }, "div")
+                        </div>
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.Message, new { @class = "form-label" })
+                            @Html.TextAreaFor(m => m.Message, new { @class = "form-control", @placeholder = "Name" })
+                            @Html.ValidationMessageFor(m => m.Message, null, new { @class = "hide-if-empty alert alert-warning mt-1 p-3 pt-1 pb-1" }, "div")
+                        </div>
+                    </div>
+
+                    <div class="card-footer d-flex justify-content-between">
+                        <a href="/" class="btn btn-sm btn-outline-secondary"><span class="bi bi-arrow-left me-2"></span>Home</a>
+                        <button class="btn btn-sm btn-outline-primary" type="submit"><span class="fas fa-paper-plane me-2"></span>Operate</button>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 col-xxl-6">
+            <div class="card">
+                <div class="card-header background-corner-2 border-bottom">
+                    <div class="card-title">
+                        <h1><span class="far fa-life-ring"></span> Help</h1>
+                    </div>
+                </div>
+                <div class="card-body position-relative border-bottom">
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                    </p>
+                    <h5 class="fs-0">How does Falcon's pricing work?</h5>
+                    <p class="fs--1">The free version of Falcon is available for teams of up to 15 people. Our Falcon Premium plans of 15 or fewer qualify for a small team discount. As your team grows to 20 users or more and gets more value out of Falcon, you'll get closer to our standard monthly price per seat. The price of a paid Falcon plan is tiered, starting in groups of 5 and 10 users, based on the number of people you have in your Team or Organization.</p>
+                    <h5 class="fs-0">How does Falcon's pricing work?</h5>
+                    <p class="fs--1">The free version of Falcon is available for teams of up to 15 people. Our Falcon Premium plans of 15 or fewer qualify for a small team discount. As your team grows to 20 users or more and gets more value out of Falcon, you'll get closer to our standard monthly price per seat. The price of a paid Falcon plan is tiered, starting in groups of 5 and 10 users, based on the number of people you have in your Team or Organization.</p>
+                    <h5 class="fs-0">How does Falcon's pricing work?</h5>
+                    <p class="fs--1">The free version of Falcon is available for teams of up to 15 people. Our Falcon Premium plans of 15 or fewer qualify for a small team discount. As your team grows to 20 users or more and gets more value out of Falcon, you'll get closer to our standard monthly price per seat. The price of a paid Falcon plan is tiered, starting in groups of 5 and 10 users, based on the number of people you have in your Team or Organization.</p>
+                    <div class="d-flex justify-content-center">
+                        <img class="spinner-grow" src="https://lucid.app/publicSegments/view/c6db80c4-86db-400e-b8e0-9fc991757386/image.png" alt="schema Net-Worked-Data ©2023" onload="this.className='img-fluid';"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,17 @@
+@using Microsoft.AspNetCore.Http
+@using NWDWebRuntime.Managers
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@inject IHttpContextAccessor HttpContextAccessor
+
+@if (NWDAccountWebManager.AccountIsConnected(HttpContextAccessor.HttpContext) == true)
+{
+    
+}
+
+<h2> Hello HTML </h2>
+
+
+<h2> Hello PDF </h2>

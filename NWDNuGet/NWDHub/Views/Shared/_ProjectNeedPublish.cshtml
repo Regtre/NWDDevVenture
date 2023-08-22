@@ -1,0 +1,90 @@
+@using NWDFoundation.Tools
+@using NWDHub.Controllers
+@model NWDHub.Models.NWDProject
+
+<div class="row g-3">
+    <div class="col-12 col-sm-12 col-md-12 col-lg-8 col-xl-8 col-xxl-8">
+        <div class="card">
+            <div class="card-header background-corner-1 border-bottom d-flex justify-content-between">
+                <div class="">
+                        <h1>
+                            <span class="fs-2 bi-file-earmark-richtext me-2"></span>@Model.Name
+                        </h1>
+                        <p class="mb-0">@Model.Description</p>
+                        <p class="mb-0">@Model.ProjectUniqueId</p>
+                    </div>
+                <div class="align-text-top">
+                        <div class="">
+                            @{
+                                string tTokenSubMenuB = NWDRandom.RandomStringAlpha(64);
+                            }
+                            <button class="btn  btn-sm btn-outline-secondary dropdown-toggle dropdown-caret-none btn-reveal" type="button" id="@tTokenSubMenuB" data-bs-toggle="dropdown" data-boundary="viewport" aria-haspopup="true" aria-expanded="false">
+                                <span class="fas fa-ellipsis-h fs--1"></span>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-end border py-2" aria-labelledby="@tTokenSubMenuB" data-popper-placement="bottom-end">
+                                <a href="@Url.Action("Modify", "NWDProject")?sReference=@Model.Reference" class="dropdown-item">
+                                    <span class="fs-1 bi-pencil me-2"></span> Edit this project
+                                </a>
+                                <a href="@Url.Action("Trash", "NWDProject")?sReference=@Model.Reference" class="dropdown-item">
+                                    <span class="fs-1 bi-trash me-2"></span> Delete this project
+                                </a>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-sm-12 col-md-12 col-lg-4 col-xl-4 col-xxl-4">
+        <div id="ProjectNeedBeUpdate">
+            <div class="alert alert-warning  align-items-center table-responsive">
+                <div class="d-flex d-block">
+                    <div class="bg-warning me-3 icon-item">
+                        <span class="fas fa-exclamation-circle text-white fs-3"></span>
+                    </div>
+                    <h2 class="text-warning">Warning!</h2>
+                </div>
+                <hr/>
+                <div class="d-block text-center">
+                    <p class="mb-0 flex-1">Project must be published to be used at development and distribution.</p>
+                </div>
+                <div class="d-block text-center">
+                    <span class="fas fa-arrow-down text-warning fs-3"></span>
+                </div>
+                <div class="d-block text-center">
+                    <a href="@Url.Action("Publish", "NWDProject")?sReference=@Model.Reference" class="btn btn-warning"><span class="fs-1 fas fa-cogs me-2"></span> Go to publish page</a>
+                </div>
+            </div>
+        </div>
+        <div id="ProjectNotBeUpdate">
+            <div class="alert alert-success align-items-center table-responsive">
+                <div class="d-flex d-block">
+                    <div class="bg-success me-3 icon-item">
+                        <span class="fas fa-check-circle text-white fs-3"></span>
+                    </div>
+                    <h2 class="text-success">Published</h2>
+                </div>
+                <hr/>
+                <div class="d-block text-center">
+                    <p class="mb-0 flex-1">Project is published and can be used at development and distribution.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@{
+    if (Model.NeedToBePublish == true)
+    {
+        <script>
+        ShowOrHiddeContent('ProjectNeedBeUpdate', true);
+        ShowOrHiddeContent('ProjectNotBeUpdate', false);
+        </script>
+    }
+    else
+    {
+        <script>
+        ShowOrHiddeContent('ProjectNeedBeUpdate', false);
+        ShowOrHiddeContent('ProjectNotBeUpdate', true);
+        </script>
+    }
+}

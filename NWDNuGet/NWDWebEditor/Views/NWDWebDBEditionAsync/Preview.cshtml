@@ -1,0 +1,71 @@
+@using System.Reflection
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using NWDFoundation.WebEdition.Attributes
+@using NWDFoundation.WebEdition.Enums
+@using NWDWebRuntime.Models
+@using NWDWebStandard.Models
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "";
+    string? tModelToUse = ViewData["ModelToUse"] as string;
+    Type? tModel = null;
+    Type? tFinalType = null;
+    Type tGenericType = typeof(NWDWebSqlEditionRequest<>);
+    if (tModelToUse != null)
+    {
+        tModel = Type.GetType(tModelToUse);
+    }
+    if (tModel != null)
+    {
+        tFinalType = tGenericType.MakeGenericType(tModel);
+    }
+    object? tRequest = ViewData["ResultToUse"];
+
+    PropertyInfo? tControllerNameProp = tFinalType?.GetProperty("ControllerName");
+    string? tControllerName = tControllerNameProp?.GetValue(tRequest, null) as string;
+    PropertyInfo? tPaginationProp = tFinalType?.GetProperty("Pagination");
+    NWDWebSqlEditionPagination? tPagination = tPaginationProp?.GetValue(tRequest, null) as NWDWebSqlEditionPagination;
+
+    PropertyInfo? tItemProp = tFinalType?.GetProperty("Item");
+    object? tItem = tItemProp?.GetValue(tRequest, null);
+    
+    PropertyInfo? tReferenceProp = tModel?.GetProperty("Reference");
+    string tReference = ((ulong)(tReferenceProp?.GetValue(tItem) ?? 0)).ToString();
+}
+<div class="card-body border-bottom">
+        <div>@tReference</div>
+    @foreach (PropertyInfo tProp in tModel?.GetProperties(BindingFlags.Public | BindingFlags.Instance)!)
+    {
+        NWDWebPropertyDescriptionAttribute? tAttribute = tProp.GetCustomAttribute<NWDWebPropertyDescriptionAttribute>();
+        if (tAttribute != null)
+        {
+            if (tAttribute.Infos.IsPrimaryColumn)
+            {
+                if (tAttribute.Infos.Style == NWDWebEditionStyle.RichText)
+                {
+                    string? tValue = tProp.GetValue(tItem, null) as string;
+                    <h2>@Html.Raw(tValue)</h2>
+                }
+                else if (tAttribute.Infos.Style == NWDWebEditionStyle.Text)
+                {
+                    string? tValue = tProp.GetValue(tItem, null) as string;
+                    <h2>@tValue</h2>
+                }
+            }
+            else
+            {
+
+                ViewData["Attribute"] = tAttribute;
+                ViewData["Item"] = tItem;
+                <partial name="_NWDWebEditionStyleSwitchShow" model="tProp"/>
+            }
+        }
+    }
+</div>
+
+<div class="card-footer">
+    <div>
+        <a class="btn btn-sm btn-outline-secondary align-self-center" onclick="getRequestAndReplaceContent('@tControllerName','@Url.Action("ListPage", tControllerName, tPagination)')"><i class="bi-house"></i>@* Return to list*@</a>
+    </div>
+</div>
+@Html.Raw("<script>"+(ViewData["Javascript"]as string ?? string.Empty)+"</script>")

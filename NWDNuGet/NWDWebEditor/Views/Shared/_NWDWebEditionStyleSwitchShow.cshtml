@@ -1,0 +1,142 @@
+﻿@using System.Collections
+@using NWDFoundation.Models
+@using NWDFoundation.WebEdition.Attributes
+@using NWDFoundation.WebEdition.Enums
+@using NWDWebRuntime.Configuration
+@model System.Reflection.PropertyInfo
+@{
+    NWDWebPropertyDescriptionAttribute? tAttribute = ViewData["Attribute"] as NWDWebPropertyDescriptionAttribute;
+    object? tItem = ViewData["Item"];
+    string? tName = ViewData["InputName"] as string;
+    // bool tWithLabel = (bool)ViewData["WithLabel"];
+}
+@if (tAttribute != null)
+{
+    switch (tAttribute.Infos.Style)
+    {
+        case NWDWebEditionStyle.HiddenDebugable:
+        {
+            if (NWDWebRuntimeConfiguration.KConfig.Debug)
+            {
+            string? tValue = Model.GetValue(tItem, null) as string;
+            <td class="align-middle">@tValue</td>
+            }
+            break;
+        }
+        case NWDWebEditionStyle.ShowTextOnly:
+        {
+                string? tValue = Model.GetValue(tItem, null) as string;
+                <td class="align-middle">@tValue</td>
+            break;
+        }
+        case NWDWebEditionStyle.Text:
+        {
+            string? tValue = Model.GetValue(tItem, null) as string;
+            <td class="align-middle">@tValue</td>
+            break;
+        }
+        case NWDWebEditionStyle.RichText:
+        {
+            string? tValue = Model.GetValue(tItem, null) as string;
+            <td class="align-middle">@Html.Raw(tValue)</td>
+            break;
+        }
+        case NWDWebEditionStyle.Color:
+        {
+            string? tValue = Model.GetValue(tItem, null) as string;
+            <td class="align-middle">
+                <svg class="circle-progress-svg" width="26" height="26" viewBox="0 0 120 120">
+                    <circle class="progress-bar-rail" cx="60" cy="60" r="54" fill="none" stroke-linecap="round" stroke-width="12"></circle>
+                    <circle class="progress-bar-top" cx="60" cy="60" r="54" fill="none" stroke-linecap="round" stroke="@tValue" stroke-width="12"></circle>
+                </svg>
+            </td>
+            break;
+        }
+        case NWDWebEditionStyle.ShowPartStatus:
+        {
+            string? tValue = Model.GetValue(tItem, null) as string;
+            <td class="align-middle">@tValue?.ToString()</td>
+            break;
+        }
+        case NWDWebEditionStyle.Bool:
+        {
+            bool? tValue = Model.GetValue(tItem, null) as bool?;
+            if (tValue == true)
+            {
+                <div class="form-check form-switch">
+                    @Html.Label(tName, tAttribute.Infos.Label, new { @class = "form-label" })
+                    <input class="form-check-input" type="checkbox" disabled="disabled" checked="checked"/><label class="form-check-label">@tAttribute.Infos.Placeholder</label> <span>(@tValue.ToString())</span>
+                </div>
+            }
+            else
+            {
+                <div class="form-check form-switch">
+                    @Html.Label(tName, tAttribute.Infos.Label, new { @class = "form-label" })
+                    <input class="form-check-input" type="checkbox" disabled="disabled"/><label class="form-check-label">@tAttribute.Infos.Placeholder</label> <span>(@tValue.ToString())</span>
+                </div>
+            }
+            break;
+        }
+        case NWDWebEditionStyle.Date:
+        {
+            DateTime? tValue = Model.GetValue(tItem, null) is DateTime ? (DateTime)(Model.GetValue(tItem, null) ?? DateTime.UnixEpoch) : default;
+            <span class="align-middle">@tValue.Value.Date</span>
+            break;
+        }
+        case NWDWebEditionStyle.Dropdown:
+        {
+            string? tValue = Model.GetValue(tItem, null)?.ToString();
+            <span class="align-middle">@tValue</span>
+            break;
+        }
+        case NWDWebEditionStyle.ReferenceArray:
+        {
+            INWDReferenceArray? tVal = Model.GetValue(tItem, null) as INWDReferenceArray;
+            IList? tSelectedValueList = tAttribute.Infos.DataRetriever?.
+                GetType().GetMethod("GetAllByReference")?.
+                MakeGenericMethod(tAttribute.Infos.ListType!).
+                Invoke(tAttribute.Infos.DataRetriever,new object?[]{tVal}) as IList;
+            
+            if (tSelectedValueList != null)
+            {
+                foreach (NWDBasicModel tO in tSelectedValueList)
+                {
+                    <span class="align-middle">@tO.Reference</span>
+                }
+            }
+            <script>
+            new Choices(document.getElementById("@tName"+"."+"@nameof(INWDReferenceArray.ReferencesList)"),{
+                removeItemButton: true,
+            }); 
+            </script>
+
+            break;
+        }
+        case NWDWebEditionStyle.List:
+        {
+            IList<NWDBasicModel>? tList = Model.GetValue(tItem, null) as IList<NWDBasicModel>;
+
+            if (tList != null)
+            {
+                foreach (NWDBasicModel tO in tList)
+                {
+                    <span class="align-middle">@tO.Reference</span>
+                }
+            }
+            break;
+        }
+        
+        default:
+        {
+            string? tValue = Model.GetValue(tItem, null) as string;
+            <td class="align-middle">@tValue</td>
+            break;
+        }
+           
+    }
+}
+else
+{
+    string? tValue = Model.GetValue(tItem, null) as string;
+    <th class="align-middle">@tValue</th>
+}

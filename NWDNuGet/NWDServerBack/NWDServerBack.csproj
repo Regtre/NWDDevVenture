@@ -1,0 +1,46 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Title>NWDServerBack</Title>
+    <Authors>idéMobi</Authors>
+    <Copyright>idéMobi</Copyright>
+    <PackageTags>Net-Worked-Data Server Back</PackageTags>
+    <PackageVersion>1.1.181</PackageVersion>
+    <PackageProjectUrl>https://gitlab.hephaiscode.com/NetWorkedData/NWDServerBack</PackageProjectUrl>
+    <PackageLicense>https://gitlab.hephaiscode.com/NetWorkedData/NWDServerBack/-/blob/main/LICENSE.md</PackageLicense>
+    <RepositoryUrl>https://gitlab.hephaiscode.com/NetWorkedData/NWDServerBack</RepositoryUrl>
+    <RepositoryType>GitLab CE</RepositoryType>
+    <LangVersion>10</LangVersion>
+    <AssemblyVersion>1.1.181</AssemblyVersion>
+    <FileVersion>1.1.181</FileVersion>
+    <NeutralLanguage>en</NeutralLanguage>
+    <PackageIcon>NWDServerBack.png</PackageIcon>
+    <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
+    <RunAnalyzersDuringLiveAnalysis>true</RunAnalyzersDuringLiveAnalysis>
+    <RunAnalyzers>true</RunAnalyzers>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MySql.Data" Version="8.0.33" />
+    <!-- <PackageReference Include="NWDEditor" Version="1.1.181" /> -->
+    <!-- <PackageReference Include="NWDCrucial" Version="1.1.181" /> -->
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\NWDDatabaseAccess\NWDDatabaseAccess.csproj" />
+    <ProjectReference Include="..\NWDFoundation\NWDFoundation.csproj" />
+    <ProjectReference Include="..\NWDRuntime\NWDRuntime.csproj" />
+    <ProjectReference Include="..\NWDEditor\NWDEditor.csproj" />
+    <ProjectReference Include="..\NWDCrucial\NWDCrucial.csproj" />
+    <ProjectReference Include="..\NWDServerShared\NWDServerShared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="NWDServerBack.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+  
+</Project>

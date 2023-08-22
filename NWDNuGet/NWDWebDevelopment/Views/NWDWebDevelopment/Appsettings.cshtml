@@ -1,0 +1,79 @@
+@using NWDFoundation.Configuration
+@using NWDFoundation.Tools
+@using NWDWebStandard.Models
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!-- TITLE With background -->
+<div class="container p-0 m-0 mb-3">
+    <div class="row g-3">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header background-corner-2 border-bottom">
+                    <div class="row">
+                        <div class="col-8">
+                            <h3><span class="fas fa-shield-alt"></span> Net-Worked-Data Development!</h3>
+                            <p class="mb-0">You are my only hope!</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body position-relative">
+                    Appsettings.json file cleaner!
+                </div>
+            </div>
+        </div>
+
+        @{
+            string tRefLocal = NWDRandom.RandomStringAlpha(32);
+        }
+        <div class="col-6 col-sx-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 col-xxl-6">
+            <div class="card">
+                <div class="card-header background-corner-2 border-bottom">
+                    <h3><span class="bi-gear"></span> Your configuration json cleaned</h3>
+                </div>
+                <div id="fezefezfeezffez" class="card-body border-bottom">
+                    <code>
+                        <pre onmouseover="AddCopySourceCodeToElement(this, true, false);">
+@{
+    string tData = NWDConfigurationInstalled.ExportConfiurations().Replace("\"A\": \"A\",", "\"Logging\": {\n    \"LogLevel\": {\n      \"Default\": \"Information\",\n      \"Microsoft.AspNetCore\": \"Warning\"\n    }\n  },\n  \"AllowedHosts\": \"*\",\n  \"Kestrel\": {\n    \"EndPoints\": {\n      \"Http\": {\n        \"Url\": \"http://localhost:2050\"\n      },\n      \"Https\": {\n        \"Url\": \"https://localhost:2051\"\n      }\n    }\n  },");
+}
+@tData
+</pre>
+                    </code>
+                </div>
+                <div class="card-footer">
+                    @{
+                        await Html.RenderPartialAsync("_NWDHtmlDivCopy", new NWDHtmlDivCopy(tData));
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-sx-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 col-xxl-6">
+            <div class="card">
+                <div class="card-header background-corner-2 border-bottom">
+                    <h3><span class="bi-gear"></span> Example of default settings</h3>
+                </div>
+                <div class="card-body border-bottom">
+                    <div class="card bg-dark border-primary">
+                        <div class="card-body">
+                            <code>
+                                <pre onmouseover="AddCopySourceCodeToElement(this, true, true);">
+@{
+    string tDatDefault = NWDConfigurationInstalled.ExportConfiurationsDefault().Replace("\"A\": \"A\",", "\"Logging\": {\n    \"LogLevel\": {\n      \"Default\": \"Information\",\n      \"Microsoft.AspNetCore\": \"Warning\"\n    }\n  },\n  \"AllowedHosts\": \"*\",\n  \"Kestrel\": {\n    \"EndPoints\": {\n      \"Http\": {\n        \"Url\": \"http://localhost:2050\"\n      },\n      \"Https\": {\n        \"Url\": \"https://localhost:2051\"\n      }\n    }\n  },");
+}
+@tDatDefault
+</pre>
+                            </code>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    @{
+                        await Html.RenderPartialAsync("_NWDHtmlDivCopy", new NWDHtmlDivCopy(tDatDefault));
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

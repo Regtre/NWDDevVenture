@@ -1,0 +1,49 @@
+﻿@using Microsoft.AspNetCore.Http
+@using NWDWebRuntime.Configuration
+@using NWDWebRuntime.Managers
+@using NWDWebRuntime.Models
+@using NWDWebStandard.Controllers
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@inject IHttpContextAccessor HttpContextAccessor
+
+@model NWDWebStandard.Models.NWDPage;
+
+
+@if (NWDWebRuntimeConfiguration.KConfig.IsDevelopment == true)
+{
+    <div class="text-end mb-3">
+        <span class="ms-2 badge rounded-pill badge-subtle-success bi-check-circle"> Kortex</span>
+        @* <span class="ms-2 badge rounded-pill badge-subtle-danger bi-x-circle"> Kortex</span> *@
+    </div>
+}
+@if (NWDAuthorizeAdminOnly.ValidFor(HttpContextAccessor.HttpContext))
+{
+    <div class="text-end mb-3">
+        <a href="/NWDPageEditor/Modify?sReference=@Model.Reference"><span class="btn btn-primary"> edit</span></a>
+    </div>
+}
+<div class="container p-0 m-0">
+    <div class="row g-3">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+            <div class="card">
+                <div class="card-header background-corner-2 border-bottom">
+                    <div class="row">
+                        <div class="col-8">
+                            <h1>
+                                <span class="fas fa-shield-alt"></span> @Model.Title
+                            </h1>
+                            <p class="mb-0">@Model.Header</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body position-relative">@Model.Paragraphe</div>
+            </div>
+        </div>
+    </div>
+</div>

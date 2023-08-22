@@ -1,0 +1,101 @@
+@using System.Reflection
+@using Google.Protobuf.Reflection
+@using Newtonsoft.Json
+@using NWDFoundation.Configuration
+@using NWDFoundation.Models
+@using NWDFoundation.Tools
+@using NWDWebRuntime.Models;
+@using NWDWebRuntime.Tools
+@using NWDWebEditor.Controllers;
+@using NWDWebRuntime.Configuration
+
+@model NWDModelModalEdit
+@{
+    string tId = NWDToolBox.UniqueRandomString(12);
+    string tAnchor = "Edit_" + Model.Reference;
+    string tControllerId = NWDToolBox.UniqueRandomString(12);
+    string tModelHeritedFrom = "unknown";
+    Type? tControllerEditor = null;
+    string tControllerEditorName = "unknown";
+    string tUrlLoad = "/";
+    if (string.IsNullOrEmpty(Model.UrlReload) == false)
+    {
+        tUrlLoad = Model.UrlReload;
+        if (tUrlLoad.Length > 0 && tUrlLoad.Contains('#'))
+        {
+            tUrlLoad = tUrlLoad.Substring(0, tUrlLoad.LastIndexOf("#", StringComparison.InvariantCulture));
+        }
+    }
+    if (Model.ClassType.IsSubclassOf(typeof(NWDPlayerData)))
+    {
+        foreach (Type tType in NWDReflexion.GetAllTypesSubclassOf(typeof(NWDModelEditionAsyncController<>), NWDLibrariesInstalled.AssemblyList.ToArray()))
+        {
+            if (tType.BaseType.IsGenericType)
+            {
+                if (tType.GenericTypeArguments.Contains(Model.ClassType))
+                {
+                    tControllerEditor = tType;
+                }
+            }
+        }
+        tModelHeritedFrom = nameof(NWDPlayerData);
+    }
+    else if (Model.ClassType.IsSubclassOf(typeof(NWDDatabaseWebBasicModel)))
+    {
+        foreach (Type tType in NWDReflexion.GetAllTypesSubclassOf(typeof(NWDWebDBEditionAsyncController<>), NWDLibrariesInstalled.AssemblyList.ToArray()))
+        {
+            if (tType.BaseType.IsGenericType)
+            {
+                if (tType.BaseType.GenericTypeArguments.Contains(Model.ClassType))
+                {
+                    tControllerEditor = tType;
+                }
+            }
+        }
+        tModelHeritedFrom = nameof(NWDDatabaseWebBasicModel);
+    }
+    if (tControllerEditor != null)
+    {
+        tControllerEditorName = tControllerEditor.Name.Replace("Controller", "");
+    }
+    string tDivEdit = "Control_" + Model.Reference;
+}
+<div id="@tAnchor" class="opacity-100">
+        @if (Model.Reference != 0)
+        {
+    <button class="btn btn-sm btn-outline-primary opacity-25" type="button" data-bs-toggle="modal" data-bs-target="#@tId" onclick="getRequestAndReplaceContent('@tDivEdit', '/@tControllerEditorName/ModifyInDiv?sReference=@Model.Reference');">
+            <span class="bi bi-pencil"></span>
+    </button>
+        }
+        else
+        {
+            <button class="btn btn-sm btn-outline-primary opacity-25" type="button" data-bs-toggle="modal" data-bs-target="#@tId" onclick="getRequestAndReplaceContent('@tDivEdit', '/@tControllerEditorName/ModifyInDiv?sReference=@Model.Reference&sDefaultValues=@JsonConvert.SerializeObject(Model.DefaultValues)');">
+            <span class="bi bi-plus-square"></span>
+            </button>
+        }
+    <div class="modal fade" id="@tId" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 500px">
+            <div class="modal-content position-relative">
+                <div class="modal-header bg-light">
+                    <div>
+                        <h4 class="mb-1" id="staticBackdropLabel">@Model.Title</h4>
+                        <p class="fs--2 mb-0">@Model.Description</p>
+                        <p class="fs--2 mb-0">@Model.UrlReload</p>
+                        <p class="fs--2 mb-0">@Model.ClassType.Name model is herited from @tModelHeritedFrom</p>
+                        <p class="fs--2 mb-0">Controller Editor is @tControllerEditorName</p>
+                        <p class="fs--2 mb-0">@Model.Reference</p>
+                    </div>
+                </div>
+                    <div class="modal-body p-0 m-0">
+                        <div id="@tDivEdit">
+                            <div id="spinner" class="card-body text-center">
+                                <div class="spinner-border text-primary" role="status"></div>
+                            </div>
+                            <div id="content_to_replace" class="justify-content-center">
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>

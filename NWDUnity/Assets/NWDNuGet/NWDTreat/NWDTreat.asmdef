@@ -1,0 +1,19 @@
+{
+    "name": "NWDTreat",
+    "rootNamespace": "",
+    "references": [
+        "GUID:7d147c508e543004d8994101d9165182",
+        "GUID:4aaa26f5999c4484bb11384e1f175b95"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

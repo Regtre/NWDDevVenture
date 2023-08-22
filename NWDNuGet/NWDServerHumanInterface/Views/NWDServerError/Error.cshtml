@@ -1,0 +1,77 @@
+@using Microsoft.AspNetCore.Localization
+@using NWDFoundation.Models
+@using NWDServerShared.Configuration
+
+@model NWDFoundation.Models.NWDWebError
+@{
+    Layout = "";
+    var tRequestCulture = Context.Features.Get<IRequestCultureFeature>()?.RequestCulture;
+    NWDWebError? tError = ViewData[nameof(NWDWebError)] as NWDWebError;
+    if (tError == null)
+    {
+        tError = new NWDWebError();
+    }
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="Commit" content="CI_COMMIT_SHA">
+    <meta name="job" content="CI_JOB_ID">
+    <meta name="job date time" content="PipelineDate">
+    <meta name="error page" content="@tError.Error">
+    <meta name="pipeline ID" content="CI_PIPELINE_ID">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- ===============================================-->
+    <!--    Document Title  -->
+    <!-- ===============================================-->
+    <title>@NWDServerConfiguration.KConfig.Ip</title>
+    <!-- ===============================================-->
+    <!--    Favicons     -->
+    <!-- ===============================================-->
+    <link rel="apple-touch-icon" sizes="180x180" href="https://www.net-worked-data.com/error-apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://www.net-worked-data.com/error-favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://www.net-worked-data.com/error-favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://www.net-worked-data.com/error-favicon-48x48.png">
+    <!-- ===============================================-->
+    <!--    Stylesheets    -->
+    <!-- ===============================================-->
+    <link href="https://www.net-worked-data.com/error-theme.min.css" rel="stylesheet" id="style-default">
+    <link href="https://www.net-worked-data.com/error-site.css" rel="stylesheet" id="website-style">
+    <link href="https://www.net-worked-data.com/error-NetWorkedData.css" rel="stylesheet" id="nwd-style">
+    <link href="https://www.net-worked-data.com/error-Error.css" rel="stylesheet" id="error-style">
+
+</head>
+<body>
+<!-- ===============================================-->
+<!--    Main Content  -->
+<!-- ===============================================-->
+<main class="main" id="top">
+    <div class="container-fluid" data-layout="container">
+        <div class="row flex-center min-vh-100 py-6 text-center">
+            <div class="col-sm-10 col-md-8 col-lg-6 col-xxl-5">
+                <div class="card mb-3">
+                    <div class="card-header border-bottom">
+                        <img class="rounded error-logo" src="https://www.net-worked-data.com/error-favicon-80x80.png" alt="error" width="40px" height="40px">
+                    </div>
+                    <div class="card-body border-bottom">
+                        <h4 class="fw-black lh-1 text-200  error-effect">@tError.Error</h4>
+                        <div class="">Error @tError.Title</div>
+                        <div class="">@tError.OriginalUrl</div>
+                        <div class="">@tError.Description</div>
+                        <div class="lead mt-3 mb-3  text-800 font-sans-serif fw-semi-bold">Whoops, something went wrong!</div>
+                    </div>
+                </div>
+                <div class="commit-infos">
+                    @* <div class="commit-separator"></div> *@
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<!-- ===============================================-->
+<!--    End of Main Content  -->
+<!-- ===============================================-->
+</body>
+</html>

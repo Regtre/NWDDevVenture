@@ -1,0 +1,183 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using NWDFoundation.WebEdition.Enums
+@using NWDWebRuntime.Models.Enums
+@using NWDWebStandard.Controllers
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@model NWDWebRuntime.Models.NWDToastStandard
+
+@switch (Model.Layout)
+{
+    case NWDWebNotificationLayoutStyle.Alert:
+    {
+        string tAlertStyle = "alert-primary";
+        // string tIconStyle = "fa-check-circle";
+        switch (Model.Style)
+        {
+            case NWDBootstrapKindOfStyle.Primary:
+            {
+                tAlertStyle = "alert-primary";
+                // tIconStyle = "fa-check-circle";
+            }
+                break;
+            case NWDBootstrapKindOfStyle.Secondary:
+            {
+                tAlertStyle = "alert-secondary";
+                // tIconStyle = "fa-info-circle";
+            }
+                break;
+            case NWDBootstrapKindOfStyle.Success:
+            {
+                tAlertStyle = "alert-success";
+                // tIconStyle = "fa-check-circle";
+            }
+                break;
+            case NWDBootstrapKindOfStyle.Warning:
+            {
+                tAlertStyle = "alert-warning";
+                // tIconStyle = "fa-exclamation-circle";
+            }
+                break;
+            case NWDBootstrapKindOfStyle.Danger:
+            {
+                tAlertStyle = "alert-danger";
+                // tIconStyle = "fa-times-circle";
+            }
+                break;
+        }
+        <div class="alert @tAlertStyle " role="alert">
+            @* <div class="bg-success me-3 icon-item"><span class="fas @tIconStyle text-white fs-3"></span></div> *@
+            <div class="alert-heading d-flex align-items-center">
+                <div class="me-auto">
+                    <h4 class="alert-heading fw-semi-bold">
+                        @* <span class="bg-primary me-3 icon-item fas @tIconStyle text-white fs-3"></span>  *@
+                        @Model.Title
+                    </h4>
+                </div>
+                <div>
+                    @Model.Subtitle <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="">
+                @if (string.IsNullOrEmpty(@Model.Message) == false)
+                {
+                    <p>
+                        @Model.Message
+                    </p>
+                }
+                @if (Model.ListOfString != null)
+                {
+                    <ul>
+                        @foreach (string tI in Model.ListOfString)
+                        {
+                            <li>@tI</li>
+                        }
+                    </ul>
+                }
+                @if (string.IsNullOrEmpty(Model.PrimaryText) == false || string.IsNullOrEmpty(Model.SecondaryText) == false)
+                {
+                    <div class="">
+                        @if (string.IsNullOrEmpty(Model.PrimaryText) == false)
+                        {
+                            <a href="@Model.PrimaryUrl" class="btn btn-primary btn-sm">@Model.PrimaryText</a>
+                        }
+                        @if (string.IsNullOrEmpty(Model.SecondaryText) == false)
+                        {
+                            <a href="@Model.SecondaryUrl" class="btn btn-outline-primary btn-sm">@Model.SecondaryText</a>
+                        }
+                    </div>
+                }
+
+                @if (Model.ContactUs == true)
+                {
+                    <div class="border-top-1 mb-0">
+                        <small>
+                        In case of concern, please <a asp-area="" asp-controller="@NWDHomeController.ASP_Controller()" asp-action="@nameof(NWDHomeController.ContactUs)">contact us</a> and provide us with as much information as possible to help us respond to you.</small>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+        break;
+    case NWDWebNotificationLayoutStyle.PopUp:
+    {
+        string tAlertStyle = "primary";
+        // string tIconStyle = "fa-check-circle";
+        switch (Model.Style)
+        {
+            case NWDBootstrapKindOfStyle.Primary:
+            {
+                tAlertStyle = "primary";
+                // tIconStyle = "fa-check-circle";
+            }
+                break;
+            case NWDBootstrapKindOfStyle.Secondary:
+            {
+                tAlertStyle = "secondary";
+                // tIconStyle = "fa-info-circle";
+            }
+                break;
+            case NWDBootstrapKindOfStyle.Success:
+            {
+                tAlertStyle = "success";
+                // tIconStyle = "fa-check-circle";
+            }
+                break;
+            case NWDBootstrapKindOfStyle.Warning:
+            {
+                tAlertStyle = "warning";
+                // tIconStyle = "fa-exclamation-circle";
+            }
+                break;
+            case NWDBootstrapKindOfStyle.Danger:
+            {
+                tAlertStyle = "danger";
+                // tIconStyle = "fa-times-circle";
+            }
+                break;
+        }
+                <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="toast-header bg-@tAlertStyle text-bg-@tAlertStyle">
+                        <strong class="me-auto">@Model.Title</strong><small>@Model.Subtitle</small>
+                        <button class="ms-2 btn-close btn-close-white" type="button" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                    <div class="toast-body">
+                        @if (string.IsNullOrEmpty(@Model.Message) == false)
+                        {
+                            <p>@Model.Message</p>
+                        }
+                        @if (Model.ListOfString != null)
+                        {
+                            <ul>
+                                @foreach (string tI in Model.ListOfString)
+                                {
+                                    <li>@tI</li>
+                                }
+                            </ul>
+                        }
+                    @if (string.IsNullOrEmpty(Model.PrimaryText) == false || string.IsNullOrEmpty(Model.SecondaryText) == false)
+                    {
+                        <div class="mt-2 p-3 border-top">
+                            @if (string.IsNullOrEmpty(Model.PrimaryText) == false)
+                            {
+                                <a href="@Model.PrimaryUrl" class="btn btn-@tAlertStyle btn-sm">@Model.PrimaryText</a>
+                            }
+                            @if (string.IsNullOrEmpty(Model.SecondaryText) == false)
+                            {
+                                <a href="@Model.SecondaryUrl" class="btn btn-outline-@tAlertStyle btn-sm">@Model.SecondaryText</a>
+                            }
+                        </div>
+                    }
+                    @if (Model.ContactUs == true)
+                    {
+                        <div class="border-top-1 mb-0">
+                            <small>
+                                In case of concern, please <a asp-area="" asp-controller="@NWDHomeController.ASP_Controller()" asp-action="@nameof(NWDHomeController.ContactUs)">contact us</a> and provide us with as much information as possible to help us respond to you.</small>
+                        </div>
+                    }
+                    </div>
+                </div>
+    }
+        break;
+}

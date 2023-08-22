@@ -1,0 +1,45 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using NWDWebRuntime.Configuration
+@using NWDWebStandard.Configuration
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    string[] tLiens = new string[] {
+    "<a href=\""+ NWDWebRuntimeConfiguration.KConfig.GetDnsHttps()+ "\"><b>"+ NWDWebStandardConfiguration.KConfig.WebSiteName + "</b> <br/> <i>le site de référence pour le latin </i></a> ",
+
+    "<a href=\""+ NWDWebRuntimeConfiguration.KConfig.GetDnsHttps()+ "\"> <img src=\""+ NWDWebRuntimeConfiguration.KConfig.GetDnsHttps()+ "/logo.png\" alt=\""+ NWDWebStandardConfiguration.KConfig.WebSiteName + " le site de référence pour le latin\" width=\"60\"></a> ",
+    };
+}
+<h1>Liens vers @NWDWebStandardConfiguration.KConfig.WebSiteName</h1>
+<h2>Lien vers le site et les logos</h2>
+<div>
+    Voici les façons les plus élégantes de faire un lien vers @NWDWebStandardConfiguration.KConfig.WebSiteName :
+    <table class="Table_Logos">
+        <tr><th>Code HTML</th><th>Résultat</th></tr>
+        @foreach (string tLien in tLiens)
+        {
+            <tr>
+                <td class="Code_HTML">
+                    <code>@tLien</code>
+                </td>
+                <td class="Code_Result">@Html.Raw(tLien)</td>
+            </tr>
+        }
+    </table>
+    <div>
+
+    </div>
+</div>
+<h2>Lien vers une référence</h2>
+
+<h3>Lien vers un mot et ses sens</h3>
+<div>
+    Vous pouvez faire un lien vers un mot directement depuis votre recherche en copiant le lien fourni à coté de chaque mot  : "lien pour un permalink vers ...".
+</div>
+<h3>Lien vers un tableaux</h3>
+<div>
+    Vous pouvez faire un lien vers les tableaux directement depuis votre recherche en copiant le lien fourni à coté de chaque mot  : "voir tous les tableaux de ...".
+</div>

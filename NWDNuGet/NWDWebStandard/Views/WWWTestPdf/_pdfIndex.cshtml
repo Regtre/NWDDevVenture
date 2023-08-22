@@ -1,0 +1,27 @@
+@using Microsoft.AspNetCore.Http
+@using NWDWebRuntime.Managers
+@using NWDWebRuntime.Models
+@using NWDWebRuntime.Models.Enums
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    NWDPageStandard? tPageInformation = ViewData[nameof(NWDPageStandard)] as NWDPageStandard;
+    string tPagePath = "NWDWebStandard at Views/TestPdf/_pdfIndex.cshtml";
+    if (tPageInformation == null)
+    {
+        tPageInformation = new NWDPageStandard();
+    }
+}
+
+@inject IHttpContextAccessor HttpContextAccessor
+@if (tPageInformation.PageStyle != NWDPageContainer.PdfPage)
+{
+    <h2> Hello HTML from @tPagePath </h2>
+}
+else
+{
+    <h2> Hello PDF from @tPagePath</h2>
+}
+@if (NWDAccountWebManager.AccountIsConnected(HttpContextAccessor.HttpContext) == true)
+{
+    <h3> Account limited page! </h3>
+}

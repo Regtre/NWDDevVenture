@@ -1,0 +1,95 @@
+﻿body {
+	
+}
+
+.commit-infos {
+	
+}
+
+.commit-separator {
+	font-size: 10px;
+}
+
+.commit-separator::before {
+	content: "GIT_COMMIT";
+}
+
+.commit-separator::after {
+	content: "PIPELINE_JOB PIPELINE_DATE";
+}
+
+.error-return-url {
+	
+}
+
+.error-logo {
+	width: 40px;
+	height: 40px;
+}
+
+.wip-logo {
+	width: 72px;
+	height: 72px;
+}
+
+.error-effect {
+	font-size: 7rem;
+	border-radius: 10px;
+	border: 1px none black;
+	margin: 10px auto;
+	padding: 10px;
+	width: 300px;
+	background-color: #333232;
+	box-shadow: 0 5px 5px #999595;
+	animation: 2s linear infinite wiggle;
+}
+
+.anim-dot-one {
+	animation:  4s linear 1s infinite reverse both animdotone;
+}
+
+.anim-dot-two {
+	animation:  4s linear 2s infinite reverse both animdotone;
+}
+
+.anim-dot-three {
+	animation:  4s linear 3s infinite reverse both animdotone;
+}
+@keyframes animdotone {
+from {
+	color: rgba(255, 255, 255);
+}
+to {
+	color: rgb(75, 75, 75);
+}
+}
+
+@keyframes wiggle {
+0%, 7% {
+	transform: rotateZ(0);
+}
+
+15% {
+	transform: rotateZ(-15deg);
+}
+
+20% {
+	transform: rotateZ(10deg);
+}
+
+25% {
+	transform: rotateZ(-10deg);
+}
+
+30% {
+	transform: rotateZ(6deg);
+}
+
+35% {
+	transform: rotateZ(-4deg);
+}
+
+40%, 100% {
+	transform: rotateZ(0);
+}
+}

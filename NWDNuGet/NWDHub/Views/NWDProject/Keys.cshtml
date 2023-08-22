@@ -1,0 +1,182 @@
+@using System.Reflection
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Newtonsoft.Json
+@using NWDFoundation.Configuration.Environments
+@using NWDFoundation.Models
+@using NWDFoundation.Tools
+@using NWDFoundation.WebEdition.Attributes
+@using NWDFoundation.WebEdition.Enums
+@using NWDHub.Controllers
+@using NWDHub.Managers
+@using NWDHub.Models
+@using NWDWebRuntime.Configuration
+@using NWDWebRuntime.Tools
+@using NWDWebStandard.Models
+@inject IHttpContextAccessor HttpContextAccessor
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string? tControllerName = ViewData["ControllerName"] as string;
+    string? tModelToUse = ViewData["ModelToUse"] as string;
+    if (tModelToUse != null)
+    {
+        Type? tModel = Type.GetType(tModelToUse);
+    }
+    NWDProject? tResultToUse = ViewData["ResultToUse"] as NWDProject;
+    Dictionary<string, string> tDictionaryToFilter = new Dictionary<string, string>();
+    if (tResultToUse != null)
+    {
+        tDictionaryToFilter.TryAdd(nameof(NWDProjectSubObject.Project), tResultToUse.Reference.ToString());
+    }
+    string tDicoJson = JsonConvert.SerializeObject(tDictionaryToFilter);
+}
+
+@if (tResultToUse != null)
+{
+    @if (NWDWebRuntimeConfiguration.KConfig.IsDevelopment == true)
+    {
+        <div class="text-end mb-3">
+            <span class="ms-2 badge rounded-pill badge-subtle-success bi-check-circle"> Kortex</span>
+            @* <span class="ms-2 badge rounded-pill badge-subtle-danger bi-x-circle"> Kortex</span> *@
+        </div>
+    }
+    <div class="container p-0 m-0">
+    <partial name="/Views/Shared/_ProjectNeedPublish.cshtml" model="@tResultToUse"/>
+    <div class="row g-3">
+    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+        <div class="card">
+            <div class="card-header bg-light p-0 m-0 border-0">
+                <div class="card-title p-0 m-0 border-0">
+                    <ul class="nav nav-tabs p-0 m-0" id="myTab" role="tablist">
+                        @foreach (NWDProjectTreatStorage tKeys in NWDProjectTreatManager.GetAllByProjectUniqueId(tResultToUse.ProjectUniqueId).OrderBy(x => x.Environment).ToList())
+                        {
+                            string tShow = "";
+                            if (tKeys.Environment == @NWDProjectController.kEnvironmentCookie.GetValue(HttpContextAccessor.HttpContext))
+                            {
+                                tShow = "active";
+                            }
+                            int tEnv = (int)tKeys.Environment;
+                            string tEnvName = tKeys.Environment.ToString();
+                            <li class="nav-item">
+                                <a class="nav-link @tShow" id="@tEnvName-tab" data-bs-toggle="tab" href="#tab-@tEnvName" role="tab" aria-controls="tab-@tEnvName" aria-selected="true" onclick="@NWDProjectController.kEnvironmentCookie.GenerateOnClick(tKeys.Environment)"><span class="@NWDEnvironmentIcon.IconCssNameFor(tKeys.Environment)"></span> @tEnvName</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+            <div class="card-body p-0 m-0 border-0">
+                <div class="tab-content p-0 m-0 border-0" id="myTabContent">
+                    
+                    @foreach (NWDProjectTreatStorage tKeys in NWDProjectTreatManager.GetAllByProjectUniqueId(tResultToUse.ProjectUniqueId).OrderBy(x => x.Environment).ToList())
+                                {
+                                    int tEnv = (int)tKeys.Environment;
+                                    string tEnvName = tKeys.Environment.ToString();
+                                    string tShow = "";
+                                    if (tKeys.Environment == @NWDProjectController.kEnvironmentCookie.GetValue(HttpContextAccessor.HttpContext))
+                                    {
+                                        tShow = "show active";
+                                    }
+                                    <div class="tab-pane fade p-0 m-0 @tShow" id="tab-@tEnvName" role="tabpanel" aria-labelledby="@tEnvName-tab">
+                                        
+                                            <div class="card-body position-relative border-bottom">
+                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                                                <table class="table table-hover mb-0">
+                                                    <thead>
+                                                    <tr>
+                                                        <th scope="col"></th>
+                                                        <th scope="col">Key</th>
+                                                        <th scope="col">Value</th>
+                                                        <th scope="col" class="w-25 text-end">Copy</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <span class="bi bi-box"></span>
+                                                        </td>
+                                                        <td>
+                                                            Project Id
+                                                        </td>
+                                                        <td>
+                                                            @tKeys.ProjectUniqueId
+                                                        </td>
+                                                        <td class="w-25 text-end">
+                                                            @{
+                                                                NWDHtmlDivCopy tProjectCopy = new NWDHtmlDivCopy(tKeys.ProjectUniqueId.ToString());
+                                                            }
+                                                            <partial name="/Views/Shared/_NWDHtmlDivCopy.cshtml" model="@tProjectCopy"/>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <span class="bi bi-display"></span>
+                                                        </td>
+                                                        <td>
+                                                            Environment
+                                                        </td>
+                                                        <td>
+                                                            @tEnv
+                                                        </td>
+                                                        <td class="w-25 text-end">
+                                                            @{
+                                                                NWDHtmlDivCopy tEnvironmentCopy = new NWDHtmlDivCopy(tEnv.ToString());
+                                                            }
+                                                            <partial name="/Views/Shared/_NWDHtmlDivCopy.cshtml" model="@tEnvironmentCopy"/>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <span class="bi bi-key"></span>
+                                                        </td>
+                                                        <td>
+                                                            Project Key
+                                                        </td>
+                                                        <td colspan="2">
+                                                            @{
+                                                                NWDHtmlSecretKey tProjectKeyCopy = new NWDHtmlSecretKey(tKeys.ProjectKey);
+                                                            }
+                                                            <partial name="/Views/Shared/_NWDHtmlSecretKey.cshtml" model="@tProjectKeyCopy"/>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <span class="bi bi-key"></span>
+                                                        </td>
+                                                        <td>
+                                                            Secret Key
+                                                        </td>
+                                                        <td colspan="2">
+                                                            @{
+                                                                NWDHtmlSecretKey tSecretKeyCopy = new NWDHtmlSecretKey(tKeys.SecretKey);
+                                                            }
+                                                            <partial name="/Views/Shared/_NWDHtmlSecretKey.cshtml" model="@tSecretKeyCopy"/>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <span class="bi bi-key-fill"></span>
+                                                        </td>
+                                                        <td>
+                                                            Treat Key
+                                                        </td>
+                                                        <td colspan="2">
+                                                            @{
+                                                                NWDHtmlSecretKey tTreatKeyCopy = new NWDHtmlSecretKey(tKeys.TreatKey);
+                                                            }
+                                                            <partial name="/Views/Shared/_NWDHtmlSecretKey.cshtml" model="@tTreatKeyCopy"/>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            </div>
+                                }
+                </div>
+
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+}

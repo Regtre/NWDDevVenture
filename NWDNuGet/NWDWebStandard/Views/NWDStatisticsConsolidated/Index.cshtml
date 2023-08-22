@@ -1,0 +1,86 @@
+﻿@using Microsoft.AspNetCore.Http
+@using ChartJSCore.Models
+@using NWDWebRuntime.Configuration
+@using UAParser
+
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    Chart? tHome = (Chart?)ViewData["Home"];
+
+    ClientInfo? tClientInfo = (ClientInfo?)ViewData["ClientInfo"];
+
+}
+@if (NWDWebRuntimeConfiguration.KConfig.IsDevelopment == true)
+{
+    <div class="text-end mb-3">
+        <span class="ms-2 badge rounded-pill badge-subtle-success bi-check-circle"> Kortex</span>
+        @* <span class="ms-2 badge rounded-pill badge-subtle-danger bi-x-circle"> Kortex</span> *@
+    </div>
+}
+
+<div class="container p-0 m-0">
+
+    <div class="row g-3">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+            <div class="card">
+                <div class="card-header background-corner-2 border-bottom">
+                    <div class="row">
+                        <div class="col-8">
+                            <h2>
+                                <span class="fs-2 bi-graph-up me-1"></span>Public statistics
+                            </h2>
+                            <p class="mb-0">On this page, you can see public statistic for this website. You can estimate the reputation of our services and informations.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Card for statistics -->
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-6">
+            @if (tHome != null)
+            {
+                <div class="card">
+                    <div class="card-header border-bottom background-corner-2">
+                        <div class="card-title">
+                            Home page
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="Home"></canvas>
+                        <script type="text/javascript">
+                        @Html.Raw(tHome.CreateChartCode("Home"));
+                    </script>
+                    </div>
+                </div>
+            }
+        </div>
+        @if (tClientInfo != null)
+        {
+            <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                <div class="card mb-3">
+                    <div class="card-header border-bottom background-corner-4">
+                        <div class="card-title">
+                            Your system
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-hover mb-0">
+                            <tr>
+                                <td>Device</td><td>@tClientInfo.Device.Family</td>
+                            </tr>
+                            <tr>
+                                <td>OS</td><td>@tClientInfo.OS.Family</td>
+                            </tr>
+                            <tr>
+                                <td>Version</td><td>@tClientInfo.OS.Major @tClientInfo.OS.Minor @tClientInfo.OS.PatchMinor</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,19 @@
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<h2> Associate Service Test</h2>
+
+<form>
+    
+@Html.Label("service", "Service")
+@Html.TextBox("service" , "", new { @class = "form-control" })
+@Html.Label("accountReferenceToOffer", "Account Reference To Offer")
+@Html.TextBox("accountReferenceToOffer","", new { @class = "form-control" })
+
+<button class="btn btn-falcon-primary mt-3 me-2" asp-controller="NWDServiceAssociation" asp-action="AssociateSubService"> Associate Service</button>
+<button class="btn btn-falcon-primary mt-3" asp-controller="NWDServiceAssociation" asp-action="DissociateSubService"> Dissociate Service</button>
+</form>

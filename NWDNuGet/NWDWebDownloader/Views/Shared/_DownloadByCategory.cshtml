@@ -1,0 +1,78 @@
+﻿@using NWDWebDownloader.Managers
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using NWDWebDownloader.Models
+@using NWDWebDownloader.Configuration
+
+@* @inject IHtmlLocalizer< NWDWebDownloader.Resources.SharedResource> Localizer *@
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@model NWDDownloadConfig?
+
+@if (Model != null)
+{
+    if (NWDDownloadManager.BuildsByConfig.ContainsKey(Model.PageName))
+    {
+        if (NWDDownloadManager.BuildsByConfig[Model.PageName].Values.Count(item => item.Count > 0) > 0)
+        {
+            foreach (KeyValuePair<string, List<NWDBuild>> item in NWDDownloadManager.BuildsByConfig[Model.PageName].Where(item => item.Value.Count > 0))
+            {
+                <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6">
+                    <div class="card">
+                        <div class="card-header bg-light border-bottom">
+                            <div class="card-title">
+                                <span class="bi bi-file-earmark-text me-1"></span> @item.Key
+                            </div>
+                        </div>
+
+                        @if (NWDDownloadManager.ResourcesByConfig.ContainsKey(Model.PageName)
+                             && NWDDownloadManager.ResourcesByConfig[Model.PageName].DescriptionByCategory.ContainsKey(item.Key)
+                             && !string.IsNullOrEmpty(NWDDownloadManager.ResourcesByConfig[Model.PageName].DescriptionByCategory[item.Key]))
+                        {
+                            <div class="card-body position-relative mb-3 border-bottom">
+                                @Html.Raw(NWDDownloadManager.ResourcesByConfig[Model.PageName].DescriptionByCategory[item.Key])
+                            </div>
+                        }
+                        <div class="card-body position-relative m-0 p-0">
+                            <div class="table-responsive scrollbar m-0 p-0">
+                                <table class="table table-sm mb-0 fs--1">
+                                    <thead class="text-800 bg-light">
+                                    <tr>
+                                        <th class="align-middle"></th>
+                                        <th class="align-middle">FileName</th>
+                                        <th class="align-middle">Date</th>
+                                        <th class="align-middle">Size</th>
+                                        <th class="text-end">Download</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody class="list">
+                                    @for (int i = 0; i < Model.BuildListSize; i++)
+                                    {
+                                        if (i < item.Value.Count)
+                                        {
+                                            <partial name="_Build" model="@item.Value[i]"/>
+                                        }
+                                    }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h3>No download available</h3>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+}

@@ -1,0 +1,22 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@using NWDWebRuntime.Models
+
+@{
+    NWDAccountSignLost? tAccountSignLost = (NWDAccountSignLost)ViewData[nameof(NWDAccountSignLost)]!;
+}
+
+<!-- TITLE With background -->
+<div class="card mb-3">
+    <div class="bg-holder d-none d-lg-block bg-card background-corner-2">
+    </div>
+    <!--/.bg-holder-->
+    <div class="card-body position-relative">
+        <div class="row">
+            <div class="col-lg-8">
+                <h3><span class="far fa-life-ring"></span> Rescue in progress</h3>
+                <p class="mb-0">Rescue email has been sent @if(tAccountSignLost!=null) {<span> to @tAccountSignLost.AccountSignLostEmail</span> }. Check your mailbox!</p>
+            </div>
+        </div>
+    </div>
+</div>

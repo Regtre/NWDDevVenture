@@ -1,0 +1,84 @@
+﻿@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Http.Extensions
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using NWDFoundation.Models
+@using NWDWebRuntime.Managers
+@using NWDWebStandard.Controllers
+@using NWDWebRuntime.Models
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@inject IHttpContextAccessor HttpContextAccessor
+
+@model NWDFrequentlyAskedQuestionsList
+<!-- FAQ -->
+@if (Model != null)
+{
+    <!-- FAQ @Model.Domain -->
+    @if (Model.ShowIfEmpty == false && Model.ListOfQuestion.Count == 0)
+    {
+        <!-- FAQ empty and ShowIfEmpty is false-->
+    }
+    else
+    {
+        <div class="card mb-3 mt-3">
+            @if (Model.ListOfQuestion.Count > 0)
+            {
+                <div class="card-header border-bottom">
+                    <div class="card-title">
+                        <div class="d-flex justify-content-between">
+                            <h4><span class="fas fa-question-circle"></span> Frequently Asked Question</h4>
+                            @if (NWDAuthorizeAdminOnly.ValidFor(HttpContextAccessor.HttpContext))
+                            {
+                                NWDModelModalEdit tEdit = new NWDModelModalEdit()
+                                {
+                                    Title = "New ", 
+                                    Description = "New FAQ", 
+                                    ClassType = typeof(NWDFrequentlyAskedQuestion), 
+                                    Reference = 0,
+                                    UrlReload = HttpContextAccessor.HttpContext?.Request.GetDisplayUrl(),
+                                    DefaultValues = new Dictionary<string, string>()
+                                    {
+                                        { nameof(NWDFrequentlyAskedQuestion.Domain), Model.Domain },
+                                        {nameof(NWDFrequentlyAskedQuestion.SubDomain), Model.SubDomain}
+                                    }
+                                };
+                                <partial name="_NWDModelModalEdit" model="@tEdit"/>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        @foreach (NWDFrequentlyAskedQuestion tQuestion in Model.ListOfQuestion)
+                        {
+                            <partial name="/Views/Shared/_NWDFrequentlyAskedQuestion.cshtml" model="@tQuestion"/>
+                        }
+                    </div>
+                </div>
+                <div class="position-relative p-md-3">
+                    <hr class="bg-300">
+                    <div class="divider-content-center">Have more questions?</div>
+                </div>
+            }
+            else
+            {
+                <div class="card-header">
+                    <div class="card-title">
+                        Any questions?
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            You have a question, the information provided does not allow you to answer it, contact us!
+                        </div>
+                    </div>
+                </div>
+            }
+            <div class="text-center pb-4">
+                <a class="btn btn-falcon-primary btn-sm" asp-area="" asp-controller="@NWDAccountController.ASP_Controller()" asp-action="@nameof(NWDAccountController.ContactUs)">Ask us anything</a>
+            </div>
+        </div>
+    }
+}

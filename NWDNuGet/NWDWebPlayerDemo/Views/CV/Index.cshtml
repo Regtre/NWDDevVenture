@@ -1,0 +1,71 @@
+﻿@using NWDWebPlayerDemo.Models.CV
+@model List<NWDWebPlayerDemo.Models.CV.CV>
+
+<h1> Welcome to your CVs Manager</h1>
+@Html.ActionLink("Create", "Create", "CV", new { }, new { @class = "btn btn-outline-primary" })
+
+<div class="grid g-1">
+    <div class="row row-cols-1 row-cols-md-2">
+    @if (Model != null)
+    {
+        @foreach (CV tCv in Model)
+        {
+            <div class="col mb-4 mt-4">
+                <div class="card">
+                    <div class="card-header justify-content-center">
+                        <div class="dropstart float-end">
+                            <button type="button" class="btn btn-light btn-sm dropstart-withoutIcon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-three-dots-vertical"></i>
+                            </button>
+                            <ul class="dropdown-menu" style="">
+                                @Html.ActionLink("Edit", "Edit", "CV", new { Reference = tCv.Reference }, new { @class = "dropdown-item" })
+                            </ul>
+                        </div>
+                        <h6 class="card-title text-center">
+                            @tCv.Title
+                        </h6>
+                    </div>
+                    <div></div>
+                    <div class="card-body">
+
+                        <h2>@tCv.Name</h2>
+                        <h3>@tCv.Surname</h3>
+                        <div class="cvContent">
+                            <div class="cvLeft">
+                                <h4>Personal Information</h4>
+                                <ul>
+                                    <li>
+                                        <b>Birthdate:</b> @tCv.Birthdate
+                                    </li>
+                                    <li>
+                                        <b>Address:</b> @tCv.Address
+                                    </li>
+                                    <li>
+                                        <b>Phone:</b> @tCv.Phone
+                                    </li>
+                                    <li>
+                                        <b>Email:</b> @tCv.Email
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="cvRight">
+                                <h4>Education</h4>
+                                <ul>
+                                    @foreach (Education tEducation in tCv.Educations)
+                                    {
+                                        <li>
+                                            <b>@tEducation.Name</b> - @tEducation.Degree
+                                            <br/>
+                                            @tEducation.StartDate - @tEducation.EndDate
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+        }
+    }
+    </div>
+</div>

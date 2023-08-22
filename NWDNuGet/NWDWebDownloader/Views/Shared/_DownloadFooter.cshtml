@@ -1,0 +1,12 @@
+﻿@using NWDWebDownloader.Managers
+@model NWDWebDownloader.Configuration.NWDDownloadConfig
+
+
+<div class="card">
+    <div class="card-body">
+        @if (NWDDownloadManager.ResourcesByConfig.ContainsKey(Model.PageName) && !string.IsNullOrEmpty(NWDDownloadManager.ResourcesByConfig[Model.PageName].Footer))
+        {
+            @Html.Raw(NWDDownloadManager.ResourcesByConfig[Model.PageName].Footer)
+        }
+    </div>
+</div>

@@ -1,0 +1,97 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <EnableDefaultRazorGenerateItems>true</EnableDefaultRazorGenerateItems>
+    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+    <IncludeRazorContentInPack>true</IncludeRazorContentInPack>
+    <EmbedRazorGenerateSources>true</EmbedRazorGenerateSources>
+    <Title>NWDWebRuntime</Title>
+    <Authors>idéMobi</Authors>
+    <Description>Web runtime controllers and views to use Net-Worked-Data in asp website</Description>
+    <Copyright>idéMobi</Copyright>
+    <PackageProjectUrl>https://gitlab.hephaiscode.com/NetWorkedData/NWDWebRuntime</PackageProjectUrl>
+    <PackageLicense>https://gitlab.hephaiscode.com/NetWorkedData/NWDWebRuntime/-/blob/main/LICENSE.md</PackageLicense>
+    <RepositoryUrl>https://gitlab.hephaiscode.com/NetWorkedData/NWDWebRuntime</RepositoryUrl>
+    <RepositoryType>GitLab CE</RepositoryType>
+    <PackageTags>Net-Worked-Data Web Runtime</PackageTags>
+    <PackageVersion>1.1.181</PackageVersion>
+    <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
+    <AssemblyVersion>1.1.181</AssemblyVersion>
+    <FileVersion>1.1.181</FileVersion>
+    <NeutralLanguage>en</NeutralLanguage>
+    <PackageIcon>NWDWebRuntime.png</PackageIcon>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
+    <RunAnalyzersDuringLiveAnalysis>true</RunAnalyzersDuringLiveAnalysis>
+    <RunAnalyzers>true</RunAnalyzers>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="7.0.5" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="7.0.5" />
+    <PackageReference Include="Microsoft.Exchange.WebServices.NETStandard" Version="1.1.3" />
+    <PackageReference Include="ChartJSCore" Version="3.10.0" />
+    <PackageReference Include="MySql.Data" Version="8.0.33" />
+    <PackageReference Include="NVelocity" Version="1.2.0" />
+    <PackageReference Include="MailKit" Version="4.1.0" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="2.88.3" />
+    <PackageReference Include="SkiaSharp.NativeAssets.macOS" Version="2.88.3" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Win32" Version="2.88.3" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
+    <PackageReference Include="UAParser" Version="3.1.47" />
+    <!-- <PackageReference Include="NWDRuntime" Version="1.1.181" /> -->
+    <!-- <PackageReference Include="NWDStandardModels" Version="1.1.181" /> -->
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NWDFoundation\NWDFoundation.csproj" />
+    <ProjectReference Include="..\NWDRuntime\NWDRuntime.csproj" />
+    <ProjectReference Include="..\NWDDatabaseAccess\NWDDatabaseAccess.csproj" />
+    <ProjectReference Include="..\NWDStandardModels\NWDStandardModels.csproj" />
+    <ProjectReference Include="..\NWDCustomModels\NWDCustomModels.csproj" />
+    <ProjectReference Include="..\NWDTreat\NWDTreat.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Views\*">
+      <Generator>RazorGenerator</Generator>
+    </Content>
+    <Content Remove="Views\Shared\_Layout.cshtml" />
+    <None Update="NWDWebRuntime.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <Content Update="Views\Shared\_AccountOnly.cshtml">
+      <Pack>false</Pack>
+    </Content>
+    <Content Update="Views\Shared\_AdminOnly.cshtml">
+      <Pack>false</Pack>
+    </Content>
+    <Content Update="Views\Shared\_ServiceOnly.cshtml">
+      <Pack>false</Pack>
+    </Content>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Content Update="**\*.cshtml" Pack="false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="wwwroot\**\*" />
+    <EmbeddedResource Include="wwwroot\**\*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="**\*.resx">
+      <ExcludeFromManifest>true</ExcludeFromManifest>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\js\" />
+  </ItemGroup>
+
+</Project>

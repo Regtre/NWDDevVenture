@@ -1,0 +1,9 @@
+﻿@using NWDWebUploader.Models
+@model List<string>
+
+<div class="input-group" id="CategorySelect">
+    <span class="input-group-text">@nameof(NWDUploadFile.Category)</span>
+    @Html.DropDownList( nameof(NWDUploadFile.Category), new SelectList(Model), new { @class = "form-select" })
+    <button class="btn btn-outline-primary" type="button" data-bs-toggle="modal" data-bs-target="#AddCategoryModal">New category</button>
+</div>
+

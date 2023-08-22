@@ -1,0 +1,68 @@
+﻿@using NWDWebDownloader.Managers
+@using NWDWebDownloader.Models
+@using NWDWebDownloader.Configuration
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@model NWDDownloadConfig?
+
+@if (Model != null)
+{
+    if (NWDDownloadManager.BuildsByConfig.ContainsKey(Model.PageName))
+    {
+        foreach (KeyValuePair<string, List<NWDBuild>> item in NWDDownloadManager.BuildsByConfig[Model.PageName].Where(item => item.Value.Count > 0))
+        {
+            <div class="col-6">
+                <div class="card mb-3">
+                    <div class="card-header bg-light border-bottom">
+                        <div class="card-title">
+                            <span class="bi bi-file-earmark-text me-2"></span> @item.Key
+                        </div>
+                    </div>
+
+                    @if (NWDDownloadManager.ResourcesByConfig.ContainsKey(Model.PageName)
+                         && NWDDownloadManager.ResourcesByConfig[Model.PageName].DescriptionByCategory.ContainsKey(item.Key)
+                         && !string.IsNullOrEmpty(NWDDownloadManager.ResourcesByConfig[Model.PageName].DescriptionByCategory[item.Key]))
+                    {
+                        <div class="card-body position-relative mb-3 border-bottom">
+                            @Html.Raw(NWDDownloadManager.ResourcesByConfig[Model.PageName].DescriptionByCategory[item.Key])
+                        </div>
+                    }
+                    <div class="card-body position-relative m-0 p-0">
+                        <div class="table-responsive scrollbar m-0 p-0">
+                            <table class="table table-sm mb-0 fs--1">
+                                <thead class="text-800 bg-light">
+                                <tr>
+                                    <th class="align-middle"></th>
+                                    <th class="align-middle">Filename</th>
+                                    <th class="align-middle">Date</th>
+                                    <th class="align-middle">Size</th>
+                                    <th class="text-end">Download</th>
+                                    <th class="text-end">Delete</th>
+                                </tr>
+                                </thead>
+                                <tbody class="list">
+                                @for(int i=0; i < item.Value.Count; i++)
+                                {
+                                    ViewBag.classToAdd = "";
+                                    if (i >= Model.BuildListSize)
+                                    {
+                                        ViewBag.classToAdd = "table-light";
+                                    }
+                                    ViewData["sDownloadPageName"] = Model.PageName;
+
+                                    <partial name="_BuildManagement" model="@item.Value[i]"/>
+                                    
+                                }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                    </div>
+                </div>
+            </div>
+        }
+    }
+}
+

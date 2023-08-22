@@ -1,0 +1,30 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+
+
+@*
+@model AccountServiceCompare
+<div class="services-item">
+    <h4>Service @Model.FuturService.ServiceName.ToString()</h4>
+    <table class="services-infos">
+        @if (@Model.Service != null)
+        {
+            <tr>
+                <td>Date de fin du service actuel : </td>
+                <td>@Model.Service.GetEndDateString()</td>
+            </tr>
+        }
+        else
+        {
+            <tr>
+                <td>Nouvelle souscription</td>
+                <td> </td>
+            </tr>
+        }
+        <tr>
+            <td>Date de fin du service après réglement : </td>
+            <td>@Model.FuturService.GetEndDateString()</td>
+        </tr>
+    </table>
+</div>
+*@

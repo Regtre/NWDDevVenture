@@ -1,0 +1,291 @@
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using NWDFoundation.Configuration
+@using NWDWebRuntime.Configuration
+@using NWDWebRuntime.Managers
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    NWDLibraryInfos[]? tFileVersionInfoList = ViewData[nameof(NWDLibraryInfos)] as NWDLibraryInfos[];
+    TimeSpan tOnline = DateTime.UtcNow - NWDWebRuntimeConfiguration.KConfig.LaunchDateTime;
+}
+
+@if (NWDWebRuntimeConfiguration.KConfig.IsDevelopment == true)
+{
+    <div class="text-end mb-3">
+        <span class="ms-2 badge rounded-pill badge-subtle-success bi-check-circle"> Kortex</span>
+        @* <span class="ms-2 badge rounded-pill badge-subtle-danger bi-x-circle"> Kortex</span> *@
+    </div>
+}
+
+<!-- TITLE With background -->
+<div class="container p-0 m-0">
+<div class="row g-3">
+<div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+    <div class="card">
+        <div class="card-header bg-light background-corner-1">
+            <div class="card-title">
+                <h1><span class="fas fa-shield-alt"></span> Net-Worked-Data</h1>
+            </div>
+            <p class="mb-0">List of Net-Worked-Data modules used in this website.</p>
+        </div>
+    </div>
+</div>
+
+<div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 col-xxl-6">
+    <div class="card">
+        <div class="card-header bg-card border-bottom background-corner-3">
+            <h5>Project</h5>
+        </div>
+        <div class="card-body position-relative">
+            <div class="table-responsive scrollbar">
+                <table class="table">
+                    <tr>
+                        <th>NWDEngine</th><td>Net-Worked-Data 3</td>
+                    </tr>
+                    <tr>
+                        <th>GetProjectId</th><td>@NWDWebRuntimeConfiguration.KConfig.GetProjectId().ToString()</td>
+                    </tr>
+                    <tr>
+                        <th>Environment</th><td>@NWDWebRuntimeConfiguration.KConfig.GetProjectEnvironment().ToString()</td>
+                    </tr>
+                    <tr>
+                        <th>DLL Version</th><td>@NWDWebRuntime.NWDVersionDll.Version</td>
+                    </tr>
+                    <tr>
+                        <th>Launch</th><td>@NWDWebRuntimeConfiguration.KConfig.LaunchDateTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                    </tr>
+                    <tr>
+                        <th>Online</th><td>@tOnline.ToString("g")</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 col-xxl-6">
+    <div class="card">
+        <div class="card-header bg-card border-bottom background-corner-4">
+            <h5>Git</h5>
+        </div>
+        <div class="card-body position-relative">
+            <div class="table-responsive scrollbar">
+                <table class="table">
+                    <tr>
+                        <th>GitCommit</th><td>@NWDWebRuntimeConfiguration.KConfig.GitCommit</td>
+                    </tr>
+                    <tr>
+                        <th>GitCommitShort</th><td>@NWDWebRuntimeConfiguration.KConfig.GitCommitShort</td>
+                    </tr>
+                    <tr>
+                        <th>PipelineDate</th><td>@NWDWebRuntimeConfiguration.KConfig.PipelineDate</td>
+                    </tr>
+                    <tr>
+                        <th>PipelineJob</th><td>@NWDWebRuntimeConfiguration.KConfig.PipelineJob</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* @if (NWDAccountWebManager.AccountIsConnected(HttpContextAccessor.HttpContext) == true) *@
+@* { *@
+@*     <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 col-xxl-6"> *@
+@*         <div class="card"> *@
+@*             <div class="card-header bg-card border-bottom background-corner-4"> *@
+@*                 <h5>Account</h5> *@
+@*             </div> *@
+@*             <div class="card-body position-relative"> *@
+@*                 <div class="table-responsive scrollbar"> *@
+@*                     <table class="table"> *@
+@*                         <tr> *@
+@*                             <th>Account</th><td>@NWDAccountWebManager.GetAccountInContext(HttpContextAccessor.HttpContext).Reference</td> *@
+@*                         </tr> *@
+@*                     </table> *@
+@*                 </div> *@
+@*             </div> *@
+@*         </div> *@
+@*     </div> *@
+@* } *@
+
+@if (tFileVersionInfoList != null)
+{
+    foreach (NWDLibraryInfos tFileVersionInfo in tFileVersionInfoList)
+    {
+        if (tFileVersionInfo.Information != null)
+        {
+            <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+                <div class="card">
+                    <div class="card-header bg-light m-0 p-0 border-bottom background-corner-3">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-8">
+                                    @if (tFileVersionInfo.Information.InternalName != null)
+                                    {
+                                        <h3>
+                                            <a id="@tFileVersionInfo.Information.InternalName.Replace(".dll", "")">
+                                                <img class="img-fluid nwd-image-package" src="/@tFileVersionInfo.Information.ProductName/@Html.Raw(tFileVersionInfo.Information.ProductName + ".png")" alt="" width="40"/> @tFileVersionInfo.Information.ProductName
+                                            </a>
+                                        </h3>
+                                    }
+                                    @if (string.IsNullOrEmpty(tFileVersionInfo.Description) == false)
+                                    {
+                                        <p>@tFileVersionInfo.Description</p>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        @if (tFileVersionInfo.SetUpPage)
+                        {
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    <div class="accordion" id="@Html.Raw(tFileVersionInfo.Information.ProductName + "_Parent")">
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header" id="@Html.Raw(tFileVersionInfo.Information.ProductName + "_Heading")">
+                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#@Html.Raw(tFileVersionInfo.Information.ProductName + "_Collapse")" aria-expanded="false" aria-controls="@Html.Raw(tFileVersionInfo.Information.ProductName + "_Collapse")"><span class="bi bi-tools me-2"></span> SetUp instruction</button>
+                                            </h2>
+                                            <div class="accordion-collapse collapse" id="@Html.Raw(tFileVersionInfo.Information.ProductName + "_Collapse")" aria-labelledby="@Html.Raw(tFileVersionInfo.Information.ProductName + "_Heading")" data-bs-parent="#@Html.Raw(tFileVersionInfo.Information.ProductName + "_Parent")">
+                                                <div class="accordion-body">
+                                                    @{
+                                                        string tSetUp = "/Views/Shared/_" + tFileVersionInfo.Information.ProductName + "_SetUp.cshtml";
+                                                    }
+                                                    <partial name="@tSetUp"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        <div class="row">
+                            <div class="col-8">
+                                <div class="table-responsive scrollbar mb-3">
+                                    <table class="table table-hover mb-0">
+                                        <thead>
+                                        <tr>
+                                            <th scope="col"></th>
+                                            <th scope="col">Key</th>
+                                            <th scope="col">Value</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>
+                                                @* <span class="text-800 fs-2 bi-gear"></span> *@
+                                                @* <span class="text-800 fs-2 bi-layers-half"></span> *@
+                                                <span class="text-800 fs-2 bi-box-seam"></span>
+                                            </td>
+                                            <td>@nameof(tFileVersionInfo.Information.ProductName)</td>
+                                            <td>@tFileVersionInfo.Information.ProductName</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span class="text-800 fs-2 bi-file-earmark-binary"></span>
+                                            </td>
+                                            <td>@nameof(tFileVersionInfo.Information.FileVersion)</td>
+                                            <td>@tFileVersionInfo.Information.FileVersion</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span class="text-800 fs-2 bi-file-earmark-text"></span>
+                                            </td>
+                                            <td>@nameof(tFileVersionInfo.Information.FileDescription)</td>
+                                            <td>@tFileVersionInfo.Information.FileDescription</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span class="text-800 fs-2 bi-pen"></span>
+                                            </td>
+                                            <td>@nameof(tFileVersionInfo.Information.LegalCopyright)</td>
+                                            <td>@tFileVersionInfo.Information.LegalCopyright</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span class="text-800 fs-2 bi-geo-alt"></span>
+                                            </td>
+                                            <td>@nameof(tFileVersionInfo.Information.CompanyName)</td>
+                                            <td>@tFileVersionInfo.Information.CompanyName</td>
+                                        </tr>
+                                        @if (tFileVersionInfo.Nuget)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <span class="text-800 fs-2 bi-file-earmark-lock"></span>
+                                                </td>
+                                                <td>NuGet package</td>
+                                                <td>NuGet</td>
+                                            </tr>
+                                        }
+                                        else
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <span class="text-800 fs-2 bi-file-code"></span>
+                                                </td>
+                                                <td>Editable project</td>
+                                                <td>CsProj</td>
+                                            </tr>
+                                        }
+                                        <tr>
+                                            <td>
+                                                <span class="text-800 fs-2 bi-puzzle"></span>
+                                            </td>
+                                            <td>@nameof(tFileVersionInfo.Information.OriginalFilename)</td>
+                                            <td>@tFileVersionInfo.Information.OriginalFilename</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                @{
+                                    if (string.IsNullOrEmpty(tFileVersionInfo.Imagine) == false)
+                                    {
+                                        <div class="card bg-dark border-primary p-3 mb-3">
+                                            <code>
+                                                <b>
+                                                    <pre class="text-secondary" >/imagine</pre>
+                                                </b>
+                                                @tFileVersionInfo.Imagine
+                                                <span class="text-secondary">, style Zootopia, style SteamPunk, ultra 4k, vray render, high resolution, maximum intricate detail, cinematic and volumetric lighting --ar 3:2</span>
+                                            </code>
+                                        </div>
+                                    }
+                                    if (string.IsNullOrEmpty(tFileVersionInfo.ImagineBis) == false)
+                                    {
+                                        <div class="card bg-dark border-primary p-3">
+                                            <code>
+                                                <b>
+                                                    <pre class="text-secondary" >/imagine</pre>
+                                                </b>
+                                                @tFileVersionInfo.ImagineBis
+                                                <span class="text-secondary">, style Zootopia, style SteamPunk, ultra 4k, vray render, high resolution, maximum intricate detail, cinematic and volumetric lighting --ar 3:2</span>
+                                            </code>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                            <div class="col-4">
+                                <div class="hoverbox rounded-3  nwd-image-anim mb-3">
+                                    <img class="nwd-image-anim" src="/@tFileVersionInfo.Information.ProductName/Background.png" alt=""/>
+                                </div>
+                                @* <span class="badge badge-soft-primary">NWDDevVenture/NWDNuGet/NWDWebStandard/wwwroot/@tFileVersionInfo.Information.ProductName/Background</span> *@
+                                <div class="hoverbox rounded-3  nwd-image-anim">
+                                    <img class="nwd-image-anim" src="/@tFileVersionInfo.Information.ProductName/BackgroundBis.png" alt=""/>
+                                </div>
+                                @* <span class="badge badge-soft-primary">NWDDevVenture/NWDNuGet/NWDWebStandard/wwwroot/@tFileVersionInfo.Information.ProductName/BackgroundBis</span> *@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+}
+</div>
+</div>

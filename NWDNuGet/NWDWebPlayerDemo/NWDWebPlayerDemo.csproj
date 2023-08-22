@@ -1,0 +1,76 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <EnableDefaultRazorGenerateItems>true</EnableDefaultRazorGenerateItems>
+    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+    <IncludeRazorContentInPack>true</IncludeRazorContentInPack>
+    <EmbedRazorGenerateSources>true</EmbedRazorGenerateSources>
+    <Title>NWDWebPlayerDemo</Title>
+    <Authors>idéMobi</Authors>
+    <Description>Web Http Error Simulator</Description>
+    <Copyright>idéMobi</Copyright>
+    <PackageProjectUrl>https://gitlab.hephaiscode.com/NetWorkedData/NWDWebPlayerDemo</PackageProjectUrl>
+    <PackageLicense>https://gitlab.hephaiscode.com/NetWorkedData/NWDWebPlayerDemo/-/blob/main/LICENSE.md</PackageLicense>
+    <RepositoryUrl>https://gitlab.hephaiscode.com/NetWorkedData/NWDWebPlayerDemo</RepositoryUrl>
+    <RepositoryType>GitLab CE</RepositoryType>
+    <PackageTags>Net-Worked-Data Web Player Demo</PackageTags>
+    <PackageVersion>1.1.181</PackageVersion>
+    <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
+    <AssemblyVersion>1.1.181</AssemblyVersion>
+    <FileVersion>1.1.181</FileVersion>
+    <NeutralLanguage>en</NeutralLanguage>
+    <PackageIcon>NWDWebPlayerDemo.png</PackageIcon>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
+    <RunAnalyzersDuringLiveAnalysis>true</RunAnalyzersDuringLiveAnalysis>
+    <RunAnalyzers>true</RunAnalyzers>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="7.0.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+  <ProjectReference Include="..\NWDFoundation\NWDFoundation.csproj" />
+  <ProjectReference Include="..\NWDRuntime\NWDRuntime.csproj" />
+  <ProjectReference Include="..\NWDWebEditor\NWDWebEditor.csproj" />
+  <ProjectReference Include="..\NWDWebRuntime\NWDWebRuntime.csproj" />
+  <ProjectReference Include="..\NWDWebStandard\NWDWebStandard.csproj" />
+  <ProjectReference Include="..\NWDWebTreat\NWDWebTreat.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Content Update="Views\*">
+      <Generator>RazorGenerator</Generator>
+    </Content>
+    <Content Remove="Views\Shared\_Layout.cshtml" />
+    <None Update="NWDWebPlayerDemo.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="**\*.cshtml" Pack="false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="wwwroot\**\*" />
+    <EmbeddedResource Include="wwwroot\**\*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="**\*.resx">
+      <ExcludeFromManifest>true</ExcludeFromManifest>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="Views\CV\FormCV.cshtml" />
+    <AdditionalFiles Include="Views\CV\Index.cshtml" />
+  </ItemGroup>
+  
+</Project>

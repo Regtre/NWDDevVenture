@@ -1,0 +1,68 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <Title>NWDRuntime</Title>
+        <Authors>idéMobi</Authors>
+        <Copyright>idéMobi</Copyright>
+        <PackageTags>Net-Worked-Data  Runtime</PackageTags>
+        <PackageVersion>1.1.181</PackageVersion>
+        <LangVersion>9.0</LangVersion>
+        <PackageProjectUrl>https://gitlab.hephaiscode.com/NetWorkedData/NWDRuntime</PackageProjectUrl>
+        <PackageLicense>https://gitlab.hephaiscode.com/NetWorkedData/NWDRuntime/-/blob/main/LICENSE.md</PackageLicense>
+        <RepositoryUrl>https://gitlab.hephaiscode.com/NetWorkedData/NWDRuntime</RepositoryUrl>
+        <RepositoryType>GitLab CE</RepositoryType>
+        <LangVersion>9.0</LangVersion>
+        <AssemblyVersion>1.1.181</AssemblyVersion>
+        <FileVersion>1.1.181</FileVersion>
+        <NeutralLanguage>en</NeutralLanguage>
+        <PackageIcon>NWDRuntime.png</PackageIcon>
+        <GenerateDocumentationFile>false</GenerateDocumentationFile>
+        <SignAssembly>true</SignAssembly>
+        <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
+        <RunAnalyzersDuringLiveAnalysis>true</RunAnalyzersDuringLiveAnalysis>
+        <RunAnalyzers>true</RunAnalyzers>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <!-- <PackageReference Include="NWDDatabaseAccess" Version="1.1.181" /> -->
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\NWDFoundation\NWDFoundation.csproj" />
+        <ProjectReference Include="..\NWDDatabaseAccess\NWDDatabaseAccess.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update="NWDRuntime.png">
+            <Pack>True</Pack>
+            <PackagePath></PackagePath>
+        </None>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Include="..\..\NWDUnity\Assets\NWDNuGet\NWDRuntime\Exchanges\*.cs">
+            <Link>Exchanges-from-Unity/%(FileName)%(Extension)</Link>
+        </Compile>
+        <Compile Include="..\..\NWDUnity\Assets\NWDNuGet\NWDRuntime\Exchanges\Payloads\*.cs">
+            <Link>Exchanges-from-Unity/Payloads-from-Unity/%(FileName)%(Extension)</Link>
+        </Compile>
+        <Compile Include="..\..\NWDUnity\Assets\NWDNuGet\NWDRuntime\Facades\*.cs">
+            <Link>Facades-from-Unity/%(FileName)%(Extension)</Link>
+        </Compile>
+        <Compile Include="..\..\NWDUnity\Assets\NWDNuGet\NWDRuntime\Factories\*.cs">
+            <Link>Factories-from-Unity/%(FileName)%(Extension)</Link>
+        </Compile>
+        <Compile Include="..\..\NWDUnity\Assets\NWDNuGet\NWDRuntime\Models\*.cs">
+            <Link>Models-from-Unity/%(FileName)%(Extension)</Link>
+        </Compile>
+        <Compile Include="..\..\NWDUnity\Assets\NWDNuGet\NWDRuntime\NWDVersionDll.cs">
+            <Link>NWDVersionDll.cs</Link>
+        </Compile>
+    </ItemGroup>
+    <ItemGroup><!-- <PackageReference Include="NWDDatabaseAccess" Version="1.1.178" /> -->
+
+        <Folder Include="Enums-from-Unity\" />
+    </ItemGroup>
+
+</Project>

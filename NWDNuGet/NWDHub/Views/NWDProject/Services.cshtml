@@ -1,0 +1,70 @@
+@using System.Reflection
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Newtonsoft.Json
+@using NWDFoundation.Models
+@using NWDFoundation.Tools
+@using NWDFoundation.WebEdition.Attributes
+@using NWDFoundation.WebEdition.Enums
+@using NWDHub.Models
+@using NWDWebRuntime.Configuration
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string? tControllerName = ViewData["ControllerName"] as string;
+    string? tModelToUse = ViewData["ModelToUse"] as string;
+    if (tModelToUse != null)
+    {
+        Type? tModel = Type.GetType(tModelToUse);
+    }
+    NWDProject? tResultToUse = ViewData["ResultToUse"] as NWDProject;
+    Dictionary<string, string> tDictionaryToFilter = new Dictionary<string, string>();
+    if (tResultToUse != null)
+    {
+        tDictionaryToFilter.TryAdd(nameof(NWDProjectSubObject.Project), tResultToUse.Reference.ToString());
+    }
+    string tDicoJson = JsonConvert.SerializeObject(tDictionaryToFilter);
+}
+<partial name="/Views/Shared/_ProjectNeedPublish.cshtml" model="@tResultToUse"/>
+<!-- TITLE With background -->
+@if (tResultToUse != null)
+{
+    <div class="card mb-3">
+        <div class="bg-holder d-none d-lg-block bg-card background-corner-2">
+        </div>
+        <div class="card-header">
+            <div class="d-flex flex-between-center pb-0">
+                <h3>
+                    <span class="fs-2 bi-file-earmark-richtext me-2"></span>@tResultToUse.Reference
+                </h3>
+            </div>
+        </div>
+    </div>
+}
+<!-- Card for informations -->
+<div class="card mb-3">
+    <div class="card-header border-bottom background-corner-4">
+        <div class="card-title">
+            Services
+        </div>
+    </div>
+    <div class="card-body">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi. Proin porttitor, orci nec nonummy molestie, enim est eleifend mi, non fermentum diam nisl sit amet erat. Duis semper.
+    </div>
+</div>
+
+<div class="card mb-3" id="NWDProjectServiceEdition" data-url='@Url.Action("ListAll", "NWDProjectServiceEdition")?sDictionaryToSelect=@tDicoJson'>
+    <div class="card-header border-bottom background-corner-3">
+        <div class="card-title">
+            Services
+        </div>
+    </div>
+    <div id="spinner" class="card-body border-bottom text-center">
+        <div class="spinner-border text-primary" Service="status"></div>
+    </div>
+    <div id="content_to_replace" class="justify-content-center">
+        <script>$(document).ready(function () {
+                          startRequestAndReplaceContent('NWDProjectServiceEdition');
+                          });
+                          </script>
+    </div>
+</div>

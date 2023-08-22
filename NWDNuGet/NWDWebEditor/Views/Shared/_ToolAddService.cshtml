@@ -1,0 +1,42 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@using Microsoft.AspNetCore.Http;
+
+@inject IHttpContextAccessor HttpContextAccessor
+
+@*
+@model AddServiceModel
+<div class="dico-form">
+    @using (Html.BeginForm("AddServiceModel", "Admin"))
+    {
+        <table>
+            <tr>
+                <td>@Html.LabelFor(m => m.Reference, new { @class = "" })</td>
+                <td>
+                    @Html.TextBoxFor(m => m.Reference)
+                    @Html.ValidationMessageFor(m => m.Reference)
+                </td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.Service, new { @class = "" })</td>
+                <td>
+                    @Html.DropDownListFor(m => m.Service, @Html.GetEnumSelectList<AccountServiceType>(), new { @class = "" })
+                    @Html.ValidationMessageFor(m => m.Service)
+                </td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.Days, new { @class = "" })</td>
+                <td>
+                    @Html.TextBoxFor(m => m.Days)
+                    @Html.ValidationMessageFor(m => m.Days)
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="submit" value="Ajouter" />
+                </td>
+            </tr>
+        </table>
+    }
+</div>
+*@

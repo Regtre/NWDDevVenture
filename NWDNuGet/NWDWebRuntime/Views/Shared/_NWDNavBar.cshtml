@@ -1,0 +1,10 @@
+﻿@using NWDWebRuntime.Models
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@model NWDWebRuntime.Models.NWDNavBar
+
+@foreach (NWDNavBarMenu tMenu in Model.Menus)
+{
+    <partial name="_NWDNavBarMenu" model="@tMenu"/>
+}

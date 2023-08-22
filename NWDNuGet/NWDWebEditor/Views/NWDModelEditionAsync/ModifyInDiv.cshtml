@@ -1,0 +1,61 @@
+@using System.Reflection
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using NWDFoundation.Models
+@using NWDFoundation.Tools
+@using NWDFoundation.WebEdition.Attributes
+@using NWDFoundation.WebEdition.Enums
+@using NWDFoundation.WebEdition.Models
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "";
+    string? tControllerName = ViewData["ControllerName"] as string;
+    string? tModelToUse = ViewData["ModelToUse"] as string;
+    Type? tModel =  null;
+    if (tModelToUse != null)
+    {
+        tModel = Type.GetType(tModelToUse);
+    }
+   
+    object? tResultToUse = ViewData["ResultToUse"];
+
+    PropertyInfo? tReferenceProp = tModel?.GetProperty("Reference");
+    ulong tReference = (ulong)(tReferenceProp?.GetValue(tResultToUse) ?? 0);
+    
+    string tFormId = NWDSecurityTools.GenerateSha(tModelToUse + tControllerName)+ NWDRandom.RandomStringToken(16);
+}
+<form method="post" id="@tFormId">
+    <div class="card-body border-bottom">
+        @* @tModelToUse model  *@
+        <script>
+            tinymce.remove();
+        </script>
+        @Html.AntiForgeryToken()
+        @Html.Hidden("Reference", tReference)
+        @foreach (PropertyInfo tProp in tModel?.GetProperties(BindingFlags.Public | BindingFlags.Instance)!)
+        {
+            if (tProp.Name != nameof(NWDBasicModel.Reference))
+            {
+                NWDWebPropertyDescriptionAttribute? tAttribute = tProp.GetCustomAttribute<NWDWebPropertyDescriptionAttribute>();
+                ViewData["Attribute"] = tAttribute;
+                ViewData["Item"] = tResultToUse;
+                ViewData["InputName"] = tProp.Name;
+                // object? tVa = tProp.GetValue(tResultToUse, null);
+                @* <div>@tProp.Name : @tVa.ToString()</div> *@
+                <partial name="_NWDWebEditionStyleSwitch" model="tProp"/>
+            }
+        }
+
+    </div>
+    <div class="card-footer">
+        <div>
+            
+            <a class="btn btn-sm btn-outline-primary align-self-center mr-1" onclick="tinyMCE.triggerSave();postRequestAndReplaceContent( '@tControllerName', '@Url.Action("SaveInDiv", tControllerName)','@tFormId')">
+                <i class="bi-save"></i>@* Save*@
+            </a>
+            <a class="btn btn-sm btn-outline-secondary align-self-center" onclick="getRequestAndReplaceContent('@tControllerName', '@Url.Action("ShowInDiv", tControllerName)?sReference=@tReference')">
+                <i class="bi-house"></i>@* Return to list*@
+            </a>
+        </div>
+    </div>
+</form>
+@Html.Raw("<script>"+(ViewData["Javascript"]as string ?? string.Empty)+"</script>")

@@ -1,0 +1,154 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <EnableDefaultRazorGenerateItems>true</EnableDefaultRazorGenerateItems>
+    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+    <IncludeRazorContentInPack>true</IncludeRazorContentInPack>
+    <EmbedRazorGenerateSources>true</EmbedRazorGenerateSources>
+    <Title>NWDWebStandard</Title>
+    <Authors>idéMobi</Authors>
+    <Description>Web standard controllers and views to use Net-Worked-Data in asp website</Description>
+    <Copyright>idéMobi</Copyright>
+    <PackageProjectUrl>https://gitlab.hephaiscode.com/NetWorkedData/NWDWebStandard</PackageProjectUrl>
+    <PackageLicense>https://gitlab.hephaiscode.com/NetWorkedData/NWDWebStandard/-/blob/main/LICENSE.md</PackageLicense>
+    <RepositoryUrl>https://gitlab.hephaiscode.com/NetWorkedData/NWDWebStandard</RepositoryUrl>
+    <RepositoryType>GitLab CE</RepositoryType>
+    <PackageTags>Net-Worked-Data Web Standard</PackageTags>
+    <PackageVersion>1.1.181</PackageVersion>
+    <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
+    <AssemblyVersion>1.1.181</AssemblyVersion>
+    <FileVersion>1.1.181</FileVersion>
+    <NeutralLanguage>en</NeutralLanguage>
+    <PackageIcon>NWDWebStandard.png</PackageIcon>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
+    <RunAnalyzersDuringLiveAnalysis>true</RunAnalyzersDuringLiveAnalysis>
+    <RunAnalyzers>true</RunAnalyzers>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="7.0.5" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="7.0.5" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.30.0" />
+    <!-- <PackageReference Include="NWDWebRuntime" Version="1.1.181" /> -->
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NWDDatabaseAccess\NWDDatabaseAccess.csproj" />
+    <ProjectReference Include="..\NWDFoundation\NWDFoundation.csproj" />
+    <ProjectReference Include="..\NWDStandardModels\NWDStandardModels.csproj" />
+    <ProjectReference Include="..\NWDRuntime\NWDRuntime.csproj" />
+    <ProjectReference Include="..\NWDWebRuntime\NWDWebRuntime.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Views\*">
+      <Generator>RazorGenerator</Generator>
+    </Content>
+    <None Update="NWDWebStandard.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <Content Update="Views\Shared\_NWDNavBarMenu.cshtml">
+      <Pack>false</Pack>
+    </Content>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Content Update="**\*.cshtml" Pack="false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="wwwroot\**\*" />
+    <EmbeddedResource Include="wwwroot\**\*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="**\*.resx">
+      <ExcludeFromManifest>true</ExcludeFromManifest>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Views\CV\FormCV.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\CV\Index.cshtml" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\.DS_Store" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\css\theme-rtl.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\css\theme-rtl.css.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\css\theme-rtl.min.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\css\theme-rtl.min.css.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\css\theme.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\css\theme.css.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\css\theme.min.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\css\theme.min.css.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\css\user-rtl.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\css\user-rtl.css.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\css\user-rtl.min.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\css\user-rtl.min.css.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\css\user.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\css\user.css.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\css\user.min.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\css\user.min.css.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\js\config.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\js\config.js.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\js\echart-example.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\js\echart-example.js.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\js\echarts-example.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\js\echarts-example.js.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\js\emoji-button.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\js\flatpickr.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\js\theme.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\js\theme.js.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\js\theme.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\js\theme.min.js.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\decorations\circles-1.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\decorations\circles-2.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\decorations\corner-1.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\decorations\corner-2.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\decorations\corner-3.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\decorations\corner-4.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\decorations\corner-5.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\decorations\half-circle.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\decorations\half-circle@2x.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\favicons\android-chrome-192x192.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\favicons\android-chrome-512x512.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\favicons\apple-touch-icon.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\favicons\favicon-16x16.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\favicons\favicon-32x32.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\favicons\favicon-48x48.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\favicons\mstile-150x150.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\lib\.DS_Store" />
+    <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation-unobtrusive\LICENSE.txt" />
+    <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\dist\additional-methods.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\dist\additional-methods.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\dist\jquery.validate.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\dist\jquery.validate.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\LICENSE.md" />
+    <_ContentIncludedByDefault Remove="wwwroot\lib\jquery\dist\jquery.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\lib\jquery\dist\jquery.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\lib\jquery\dist\jquery.min.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\lib\jquery\LICENSE.txt" />
+    <_ContentIncludedByDefault Remove="wwwroot\NWDWebStandard\Background.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\NWDWebStandard\NWDWebStandard.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\NWDWebStandard\NWDWebStandard.svg" />
+    <_ContentIncludedByDefault Remove="wwwroot\NWDWebTreat\Background.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\NWDWebTreat\BackgroundBis.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\NWDServerHumanInterface\Background.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\NWDServerHumanInterface\BackgroundBis.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="Views\NWDWebError\Error.cshtml" />
+    <AdditionalFiles Include="Views\NWDWebError\Index.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Managers\" />
+  </ItemGroup>
+  
+</Project>

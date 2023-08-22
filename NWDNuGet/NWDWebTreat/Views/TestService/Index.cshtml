@@ -1,0 +1,23 @@
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<form action="/TestService/Dissociate">
+    @Html.Label("Account")
+    @Html.TextBox("referenceAccount")
+    
+@Html.Label("Service")
+@Html.TextBox("referenceService")
+    <button type="submit"> Dissociate</button>
+</form>
+
+
+<form action="/TestService/Associate">
+    @Html.Label("Account")
+    @Html.TextBox("referenceAccount")
+    <button type="submit"> Associate</button>
+</form>
+
+

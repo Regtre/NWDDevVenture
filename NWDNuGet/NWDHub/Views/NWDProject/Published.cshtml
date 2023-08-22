@@ -1,0 +1,42 @@
+@using System.Reflection
+@using Newtonsoft.Json
+@using NWDFoundation.Models
+@using NWDFoundation.Tools
+@using NWDFoundation.WebEdition.Attributes
+@using NWDFoundation.WebEdition.Enums
+@using NWDHub.Models
+@using NWDWebRuntime.Configuration
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string? tControllerName = ViewData["ControllerName"] as string;
+    string? tModelToUse = ViewData["ModelToUse"] as string;
+    if (tModelToUse != null)
+    {
+        Type? tModel = Type.GetType(tModelToUse);
+    }
+    NWDProject? tResultToUse = ViewData["ResultToUse"] as NWDProject;
+}
+<!-- TITLE With background -->
+@if (tResultToUse != null)
+{
+    <div class="card mb-3">
+        <div class="bg-holder d-none d-lg-block bg-card background-corner-2">
+        </div>
+        <div class="card-header">
+            <div class="d-flex flex-between-center pb-0">
+                <h3>
+                    <span class="fs-2 bi-file-earmark-richtext me-2"></span>@tResultToUse.Reference
+                </h3>
+            </div>
+        </div>
+    </div>
+}
+<!-- Card for informations -->
+<div class="card mb-3">
+    <div class="card-header border-bottom background-corner-4">
+        <div class="card-title">
+            Publish is finish!  Enjoy Project!
+        </div>
+    </div>
+</div>

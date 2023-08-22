@@ -1,0 +1,104 @@
+﻿@using NWDWebRuntime.Models
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@model NWDSideBarBlock
+
+@{
+    NWDPageStandard? tPageStandard = ViewData[nameof(NWDPageStandard)] as NWDPageStandard;
+    string tCollapseArea;
+    string tAreaVisibility;
+    string tAriaExpanded;
+    string tActionActivate;
+}
+
+@if (Model != null)
+{
+    <li class="nav-item">
+        <!-- label-->
+        <div class="row navbar-vertical-label-wrapper mt-3 mb-2">
+            <div class="col-auto navbar-vertical-label">
+                @Model.Name
+                @if (string.IsNullOrEmpty(Model.BadgeText) == false)
+                {
+                    <span class="ms-2 badge rounded-pill badge-subtle-@Model.BadgeStyle.ToString().ToLower()">@Model.BadgeText</span>
+                }
+            </div>
+            <div class="col ps-0">
+                <hr class="mb-0 navbar-vertical-divider"/>
+            </div>
+        </div>
+    </li>
+
+@foreach (NWDSideBarCategory tCategory in @Model.Categories)
+{
+    bool tOpened = false;
+    if (tCategory.AlwaysShow)
+    {
+        tOpened = true;
+    }
+    else
+    {
+        foreach (NWDSideBarElement tElement in tCategory.Elements)
+        {
+            if (tPageStandard != null && tElement.ActionName == tPageStandard.ActionName)
+            {
+                tOpened = true;
+                break;
+            }
+        }
+    }
+    if (tOpened)
+    {
+        tCollapseArea = "";
+        tAreaVisibility = "show";
+        tAriaExpanded = "true";
+    }
+    else
+    {
+        tCollapseArea = "collapsed";
+        tAreaVisibility = "";
+        tAriaExpanded = "false";
+    }
+
+    <!-- Sidebar Tools @tCategory.Name -->
+    <li class="nav-item">
+        <a class="nav-link dropdown-indicator @tCollapseArea" href="#@tCategory.TokenId" role="button" data-bs-toggle="collapse" aria-expanded="@tAriaExpanded" aria-controls="@tCategory.TokenId">
+            <div class="d-flex align-items-center">
+                <span class="@tCategory.IconStyle"></span>
+                <span class="nav-link-text ps-1">
+                    @tCategory.Name
+                    @if (string.IsNullOrEmpty(tCategory.BadgeText) == false)
+                    {
+                        <span class="ms-2 badge rounded-pill badge-subtle-@tCategory.BadgeStyle.ToString().ToLower()">@tCategory.BadgeText</span>
+                    }
+                </span>
+            </div>
+        </a>
+        <ul class="nav collapse @tAreaVisibility" id="@tCategory.TokenId">
+            @foreach (NWDSideBarElement tElement in tCategory.Elements)
+            {
+                <li class="nav-item">
+                    @if (tPageStandard != null && tPageStandard.ActionName == tElement.ActionName)
+                    {
+                        tActionActivate = "active";
+                    }
+                    else
+                    {
+                        tActionActivate = "";
+                    }
+                    <a class="nav-link @tActionActivate" href="@Html.Raw(tElement.Url())">
+                        <div class="d-flex align-items-center">
+                            <span class="nav-link-text ps-1">@tElement.Name</span>
+                            @if (string.IsNullOrEmpty(tElement.BadgeText) == false)
+                            {
+                                <span class="ms-2 badge rounded-pill badge-subtle-@tElement.BadgeStyle.ToString().ToLower()">@tElement.BadgeText</span>
+                            }
+                        </div>
+                    </a>
+                </li>
+            }
+        </ul>
+    </li>
+}
+}

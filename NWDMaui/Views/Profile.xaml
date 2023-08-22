@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="NWDMaui.Views.NWDProfile"
+             xmlns:model="clr-namespace:NWDFoundation.Models;assembly=NWDFoundation"
+             xmlns:viewModels="clr-namespace:NWDMaui.ViewModels"
+             BackgroundColor="FloralWhite">
+    <ContentPage.Content>
+        <Grid>
+            <StackLayout Margin="20" Spacing="10">
+
+                <StackLayout Margin="0,80" HorizontalOptions="Center">
+                    <Label FontSize="32" Text="Welcome Back" HorizontalOptions="Center" />
+                    <Label FontFamily="OpenSansRegular" TextColor="{StaticResource SecondaryColor}"
+                           FontSize="16" Text="Welcome to your profile ! " />
+                </StackLayout>
+
+                <Label Text="Services" TextColor="{DynamicResource PrimaryColor}"></Label>
+                <CollectionView ItemsSource="{Binding Services}" x:DataType="viewModels:ProfileViewModel">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="model:NWDAccountService">
+                            <Grid Padding="10">
+                                <HorizontalStackLayout Spacing="5">
+                                    <Label Text="{Binding Name}"
+                                           FontAttributes="Bold" TextColor="{DynamicResource SecondaryColor}" />
+                                    <Label Text="{Binding Start}"
+                                           FontAttributes="Bold" TextColor="{DynamicResource SecondaryColor}" />
+                                    <Label Text="{Binding End}"
+                                           FontAttributes="Bold" TextColor="{DynamicResource SecondaryColor}" />
+                                </HorizontalStackLayout>
+
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <Label Text="Signs" TextColor="{DynamicResource PrimaryColor}"></Label>
+                <CollectionView ItemsSource="{Binding Signs}" x:DataType="viewModels:ProfileViewModel">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="model:NWDAccountSign">
+                            <Grid Padding="10">
+                                <HorizontalStackLayout Spacing="5">
+                                    <Label Text="{Binding Account}"
+                                           FontAttributes="Bold" TextColor="{DynamicResource SecondaryColor}" />
+                                    <Label Text="{Binding SignType}"
+                                           FontAttributes="Bold" TextColor="{DynamicResource SecondaryColor}" />
+                                    <Label Text="{Binding Name}"
+                                           FontAttributes="Bold" TextColor="{DynamicResource SecondaryColor}" />
+                                    <Button Text="Edit"
+                                            Clicked="SignModify"
+                                            TextColor="Pink"
+                                            HorizontalOptions="End">
+                                    </Button>
+                                </HorizontalStackLayout>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+                
+                <HorizontalStackLayout Spacing="5" HorizontalOptions="Center">
+                   
+                    <Button Text="Modify Login Password"
+                            Clicked="SignModifyLoginPassword"
+                            TextColor="Pink"
+                            HorizontalOptions="Center">
+                    </Button>
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout Spacing="5">
+                    <Button Text="Add Email/PWD Sign"
+                            Clicked="GoToAddSignEmailPassword"
+                            TextColor="Pink"
+                            HorizontalOptions="Center">
+                    </Button>
+                    <Button Text="Add Login/PWD Sign"
+                            Clicked="GoToAddSignLoginPassword"
+                            TextColor="Pink"
+                            HorizontalOptions="Center">
+                    </Button>
+                </HorizontalStackLayout>
+
+                <Button Text="Sign Out"
+                        Clicked="SignOut"
+                        TextColor="Pink">
+                </Button>
+            </StackLayout>
+            
+            
+            <CollectionView ItemsSource="{Binding PlayerData}" x:DataType="viewModels:ProfileViewModel">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="model:NWDPlayerData">
+                        <Grid Padding="10">
+                            <HorizontalStackLayout Spacing="5">
+                                <Label Text="{Binding Reference}"
+                                       FontAttributes="Bold" TextColor="{DynamicResource SecondaryColor}" />
+                            </HorizontalStackLayout>
+
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
+
+    </ContentPage.Content>
+</ContentPage>

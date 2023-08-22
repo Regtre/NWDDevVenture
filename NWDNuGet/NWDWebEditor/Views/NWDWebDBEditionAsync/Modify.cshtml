@@ -1,0 +1,86 @@
+@using System.Reflection
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using NWDFoundation.Models
+@using NWDFoundation.WebEdition.Attributes
+@using NWDFoundation.WebEdition.Models
+@using NWDWebRuntime.Configuration
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string? tControllerName = ViewData["ControllerName"] as string;
+    string? tModelToUse = ViewData["ModelToUse"] as string;
+    Type? tModel = null;
+    if (tModelToUse != null)
+    {
+        tModel = Type.GetType(tModelToUse);
+    }
+    object? tResultToUse = ViewData["ResultToUse"];
+
+    PropertyInfo? tReferenceProp = tModel?.GetProperty("Reference");
+    ulong tReference = (ulong)(tReferenceProp?.GetValue(tResultToUse) ?? 0);
+}
+@if (NWDWebRuntimeConfiguration.KConfig.IsDevelopment == true)
+{
+    <div class="text-end mb-3">
+        <span class="ms-2 badge rounded-pill badge-subtle-success bi-check-circle"> Kortex</span>
+        @* <span class="ms-2 badge rounded-pill badge-subtle-danger bi-x-circle"> Kortex</span> *@
+    </div>
+}
+
+<div class="container p-0 m-0">
+    <div class="row g-3">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+
+            @using (Html.BeginForm("Save", tControllerName))
+            {
+                <div class="card">
+                    <div class="card-header bg-light border-bottom">
+                        <div class="card-title">
+                            @if (tReference == 0)
+                            {
+                                <h3> New instance of @tModel.Name</h3>
+                            }
+                            else
+                            {
+                                <h3> Modification of @tModel.Name (@tReference)</h3>
+                            }
+                        </div>
+                    </div>
+                    <div class="card-body border-bottom">
+                        <script>
+            tinymce.remove();
+        </script>
+                        @Html.AntiForgeryToken()
+                        @Html.Hidden("Reference", tReference)
+                        @foreach (PropertyInfo tProp in tModel?.GetProperties(BindingFlags.Public | BindingFlags.Instance)!)
+                        {
+                            if (tProp.Name != nameof(NWDBasicModel.Reference))
+                            {
+                                NWDWebPropertyDescriptionAttribute? tAttribute = tProp.GetCustomAttribute<NWDWebPropertyDescriptionAttribute>();
+                                ViewData["Attribute"] = tAttribute;
+                                ViewData["Item"] = tResultToUse;
+                                ViewData["InputName"] = tProp.Name;
+                                <partial name="_NWDWebEditionStyleSwitch" model="tProp"/>
+                            }
+                        }
+                    </div>
+                    <div class="card-footer">
+                        <div class="d-flex justify-content-between">
+                            @if (tReference != 0)
+                            {
+                                <a class="btn btn-sm btn-outline-secondary align-self-center" href="@Url.Action("Show", tControllerName)?sReference=@tReference">
+                                    <i class="bi bi-arrow-left"></i>
+                                </a>
+                            }
+                            <button class="btn btn-sm btn-outline-primary align-self-center mr-1" type="submit" onclick="tinyMCE.triggerSave();">
+                                <i class="bi-save"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            }
+            @Html.Raw("<script>" + (ViewData["Javascript"] as string ?? string.Empty) + "</script>")
+
+        </div>
+    </div>
+</div>

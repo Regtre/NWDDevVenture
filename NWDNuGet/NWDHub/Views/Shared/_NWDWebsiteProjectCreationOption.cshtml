@@ -1,0 +1,41 @@
+@using NWDHub.Models
+@model NWDWebsiteProjectCreationOption
+
+<div class="row g-3 mb-3">
+    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+        <div class="card">
+            <div class="card-header background-corner-2 border-bottom">
+                <div class="row">
+                    <div class="col-8">
+                        <h2><span class="fas fa-shield-alt"></span> Title h2 with sentence to explain and corner</h2>
+                        <p class="mb-0">You are my only hope!</p>
+                    </div>
+                </div>
+            </div>
+            @using (Html.BeginForm("WebProjectDownload", "NWDProject"))
+            {
+                <div class="card-body position-relative">
+                    --Vous pouvez télécharger un pro-projet en ASP dotnet (C# .Net)  pour votre site web d'assistance pour votre jeu connecté --
+                    -- les jpueurs pourront effectuer des opérations sur le site (achat, mot de passe oublié etc...)
+                </div>
+                <div class="card-body position-relative">
+                    le deploiement du project se fait à votre convenance sur vos servers, il vous faudra une base de données pour la gestion interne du site web (MySql ou MariaDB) 
+                </div>
+                <div class="card-body position-relative">
+                    pour plus d'information voir le tutorial en bas de page.
+                    Net-worked-data est pas responsable du site ou de son fonctionnement, blablabla ... 
+                </div>
+                <div class="card-footer">
+                    <div>
+                        @Html.HiddenFor(sM => sM.Reference)
+                    </div>
+                    <div>
+                        @Html.LabelFor(sM => sM.TreatModule)
+                        @Html.CheckBoxFor(sM => sM.TreatModule)
+                    </div>
+                    <button class="btn btn-outline-primary align-self-center mr-1" type="submit" onclick=""><i class="bi bi-download"></i> Download Project</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>

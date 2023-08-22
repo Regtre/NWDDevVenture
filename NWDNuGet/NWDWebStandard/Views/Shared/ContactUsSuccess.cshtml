@@ -1,0 +1,118 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@using NWDWebRuntime.Models
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    NWDContactUsModel? tContactModel = ViewData[nameof(NWDContactUsModel)] as NWDContactUsModel;
+}
+<div class="container p-0 m-0">
+    <div class="row g-3">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+
+            <div class="card">
+                <div class="card-header background-corner-2 border-bottom">
+                    <h3><span class="fas fa-envelope"></span> Your message has been sent!</h3>
+                </div>
+                <div class="card-body position-relative border-bottom">
+                    Thank you for your message. We will consult it as soon as possible.
+
+                    @if (@tContactModel != null)
+                    {
+                        <table class="table table-hover mb-0">
+                            <thead>
+                            <tr>
+                                <th scope="col">Key</th>
+                                <th scope="col">Value</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>
+                                    <div class="form-label">
+                                        Name
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-field">
+                                        @tContactModel.SenderName
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="form-label">
+                                        Email
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-field">
+                                        @tContactModel.SenderEmail
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="form-label">
+                                        Subject
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-field">
+                                        @tContactModel.Subject
+                                    </div>
+                                </td>
+                            </tr>
+                            @if (string.IsNullOrWhiteSpace(@tContactModel.Category) == false)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="form-label">
+                                            Category
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="form-field">
+                                            @tContactModel.Category
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                            @if (string.IsNullOrWhiteSpace(@tContactModel.SubCategory) == false)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="form-label">
+                                            Subcategory
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="form-field">
+                                            @tContactModel.SubCategory
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                            <tr>
+                                <td>
+                                    <div class="form-label">
+                                        Message
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-field">
+                                        @tContactModel.Message
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,78 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <Title>NWDWebEmailSender</Title>
+    <EnableDefaultRazorGenerateItems>true</EnableDefaultRazorGenerateItems>
+    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+    <IncludeRazorContentInPack>true</IncludeRazorContentInPack>
+    <EmbedRazorGenerateSources>true</EmbedRazorGenerateSources>
+    <Authors>idéMobi</Authors>
+    <Copyright>idéMobi</Copyright>
+    <PackageTags>Net-Worked-Data Web Email Sender</PackageTags>
+    <PackageVersion>0.1.752</PackageVersion>
+    <PackageProjectUrl>https://gitlab.hephaiscode.com/NetWorkedData/NWDWebEmailSend</PackageProjectUrl>
+    <PackageLicense>https://gitlab.hephaiscode.com/NetWorkedData/NWDWebEmailSend/-/blob/main/LICENSE.md</PackageLicense>
+    <RepositoryUrl>https://gitlab.hephaiscode.com/NetWorkedData/NWDWebEmailSend</RepositoryUrl>
+    <RepositoryType>GitLab CE</RepositoryType>
+    <PackageTags>Net-Worked-Data  Web Editor</PackageTags>
+    <PackageVersion>0.1.752</PackageVersion>
+    <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
+    <AssemblyVersion>0.1.752</AssemblyVersion>
+    <FileVersion>0.1.752</FileVersion>
+    <NeutralLanguage>en</NeutralLanguage>
+    <PackageIcon>NWDWebEmailSender.png</PackageIcon>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\NetWorkedData.snk</AssemblyOriginatorKeyFile>
+    <PublicSign>true</PublicSign>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.13" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="6.0.13" />
+    <PackageReference Include="NWDFoundation" Version="0.1.752" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NWDFoundation\NWDFoundation.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Views\*">
+      <Generator>RazorGenerator</Generator>
+    </Content>
+    <Content Remove="Views\Shared\_Layout.cshtml" />
+    <None Update="NWDWebEmailSender.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="**\*.cshtml" Pack="false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="wwwroot\**\*" />
+    <EmbeddedResource Include="wwwroot\**\*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="**\*.resx">
+      <ExcludeFromManifest>true</ExcludeFromManifest>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Configuration" />
+    <Folder Include="Managers" />
+    <Folder Include="Models" />
+    <Folder Include="Services" />
+    <Folder Include="Views\Shared" />
+    <Folder Include="wwwroot" />
+  </ItemGroup>
+
+</Project>

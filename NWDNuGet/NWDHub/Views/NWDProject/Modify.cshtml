@@ -1,0 +1,91 @@
+@using System.Reflection
+@using NWDFoundation.Models
+@using NWDFoundation.WebEdition.Attributes
+@using NWDFoundation.WebEdition.Enums
+@using NWDFoundation.WebEdition.Models
+@using NWDHub.Models
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string? tControllerName = ViewData["ControllerName"] as string;
+    string? tModelToUse = ViewData["ModelToUse"] as string;
+    Type? tModel = null;
+    if (tModelToUse != null)
+    {
+        tModel = Type.GetType(tModelToUse);
+    }
+    NWDProject? tResultToUse = ViewData["ResultToUse"] as NWDProject;
+    
+    PropertyInfo? tReferenceProp = tModel?.GetProperty("Reference");
+    ulong tReference = (ulong)(tReferenceProp?.GetValue(tResultToUse) ?? 0);
+}
+@using (Html.BeginForm("Save", tControllerName))
+{
+    <h1>Custom edit page for project! </h1>
+    <div class="card-body border-bottom">
+        <script>
+            tinymce.remove();
+        </script>
+        @Html.AntiForgeryToken()
+        @Html.Hidden("Reference", tReference)
+    @if (tModel != null)
+    {
+        foreach (PropertyInfo tProp in tModel.GetProperties(BindingFlags.Public | BindingFlags.Instance))
+        {
+            if (tProp.Name != nameof(NWDBasicModel.Reference))
+            {
+                NWDWebPropertyDescriptionAttribute? tAttribut = tProp.GetCustomAttribute<NWDWebPropertyDescriptionAttribute>();
+                if (tAttribut != null)
+                {
+                    switch (tAttribut.Infos.Style)
+                    {
+                        case NWDWebEditionStyle.RichText:
+                        {
+                            <div class="pb-3 mb-3 border-bottom">
+                                @Html.Label(tProp.Name, tAttribut.Infos.Label, new { @class = "form-label" })
+                                @Html.TextArea(tProp.Name, (string?)tProp.GetValue(tResultToUse, null), new { @class = "tinymce d-none form-control", @placeholder = tAttribut.Infos.Placeholder })
+                            </div>
+                            <script>
+                                tinymce.init({selector: "#@tProp.Name"});
+                            </script>
+                        }
+                            break;
+                        case NWDWebEditionStyle.Text:
+                        {
+                            <div class="pb-3 mb-3 border-bottom">
+                                @Html.Label(tProp.Name, tAttribut.Infos.Label, new { @class = "form-label" })
+                                @Html.TextBox(tProp.Name, (string?)tProp.GetValue(tResultToUse, null), new { @class = "form-control", @placeholder = tAttribut.Infos.Placeholder })
+                            </div>
+                        }
+                            break;
+                        case NWDWebEditionStyle.Bool:
+                        {
+                            <div class="pb-3 mb-3 border-bottom">
+                                @Html.Label(tProp.Name, tAttribut.Infos.Label, new { @class = "form-label" })
+                                <div class="form-check form-switch">
+                                    @Html.CheckBox(tProp.Name, (bool?)tProp.GetValue(tResultToUse, null), new { @class = "form-check-input", @placeholder = tAttribut.Infos.Placeholder })
+                                    @Html.Label(tProp.Name, tAttribut.Infos.Placeholder, new { @class = "form-check-label" })
+                                </div>
+                            </div>
+                        }
+                            break;
+                    }
+                }
+            }
+        }
+    }
+    </div>
+    <div class="card-footer">
+        <div>
+            <button class="btn btn-outline-primary align-self-center mr-1" type="submit" onclick="tinyMCE.triggerSave();"><i class="bi-save"></i> Save</button>
+            @if (tReference!=0)
+                {
+                    <a class="btn btn-outline-secondary align-self-center" href="@Url.Action("Show", tControllerName)?sReference=@tReference"><i class="bi-house"></i> Cancel</a>
+                }
+            else
+            {
+                <a class="btn btn-outline-secondary align-self-center" href="/"><i class="bi-house"></i> Cancel</a>
+            }
+        </div>
+    </div>
+}

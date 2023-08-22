@@ -1,0 +1,36 @@
+@using NWDFoundation.Tools
+@using NWDWebTrackException.Configuration
+<div class="row">
+            <div class="col-lg-6 mb-3">
+                <div class="card-body m-0">
+                    In your <a href="https://www.slack.com">Slack</a> create an application "Incoming WebHooks" and copy "webhook URL".
+                    In <b>appsetting.json</b> file add a section <b>@nameof(NWDWebTrackExceptionConfiguration)</b>.
+                    <br/>
+                    Inside this section add :
+                    <ul>
+                        <li> <span class="text-primary">@nameof(NWDWebTrackExceptionConfiguration.SendExceptionByEmail)</span> (true or false) </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-6 mb-3">
+                <div class="card bg-dark border-primary">
+                    <div class="card-header border-bottom">
+                        appsettings.json
+                    </div>
+                    <div class="card-body m-0">
+                        <pre><code>
+        {
+            "Logging": {...},
+            "AllowedHosts": "*",
+            "Kestrel": {...},
+            ...
+            <span class="text-primary">"@nameof(NWDWebTrackExceptionConfiguration)": {</span>
+                <span class="text-primary"> "@nameof(NWDWebTrackExceptionConfiguration.SendExceptionByEmail)": <span class="text-warning">false</span>,</span>
+            <span class="text-primary">},</span>
+            ...
+        }
+                                </code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>

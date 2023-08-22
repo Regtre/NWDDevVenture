@@ -1,0 +1,18 @@
+﻿@using NWDWebDownloader.Managers
+@using NWDWebDownloader.Configuration
+
+@model NWDDownloadConfig
+
+<div class="card">
+    <div class="card-header bg-light background-corner-2 border-bottom">
+        <div class="card-title">
+            <h3><span class="bi bi-file-earmark-text me-1"></span>@Model.PageName</h3>
+        </div>
+    </div>
+    <div class="card-body">
+        @if (NWDDownloadManager.ResourcesByConfig.ContainsKey(Model.PageName) && !string.IsNullOrEmpty(NWDDownloadManager.ResourcesByConfig[Model.PageName].Header))
+        {
+            @Html.Raw(NWDDownloadManager.ResourcesByConfig[Model.PageName].Header)
+        }
+    </div>
+</div>

@@ -1,0 +1,29 @@
+<root>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="NoDownloadAv" xml:space="preserve">
+        <value>Kein Download verfügbar</value>
+    </data>
+    <data name="Date" xml:space="preserve">
+        <value>Datum</value>
+    </data>
+    <data name="Download" xml:space="preserve">
+        <value>Herunterladen</value>
+    </data>
+    <data name="FileName" xml:space="preserve">
+        <value>DateiName</value>
+    </data>
+    <data name="Size" xml:space="preserve">
+        <value>Größe</value>
+    </data>
+</root>

@@ -1,0 +1,35 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@using Microsoft.AspNetCore.Http;
+@using NWDWebRuntime.Models
+@using NWDWebRuntime.Tools
+@using NWDWebStandard.Controllers
+
+@inject IHttpContextAccessor HttpContextAccessor
+
+@model NWDWebRuntime.Models.NWDAccountSignOut
+    <div class="container p-0 m-0 mb-3">
+ <div class="row g-3">
+ <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+<div class="card">
+    <div class="card-header bg-warning text-white">Sign-out</div>
+    <div class="card-body">
+        <p class="mb-3">You can safely disconnect from this site. To reconnect, all you have to do is fill in your credentials.</p>
+        @if (HttpContextAccessor.HttpContext != null)
+        {
+            @using (Html.BeginForm(nameof(NWDAccountController.SignOut), NWDToolBox.GetController(@HttpContextAccessor.HttpContext)))
+            {
+                @Html.AntiForgeryToken()
+                @Html.Hidden(nameof(NWDAccountSignOut.AccountSignOutController), NWDToolBox.GetController(@HttpContextAccessor.HttpContext))
+                @Html.Hidden(nameof(NWDAccountSignOut.AccountSignOutAction), NWDToolBox.GetAction(@HttpContextAccessor.HttpContext))
+                <button type="submit" class="btn btn-outline-warning">
+                    <span class="fas fa-sign-out-alt"></span> Sign-out
+                </button>
+            }
+        }
+
+    </div>
+</div>
+ </div>
+ </div>
+    </div>

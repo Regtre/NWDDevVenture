@@ -1,0 +1,90 @@
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using NWDFoundation.Configuration
+@using NWDFoundation.Tools
+@using NWDWebRuntime.Configuration
+@using NWDWebStandard.Models
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    //string tLoremIpsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
+    //string tLoremIpsumShort = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
+}
+
+@if (NWDWebRuntimeConfiguration.KConfig.IsDevelopment == true)
+{
+    <div class="text-end mb-3">
+        <span class="ms-2 badge rounded-pill badge-subtle-success bi-check-circle"> Kortex</span>
+        @* <span class="ms-2 badge rounded-pill badge-subtle-danger bi-x-circle"> Kortex</span> *@
+    </div>
+}
+
+<!-- TITLE With background -->
+<div class="row min-vh-100 flex-center g-0">
+            <div class="col-lg-8 py-3 position-relative">
+                <img class="bg-auth-circle-shape" src="/decorations/circles-1.png" alt="" width="250"><img class="bg-auth-circle-shape-2" src="/decorations/circles-2.png" alt="" width="150">
+                <div class="card overflow-hidden z-index-1">
+                    <div class="card-body p-0">
+                        <div class="row g-0 h-100">
+                            <div class="col-md-5 text-center bg-primary">
+                                <div class="position-relative p-4 pt-md-5 pb-md-7 light">
+                                    <div class="bg-holder bg-primary background-half-circle background-animated">
+                                    </div>
+                                    <div class="z-index-1 position-relative">
+                                        <a class="link-light mb-3 font-sans-serif fs-1 d-inline-block fw-bolder" href="/">Net-Worked-Data</a>
+                                    </div>
+                                </div>
+                                <div class="mt-3 mb-4 mt-md-4 mb-md-5 light">
+                                    <p class="text-white">
+                                        Another action?<br>
+                                        <a class="btn btn-outline-light mt-2 px-4" href="/NWDAccount/SignUpForm">Get started!</a>
+                                    </p>
+                                    <p class="mb-0 mt-4 mt-md-5 fs--1 fw-semi-bold text-white opacity-75">
+                                        Read these instructions!
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-md-7 d-flex flex-center">
+                                <div class="p-4 p-md-5 flex-grow-1">
+                                    <div class="row flex-between-center">
+                                        <div class="col-auto">
+                                            <h3>Title</h3>
+                                        </div>
+                                    </div>
+                                        <div class="mb-3" aria-describedby="popoverAccountSignIn_Email">
+                                            <label class="form-label" for="AccountSignInEmail">Adresse email</label>
+                                            <input class="form-control" data-val="true" data-val-email="The Adresse email field is not a valid e-mail address." data-val-required="The address email field is required." id="AccountSignInEmail" name="AccountSignInEmail" placeholder="Email" type="email" value="">
+                                            <div class="hide-if-empty alert alert-warning mt-1 p-3 pt-1 pb-1 field-validation-valid" data-valmsg-for="AccountSignInEmail" data-valmsg-replace="true"></div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label" for="AccountSignInPassword">Mot de passe</label>
+                                            <input class="form-control" data-val="true" data-val-maxlength="The field Mot de passe must be a string or array type with a maximum length of '128'." data-val-maxlength-max="128" data-val-minlength="The field Mot de passe must be a string or array type with a minimum length of '8'." data-val-minlength-min="8" data-val-required="The Mot de passe field is required." id="AccountSignInPassword" maxlength="128" name="AccountSignInPassword" placeholder="Password" type="password">
+                                            <div class="hide-if-empty alert alert-warning mt-1 p-3 pt-1 pb-1 field-validation-valid" data-valmsg-for="AccountSignInPassword" data-valmsg-replace="true"></div>
+                                        </div>
+                                        <div class="row flex-between-center">
+                                            <div class="col-auto">
+                                                <div class="form-check mb-0">
+                                                    <input class="form-check-input" data-val="true" data-val-required="The Se souvenir de moi field is required." id="AccountSignInRememberMe" name="AccountSignInRememberMe" type="checkbox" value="true">
+                                                    <label class="form-label" for="AccountSignInRememberMe">Se souvenir de moi</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <a class="fs--1" href="/NWDAccount/SignLostForm">Forgot password?</a>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <div class="mb-3">
+                                                <button class="btn btn-primary d-block w-100 mt-3" type="submit" id="NWDAccountSignIn_Submit" name="NWDAccountSignIn_Submit" disabled="disabled">Sign-in</button>
+                                            </div>
+                                        </div>
+                                    <div class="row g-2 mt-2">
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>

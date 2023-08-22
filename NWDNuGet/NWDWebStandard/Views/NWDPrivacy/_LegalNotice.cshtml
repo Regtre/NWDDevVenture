@@ -1,0 +1,57 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using NWDWebRuntime.Configuration
+@using NWDWebStandard.Configuration
+<!-- TITLE With background -->
+<div class="card mb-3">
+    <div class="bg-holder d-none d-lg-block bg-card background-corner-2">
+    </div>
+    <!--/.bg-holder-->
+    <div class="card-body position-relative">
+        <div class="row">
+            <div class="col-lg-8">
+                <h3><span class="fas fa-landmark"></span> Legal notice</h3>
+                <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi. Proin porttitor, orci nec nonummy molestie, enim est eleifend mi, non fermentum diam nisl sit amet erat. Duis semper.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card mb-3">
+    <div class="card-header border-bottom background-corner-1">
+        <div class="card-title">
+            Legal notice
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-lg-12 mb-3">
+                <h5 class="fs-0">Editeur du site internet</h5>
+                <p class="fs--1">
+                    L'éditeur est le département <b> @NWDWebStandardConfiguration.KConfig.WebSiteName</b> de la société <b> @NWDWebStandardConfiguration.KConfig.SocietyName</b>.<br/>
+                    L'hébergeur est la société <b>OVH</b>.
+                </p>
+                <h5 class="fs-0">Proriété intellectuelle</h5>
+                <p class="fs--1">
+                    La société <b>@NWDWebStandardConfiguration.KConfig.SocietyName</b> est pleine détentrice des droits intellectuels du site <b>@NWDWebStandardConfiguration.KConfig.WebSiteName</b>. L'usage des éléments est limité comme défini dans les
+                    <a asp-area="" asp-controller="NWDPrivacy" asp-action="TermsAndConditions">Conditions générales du site</a>.
+                </p>
+                <hr/>
+            </div>
+            <div class="col-lg-6 mb-3">
+                <h5 class="fs-0">Société @NWDWebStandardConfiguration.KConfig.SocietyName</h5>
+                <p class="fs--1">
+                    La société <b>@NWDWebStandardConfiguration.KConfig.SocietyName</b> est située au @NWDWebStandardConfiguration.KConfig.SocietyAddress - @NWDWebStandardConfiguration.KConfig.SocietyZipCode @NWDWebStandardConfiguration.KConfig.SocietyTown - @NWDWebStandardConfiguration.KConfig.SocietyCountry.<br/>La société <b>@NWDWebStandardConfiguration.KConfig.SocietyName</b> est enregistrée à la chambre de commerce de Lille.<br/>
+                    <b>@NWDWebStandardConfiguration.KConfig.SocietyName</b>, SARL Au capital de 7 500 €
+                    <br/>APE 7722C<br/>RCS LILLE<br/>SIRET 444249 551 00011<br/>TVA intracommunautaire FR93444249551<br/>Dépôt à la CNIL n°1251914
+                </p>
+
+            </div>
+            <div class="col-lg-6 mb-3">
+                <h5 class="fs-0">Société OVh</h5>
+                <p class="fs--1"> La société <b>OVH</b> est située au 2 rue Kellermann - 59100 Roubaix - FRANCE.<br/>La société <b>OVH</b> est enregistrée à la chambre de commerce de Lille.<br/><b>OVH</b>, SAS au capital de 10 069 020 €<br/>APE 2620Z<br/>RCS LILLE<br/>SIRET 424761 419 00045<br/>TVA intracommunautaire FR22424761419 </p>
+            </div>
+        </div>
+        <div class="card-footer py-3">
+        </div>
+    </div>
+</div>

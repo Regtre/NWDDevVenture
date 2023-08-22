@@ -1,0 +1,347 @@
+﻿@using System.Collections
+@using System.Globalization
+@using System.Reflection
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using NWDFoundation.Models
+@using NWDFoundation.WebEdition.Attributes
+@using NWDFoundation.WebEdition.Enums
+@using NWDFoundation.WebEdition.Facades
+@using NWDFoundation.Localization
+@using NWDFoundation.Tools
+@using NWDWebRuntime.Configuration
+@using NWDWebRuntime.Extensions
+@using NWDWebRuntime.Tools
+@model System.Reflection.PropertyInfo
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@* @inject IHtmlLocalizer<NWDWebEditor.Resources.SharedResource> Localizer *@
+
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    NWDWebPropertyDescriptionAttribute? tAttribute = ViewData["Attribute"] as NWDWebPropertyDescriptionAttribute;
+    object? tItem = ViewData["Item"];
+    string? tName = ViewData["InputName"] as string;
+    string? tValString = Model.GetValue(tItem, null) as string;
+}
+@if (tAttribute != null)
+{
+    if (string.IsNullOrEmpty(tValString))
+    {
+        tValString = string.Empty;
+    }
+    string tDebug = "";
+    PropertyInfo tInfo = tItem.GetType().GetProperty(tName.Replace("Item.",""));
+    string tType = "unknow";
+    if (tInfo != null)
+    {
+        tType = tInfo.PropertyType.Name;
+    }
+    tDebug = "<div class=\"text-start\">Property: " + tName + "<br/>Label: " + tAttribute.Infos.Label + "<br/>Input style: " + tAttribute.Infos.Style.ToString() + "<br> Type : "+tType+"<br/>Value : \'" + tValString.Replace("\"", "\\\"") + "\'</div>";
+    string tTooltips = tAttribute.Infos.Description.Replace("\"", "\\\"") + "<hr/>" + tDebug;
+
+    string tRequired = "";
+    <div class="">
+    @* Label area *@
+    @switch (tAttribute.Infos.Style)
+    {
+        case NWDWebEditionStyle.Hidden:
+            break;
+        case NWDWebEditionStyle.HiddenDebugable:
+            @Html.Label(tName, "Invisible", new { @class = "form-label text-secondary", data_bs_toggle = "tooltip", data_bs_placement = "left", data_bs_html = "true", title = tTooltips })
+            break;
+        default:
+            @Html.Label(tName, tAttribute.Infos.Label, new { @class = "form-label", data_bs_toggle = "tooltip", data_bs_placement = "left", data_bs_html = "true", title = tTooltips })
+            if (tAttribute.Infos.Required == true)
+            {
+                tRequired = "data-val=\"\" data-val-required=\"The "+tAttribute.Infos.Label+" field is required..\"";
+                <span class="ms-2 badge badge-sm rounded-pill badge-subtle-danger">Required</span>
+            }
+            else
+            {
+                @* <span class="ms-2 badge rounded-pill badge-subtle-success">Optional</span> *@
+            }
+            break;
+    }
+    @switch (tAttribute.Infos.Style)
+    {
+        case NWDWebEditionStyle.Hidden:
+        {
+            @* @Html.Hidden(tName, tValString) *@
+            <input id="@tName.Replace(".","_")" name="@tName" type="hidden" value="@tValString">
+        }
+            break;
+        case NWDWebEditionStyle.HiddenDebugable:
+        {
+            @* @Html.Hidden(tName, tValString) *@
+            <input id="@tName.Replace(".","_")" name="@tName" type="hidden" value="@tValString">
+        }
+            break;
+        case NWDWebEditionStyle.ShowTextOnly:
+        {
+            <div class="form-control form-label-fix disabled"> @tValString</div>
+            @* @Html.Hidden(tName, tValString) *@
+            <input id="@tName.Replace(".","_")" name="@tName" type="hidden" value="@tValString">
+        }
+            break;
+        case NWDWebEditionStyle.ShowIntOnly:
+        {
+            int tVal = (int)Model.GetValue(tItem, null);
+            <div class="form-control form-label-fix disabled">@tVal</div>
+            @* @Html.Hidden(tName, tVal) *@
+            <input id="@tName.Replace(".","_")" name="@tName" type="hidden" value="@tVal">
+        }
+            break;
+        case NWDWebEditionStyle.RichText:
+        {
+            string? tVal = Model.GetValue(tItem, null) as string;
+            <script>
+            tinymce.init({
+            selector: ".tinymce",
+                })
+            </script>
+        }
+            break;
+        case NWDWebEditionStyle.Text:
+        {
+            <span class="ms-2 badge rounded-pill badge-subtle-success bi-check-circle"> Kortex</span>
+            <input class="form-control input-validation-error" id="@tName.Replace(".","_")" name="@tName" placeholder="@tAttribute.Infos.Placeholder" type="text" value="@tValString" data-val="true"  @Html.Raw(tRequired)  aria-describedby="@tName.Replace(".","_")-error" aria-invalid="true">
+            @* @Html.TextBox(tName, tValString, new { @class = "form-control", @placeholder = tAttribute.Infos.Placeholder}) *@
+        }
+            break;
+        case NWDWebEditionStyle.UnixText:
+        {
+            <span class="ms-2 badge rounded-pill badge-subtle-success bi-check-circle"> Kortex</span>
+            <input class="form-control input-validation-error" id="@tName.Replace(".","_")" name="@tName" placeholder="@tAttribute.Infos.Placeholder" type="text" value="@tValString" data-val="true" @Html.Raw(tRequired) data-val-webregexp="Only Unix text allowed" data-val-webregexp-pattern="[a-zA-Z0-9_]*" aria-describedby="@tName.Replace(".","_")-error" aria-invalid="true">
+            @* @Html.TextBox(tName, tValString, new { @class = "form-control", @placeholder = tAttribute.Infos.Placeholder, data_val_WebRegExp_pattern = "[a-zA-Z0-9_]*", data_val_WebRegExp = "Only Unix text allowed", data_val = "true" }) *@
+        }
+            break;
+        case NWDWebEditionStyle.AsciiText:
+        {
+            <span class="ms-2 badge rounded-pill badge-subtle-success bi-check-circle"> Kortex</span>
+            <input class="form-control input-validation-error" id="@tName.Replace(".","_")" name="@tName" placeholder="@tAttribute.Infos.Placeholder" type="text" value="@tValString" data-val="true" @Html.Raw(tRequired) data-val-webregexp="Only ASCII text allowed" data-val-webregexp-pattern="[a-zA-Z0-9_ \\-]*" aria-describedby="@tName.Replace(".","_")-error" aria-invalid="true">
+        }
+            break;
+        case NWDWebEditionStyle.Country:
+        {
+                @Html.DropDownList(tName, NWDCountryISOExtension.GetCountriesSelectListItem(tValString), new { @class = "form-control form-select", @placeholder = tAttribute.Infos.Placeholder })
+        }
+            break;
+        case NWDWebEditionStyle.Language:
+        {
+            string? tVal = Model.GetValue(tItem, null) as string;
+            int tI = 0;
+            <div class="container">
+                <div class="row">
+                    @foreach (SelectListItem tItemList in NWDLocalizationISOExtension.GetLanguageSelectListItem(new []{tVal}))
+                    {
+                        string tIdRadio = tName + "_"+tItemList.Value;
+                        string tChecked = "";
+                        if (tItemList.Selected)
+                        {
+                            tChecked = "checked";
+                        }
+                        <div class="col-6 col-sm-6 col-md-4 col-lg-3 col-xl-3 col-xxl-2">
+                            <input class="form-check-input" type="radio" id="@tIdRadio" name="@tName" value="@tItemList.Value" @tChecked>
+                            <label class="form-label" for="@tIdRadio">@tItemList.Text</label>
+                        </div>
+                        tI++;
+                    }
+                </div>
+            </div>
+        }
+            break;
+        case NWDWebEditionStyle.Languages:
+        {
+            string[]? tVal = Model.GetValue(tItem, null) as string[];
+            int tI = 0;
+                <div class="container">
+                    <div class="row">
+                        @foreach (SelectListItem tItemList in NWDLocalizationISOExtension.GetLanguageSelectListItem(tVal))
+                        {
+                            <div class="col-6 col-sm-6 col-md-4 col-lg-3 col-xl-3 col-xxl-2">
+                                @Html.CheckBox(tName + "[" + tI + "]", tItemList.Selected, new { @value = tItemList.Value, @class = "form-check-input", @placeholder = tAttribute.Infos.Placeholder }) @Html.Label(tName + "[" + tI + "]", tItemList.Text, new { @class = "form-label" })
+                            </div>
+                            tI++;
+                        }
+                    </div>
+                </div>
+        }
+            break;
+        case NWDWebEditionStyle.Bool:
+        {
+            bool? tVal = Model.GetValue(tItem, null) as bool?;
+                <div class="form-check form-switch">
+                    @Html.CheckBox(tName, tVal, new { @class = "form-check-input", @placeholder = tAttribute.Infos.Placeholder })
+                    @Html.Label(tName, tAttribute.Infos.Placeholder, new { @class = "form-check-label" })
+                </div>
+        }
+            break;
+        case NWDWebEditionStyle.Color:
+        {
+                @Html.TextBox(tName, tValString, new
+                {
+                    @class = "form-control",
+                    @placeholder = tAttribute.Infos.Placeholder,
+                    @type = "color"
+                })
+            break;
+        }
+        case NWDWebEditionStyle.Date:
+        {
+            DateTime tVal = Model.GetValue(tItem, null) is DateTime ? (DateTime)(Model.GetValue(tItem, null) ?? DateTime.Now) : DateTime.Now;
+                @Html.TextBox(tName, tVal.ToString(CultureInfo.CurrentUICulture.DateTimeFormat.ShortDatePattern), new
+                {
+                    @class = "form-control datetimepicker",
+                    data_options = "{\"dateFormat\":\"d-m-Y\"}"
+                })
+            break;
+        }
+        case NWDWebEditionStyle.Dropdown:
+        {
+                @Html.DropDownList(tName, new SelectList(tAttribute.Infos.DropDownValues), tValString, new { @class = "form-select" })
+        }
+            break;
+        case NWDWebEditionStyle.Enum:
+        {
+            @Html.DropDownList(tName, Html.GetEnumSelectList(tInfo.PropertyType), tValString, new { @class = "form-select" })
+        }
+            break;
+        case NWDWebEditionStyle.Flag:
+        {
+            int tVal = (int)Model.GetValue(tItem, null);
+            string tToken = NWDRandom.RandomStringToken(12);
+            List<string> tTokenBs = new List<string>();
+            @Html.Hidden(tName, tVal.ToString())
+            <div class="row">
+                @foreach(string tSelectItem in Enum.GetNames(tInfo.PropertyType))
+                {
+                    string tTokenB = NWDRandom.RandomStringToken(8);
+                    int i = (int)Enum.Parse(tInfo.PropertyType, tSelectItem);
+                    bool ExactlyOneBitSet = (i!=0) && ((i&(i-1)) == 0);
+                    
+                    if (ExactlyOneBitSet)
+                    {
+                        tTokenBs.Add("if ($('#" + tTokenB + "').is(':checked')){ r = r + " + i + "; };");
+                        <div class="col-auto">
+                            @if ((tVal & i) != 0)
+                            {
+                                <input id="@tTokenB"type="checkbox" checked onchange="@tToken ();"/>
+                                <label for="@tTokenB"> @tSelectItem </label>
+                            }
+                            else
+                            {
+                                <input id="@tTokenB"type="checkbox" onchange="@tToken ();"/>
+                                <label for="@tTokenB"> @tSelectItem</label>
+                            }
+                        </div>
+                    }
+                }
+                    <script>
+                    function @tToken ()
+                    {
+                        var r = 0;
+                        @Html.Raw(string.Join('\n', tTokenBs))
+                        //alert('change it for '+r);
+                        $('#@tName.Replace(".","_")').val(r);
+                    }
+                    </script>
+            </div>
+        }
+            break;
+        case NWDWebEditionStyle.Object:
+        {
+            Type? tModel = Model.PropertyType;
+            string? tInputName = ViewData["InputName"] as string;
+            foreach (PropertyInfo tProp in tModel?.GetProperties(BindingFlags.Public | BindingFlags.Instance)!)
+            {
+                NWDWebPropertyDescriptionAttribute? tAttributeObject = tProp.GetCustomAttribute<NWDWebPropertyDescriptionAttribute>();
+                ViewData["Attribute"] = tAttributeObject;
+                ViewData["Item"] = Model.GetValue(tItem, null);
+                ViewData["InputName"] = tInputName + "." + tProp.Name;
+                <partial name="_NWDWebEditionStyleSwitch" model="tProp"/>
+            }
+
+            break;
+        }
+        case NWDWebEditionStyle.ReferenceArray:
+        {
+            INWDReferenceArray? tVal = Model.GetValue(tItem, null) as INWDReferenceArray;
+            IList? tList = tAttribute.Infos.DataRetriever?.
+                GetType().GetMethod("GetAll")?.
+                MakeGenericMethod(tAttribute.Infos.ListType!).
+                Invoke(tAttribute.Infos.DataRetriever, null) as IList;
+            IList? tSelectedValueList = tAttribute.Infos.DataRetriever?.
+                GetType().GetMethod("GetAllByReference")?.
+                MakeGenericMethod(tAttribute.Infos.ListType!).
+                Invoke(tAttribute.Infos.DataRetriever, new object?[] { tVal }) as IList;
+
+            if (tList != null)
+            {
+                @Html.ListBox(tName + "." + nameof(NWDReferencesArray<NWDDatabaseBasicModel>.ReferencesList),
+                    new SelectList(
+                        tList.Cast<NWDDatabaseWebBasicModel>().Select(x => new SelectListItem { Value = x.Reference.ToString(), Text = x.ToString() }),
+                        "Value", "Text"
+                        , (tSelectedValueList ?? new List<NWDDatabaseWebBasicModel>()).Cast<NWDDatabaseWebBasicModel>().Select(x => new SelectListItem { Value = x.Reference.ToString(), Text = x.ToString() })
+                        ),
+                    new { @class = "form-select js-choice", multiple = "multiple", id = tName + "." + nameof(NWDReferencesArray<NWDDatabaseBasicModel>.ReferencesList) })
+            }
+            <script>
+            new Choices(document.getElementById("@tName"+"."+"@nameof(INWDReferenceArray.ReferencesList)"),{
+                removeItemButton: true,
+            }); 
+            </script>
+
+            break;
+        }
+        case NWDWebEditionStyle.List:
+        {
+            <p> Not supported yet</p>
+
+            break;
+        }
+        case NWDWebEditionStyle.Track:
+        {
+            Dictionary<string, int>? tDico = ViewData["TracksAvailable"] as Dictionary<string, int>;
+            string? tVal = Model.GetValue(tItem, null) as string;
+            if (tDico != null && tDico.Count > 0)
+            {
+                    @Html.DropDownList(tName, new SelectList(tDico, "Value", "Key"), tVal, new { @class = "form-select" })
+            }
+            else
+            {
+                    @Html.Hidden(tName, tVal)
+                    <div>No track available</div>
+            }
+        }
+            break;
+
+        default:
+        {
+            string? tVal = Model.GetValue(tItem, null) as string;
+            @Html.Hidden(tName, tVal)
+        }
+            break;
+    }
+    @switch (tAttribute.Infos.Style)
+    {
+        case NWDWebEditionStyle.Hidden:
+            break;
+        case NWDWebEditionStyle.HiddenDebugable:
+            break;
+        default:
+            @Html.ValidationMessage(tName, null, new { @class = "hide-if-empty alert alert-warning mt-1 p-3 pt-1 pb-1" }, "div")
+            break;
+    }
+    </div>
+}
+else
+{
+    Object? tObject = Model.GetValue(tItem, null);
+    if (tObject != null)
+    {
+        @Html.Hidden(tName, tObject.ToString())
+    }
+}

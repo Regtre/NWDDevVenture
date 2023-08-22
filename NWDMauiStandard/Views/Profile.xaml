@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="NWDMauiDemo.Views.Profile"
+             xmlns:model="clr-namespace:NWDFoundation.Models;assembly=NWDFoundation"
+             xmlns:viewModels="clr-namespace:NWDMauiStandard.ViewModels;assembly=NWDMauiStandard"
+             xmlns:models="clr-namespace:NWDWebRuntime.Models;assembly=NWDStandardModels"
+             BackgroundColor="FloralWhite">
+    <ContentPage.Content>
+        <Grid >
+            <StackLayout Margin="20" Spacing="10">
+
+                <StackLayout Margin="0,80">
+                    <Label FontSize="32" Text="Welcome Back" />
+                    <Label FontFamily="OpenSansRegular" TextColor="{StaticResource SecondaryColor}"
+                           FontSize="16" Text="Welcome to your profile ! " />
+                </StackLayout>
+
+                <!--<Label Text="Services" TextColor="{DynamicResource PrimaryColor}"></Label>
+                <CollectionView ItemsSource="{Binding Services}" x:DataType="viewModels:ProfileViewModel">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="model:NWDAccountService">
+                            <Grid Padding="10">
+                                <HorizontalStackLayout Spacing="5">
+                                    <Label Text="{Binding Account}"
+                                           FontAttributes="Bold" TextColor="{DynamicResource SecondaryColor}" />
+                                    <Label Text="{Binding Service}"
+                                           FontAttributes="Bold" TextColor="{DynamicResource SecondaryColor}" />
+                                </HorizontalStackLayout>
+
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+                
+                <Label Text="Signs" TextColor="{DynamicResource PrimaryColor}"></Label>
+                <CollectionView ItemsSource="{Binding Signs}" x:DataType="viewModels:ProfileViewModel">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="model:NWDAccountSign">
+                            <Grid Padding="10">
+                                <HorizontalStackLayout Spacing="5">
+                                    <Label Text="{Binding Account}"
+                                           FontAttributes="Bold" TextColor="{DynamicResource SecondaryColor}" />
+                                    <Label Text="{Binding SignType}"
+                                           FontAttributes="Bold" TextColor="{DynamicResource SecondaryColor}" />
+                                    <Label Text="{Binding Name}"
+                                           FontAttributes="Bold" TextColor="{DynamicResource SecondaryColor}" />
+                                </HorizontalStackLayout>
+
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>-->
+                
+                <!--<HorizontalStackLayout Spacing="5">
+                   <CollectionView ItemsSource="{Binding AccountInfos}" x:DataType="viewModels:ProfileViewModel">
+                    <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:NWDAccountInfo">
+                        <Label Text="{Binding Nickname}"></Label>
+                    </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </HorizontalStackLayout>-->
+                <HorizontalStackLayout Spacing="5">
+                    <Button Text="Modify Email Password"
+                            Clicked="SignModifyEmailPassword"
+                            TextColor="Pink">
+                    </Button>
+                    <Button Text="Modify Login Password"
+                            Clicked="SignModifyLoginPassword"
+                            TextColor="Pink">
+                    </Button>
+                </HorizontalStackLayout>
+                
+                <HorizontalStackLayout Spacing="5">
+                    <Button Text="Add Email/PWD Sign"
+                            Clicked="GoToAddSignEmailPassword"
+                            TextColor="Pink">
+                    </Button>
+                    <Button Text="Add Login/PWD Sign"
+                            Clicked="GoToAddSignLoginPassword"
+                            TextColor="Pink">
+                    </Button>
+                </HorizontalStackLayout>
+               
+                <Button Text="Sign Out"
+                        Clicked="SignOut"
+                        TextColor="Pink">
+                </Button>
+            </StackLayout>
+        </Grid>
+        
+    </ContentPage.Content>
+</ContentPage>

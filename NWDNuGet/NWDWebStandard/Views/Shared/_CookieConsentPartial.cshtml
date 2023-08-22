@@ -1,0 +1,134 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@using Microsoft.AspNetCore.Http;
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using NWDWebRuntime
+@using NWDWebRuntime.Configuration
+@using NWDWebStandard.Configuration
+
+
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    bool showBanner = !NWDWebRuntimeStartupService.CookieConsent.GetValue(HttpContextAccessor.HttpContext);
+    string cookieString = NWDWebRuntimeStartupService.CookieConsent.GenerateCookieDataString(true);
+    string PubCookieString = NWDWebRuntimeStartupService.CookiePub.GenerateCookieDataString(true);
+    string AnalyticsCookieString = NWDWebRuntimeStartupService.CookieAnalytics.GenerateCookieDataString(true);
+}
+
+@* <div class="toast notice shadow-none bg-transparent fade hide" id="cookie-notice" role="alert" data-options="{&quot;autoShow&quot;:true,&quot;autoShowDelay&quot;:3000,&quot;showOnce&quot;:false,&quot;cookieExpireTime&quot;:7200000}" data-autohide="false" aria-live="assertive" aria-atomic="true" style="max-width:35rem"> *@
+@*     <div class="toast-body my-3 ms-0 ms-md-5"> *@
+@*         <div class="card"> *@
+@*             <div class="card-body"> *@
+@*                 <div class="d-flex"> *@
+@*                     <div class="pe-3"><img src="../../assets/img/icons/cookie-1.png" width="40" alt="cookie"></div> *@
+@*                     <div> *@
+@*                         <p>We use third party cookies to personalize content, ads and&nbsp; analyze site traffic.</p><button class="btn btn-sm btn-falcon-primary me-3" type="button" data-bs-dismiss="toast" aria-label="Close">Okay</button><a class="learn-more me-3" href="#">Learn more<svg class="svg-inline--fa fa-chevron-right fa-w-10 ms-1 fs--2" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-right" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" data-fa-i2svg=""><path fill="currentColor" d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"></path></svg><!-- <span class="fas fa-chevron-right ms-1 fs--2"></span> Font Awesome fontawesome.com --></a> *@
+@*                     </div> *@
+@*                 </div> *@
+@*             </div> *@
+@*         </div> *@
+@*     </div> *@
+@* </div> *@
+
+@if (showBanner)
+{
+    <div class="toast notice shadow-none bg-transparent fade hide" id="cookie-alert" role="alert" data-options="{&quot;autoShow&quot;:true, &quot;delay&quot;:45000, &quot;autoShowDelay&quot;:1000, &quot;showOnce&quot;:false, &quot;cookieExpireTime&quot;:7200000}" data-autohide="false" aria-live="assertive" aria-atomic="true" style="max-width:35rem">
+<div class="toast-body my-3 ms-0 ms-md-5">
+<div class="card">
+    <div class="card-header">
+        <h3><span class="fas fa-cookie-bite"></span> Cookies</h3>
+    </div>
+    <div class="card-body">
+        <div class="d-flex">
+            @* <div class="pe-3"><img src="../../assets/img/icons/cookie-1.png" width="40" alt="cookie"></div> *@
+            <div>
+                @*<div role="alert">*@
+                <input type="hidden" id="CookieA" data-cookie-string="@cookieString"/>
+                <input type="hidden" id="CookieB" data-cookie-string="@PubCookieString"/>
+                <input type="hidden" id="CookieC" data-cookie-string="@AnalyticsCookieString"/>
+                <div class="row">
+                    <div class="col-12 mb-3">
+                        The website @NWDWebStandardConfiguration.KConfig.WebSiteName uses cookies to store certain features such as your preferences. 
+                        The website @NWDWebStandardConfiguration.KConfig.WebSiteName may also use cookies for the purpose of usage statistics to improve its tools. 
+                        For more information, you can consult our <a asp-area="" asp-controller="NWDPrivacy" asp-action="TermsAndConditions"> Terms and Conditions </a> and our <a asp-area="" asp-controller="NWDPrivacy" asp-action="PrivacyPolicy">Privacy Policy</a>.
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 mb-3">
+                        You can manage your cookies directly in your broswer or on this <a asp-area="" asp-controller="NWDPrivacy" asp-action="CookiesManagement"> cookies management page</a>.
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6 d-flex">
+                        <button class="btn btn-outline-primary mt-2 px-1 d-block w-100" id="CookieConsent" type="button" data-bs-dismiss="toast" aria-label="Close"><span aria-hidden="true"><span class="fas fa-cookie-bite"></span> Only functional</span>
+                        </button>
+                    </div>
+                    <div class="col-6 d-flex">
+                        <button class="btn btn-outline-primary mt-2 px-1 d-block w-100" id="AllCookieConsent" type="button" data-bs-dismiss="toast" aria-label="Close" data-cookie-stringB="@PubCookieString" data-cookie-stringC="@AnalyticsCookieString"><span aria-hidden="true"><span class="fas fa-cookie-bite"></span> All</span> </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div></div>
+                      </div>
+        </div>
+    <script>(function () {
+            var button = document.querySelector("#CookieConsent");
+            var CookieA = document.querySelector("#CookieA[data-cookie-string]");
+            button.addEventListener("click", function (event) {
+                //alert('cookie consent limited : '+ CookieA.dataset.cookieString, 'ok');
+                document.cookie = CookieA.dataset.cookieString;
+            }, false);
+        })();
+
+        (function () {
+            var button = document.querySelector("#AllCookieConsent");
+            var CookieA = document.querySelector("#CookieA[data-cookie-string]");
+            var CookieB = document.querySelector("#CookieB[data-cookie-string]");
+            var CookieC = document.querySelector("#CookieC[data-cookie-string]");
+            button.addEventListener("click", function (event) {
+                //alert('cookie consent limited : ' + CookieA.dataset.cookieString + " ; " + CookieB.dataset.cookieString + " ; " + CookieC.dataset.cookieString , 'ok');
+                document.cookie = CookieA.dataset.cookieString
+                document.cookie = CookieB.dataset.cookieString;
+                document.cookie = CookieC.dataset.cookieString;
+            }, false);
+        })();</script>
+}
+
+@{
+
+    if (NWDWebRuntimeStartupService.CookiePub.GetValue(HttpContextAccessor.HttpContext) == true)
+    {
+        @*<div> j'affiche les pubs</div>*@
+    }
+    if (NWDWebRuntimeStartupService.CookieAnalytics.GetValue(HttpContextAccessor.HttpContext) == true)
+    {
+        @*<div> j'injecte le google analytics</div>*@
+    }
+}
+
+@if (showBanner)
+{
+    <div id="cookie_disabled" class="cookie-alert">
+        <div class="cookie-description">
+            Les cookies sont désactivés, le site @NWDWebStandardConfiguration.KConfig.WebSiteName ne pourra pas vous attribuer de session. Cela risque de perturber certaines fonctionnalités.
+        </div>
+    </div>
+
+    <script>
+        window.onload = function (e) {
+            if (navigator.cookieEnabled == false)
+            {
+                var divCookie = document.querySelector("#cookie_enable");
+                divCookie.hidden = true;
+                //alert('Les cookies sont désactivés, le site @NWDWebStandardConfiguration.KConfig.WebSiteName ne pourra pas vous attribuer de session. Cela risque de perturber certaines fonctionnalités.');
+            }
+            else
+            {
+                var divCookie = document.querySelector("#cookie_disabled");
+                divCookie.hidden = true;
+            }
+        }
+    </script>
+}

@@ -1,0 +1,204 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@using Microsoft.AspNetCore.Http
+@using NWDFoundation.Models
+@using NWDFoundation.Models.Enums
+@using NWDFoundation.Tools
+@using NWDWebRuntime.Configuration
+@using NWDWebRuntime.Managers
+@using NWDWebRuntime.Models
+@using NWDWebRuntime.Models.Enums
+@using NWDWebStandard.Controllers
+
+@inject IHttpContextAccessor HttpContextAccessor
+
+
+@if (NWDAccountWebManager.AccountIsConnected(HttpContextAccessor.HttpContext) == true)
+{
+    List<NWDAccountService>? tListServiceAll = NWDAccountServiceWebManager.GetServices(@HttpContextAccessor.HttpContext);
+    if (@tListServiceAll != null && tListServiceAll.Count > 0)
+    {
+        <div class="container p-0 m-0 mb-3">
+            <div class="row g-3">
+                @{
+                    Dictionary<NWDAccountServiceKind, List
+                        <NWDAccountService>> tServicesDico = new Dictionary<NWDAccountServiceKind, List
+                            <NWDAccountService>>();
+                    foreach (NWDAccountService tService in tListServiceAll)
+                    {
+                        if (tServicesDico.ContainsKey(tService.ServiceKind) == false)
+                        {
+                            tServicesDico.Add(tService.ServiceKind, new List
+                                <NWDAccountService>());
+                        }
+                        tServicesDico[tService.ServiceKind].Add(tService);
+                    }
+                    foreach (KeyValuePair<NWDAccountServiceKind, List <NWDAccountService>> tKeyValuePair in tServicesDico)
+                    {
+                        List <NWDAccountService> tListService = tKeyValuePair.Value;
+                        if (@tListService != null)
+                        {
+                            if (@tListService.Count() > 0)
+                            {
+                                <!-- Services List With background -->
+                                <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+                                    <div class="card">
+                                        <div class="card-header bg-light border-bottom">
+                                            <h5>Your services @tKeyValuePair.Key.ToString().ToLower()</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            @{
+                                                if (tListService.Count > 0)
+                                                {
+                                                    <div class="table-responsive scrollbar">
+                                                        <table class="table">
+                                                            <thead>
+                                                            <tr>
+                                                                <th scope="col"></th>
+                                                                <th scope="col">Service</th>
+                                                                <th scope="col">Reference</th>
+                                                                <th scope="col">Kind</th>
+                                                                <th scope="col">Scope</th>
+                                                                <th scope="col">Start</th>
+                                                                <th scope="col">End</th>
+                                                                <th class="text-end" scope="col">Actions</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            @foreach (NWDAccountService tService in tListService)
+                                                            {
+                                                                    string tTdClass = "";
+                                                                    string tTdEndClass = "text-success fw-bold";
+                                                                    string tTdStartClass = "text-success fw-bold";
+                                                                    if (tService.Start > NWDTimestamp.GetTimestampUnix())
+                                                                    {
+                                                                        tTdStartClass = "text-warning fw-bold";
+                                                                        tTdEndClass = "";
+                                                                    }
+                                                                    if (tService.End < NWDTimestamp.GetTimestampUnix())
+                                                                    {
+                                                                        tTdEndClass = "text-danger fw-bold";
+                                                                        tTdStartClass = "";
+                                                                    }
+                                                                @* remove old services *@
+                                                                if (tService.End > NWDTimestamp.GetTimestampUnix()-5*24*3600)
+                                                                {
+                                                                    <tr class="@tTdClass">
+                                                                        <td scope="col">
+                                                                            <span class="text-500 fas far fa-gem"></span>
+                                                                        </td>
+                                                                        <td scope="col">
+                                                                            <p data-bs-toggle="tooltip" data-bs-placement="top" title="@tService.Service">
+                                                                                @NWDAccountServiceWebManager.GetServiceName(tService)
+                                                                            </p>
+                                                                        </td>
+                                                                        <td scope="col">
+                                                                            @if (tService.Reference == 0)
+                                                                            {
+                                                                                <span> internal</span>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <span> @tService.Reference</span>
+                                                                            }
+                                                                        </td>
+                                                                        <td scope="col">
+                                                                            @if (tService.Service == NWDGenericServiceEnum.Admin.Value)
+                                                                            {
+                                                                                <div class="badge bg-warning">Admin</div>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <div class="badge bg-primary">Account</div>
+                                                                            }
+                                                                        </td>
+                                                                        <td scope="col">
+                                                                            @if (string.IsNullOrEmpty(tService.Ip))
+                                                                            {
+                                                                                <p>Session</p>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <p>@tService.Ip</p>
+                                                                            }
+                                                                        </td>
+                                                                        <td scope="col" class="@tTdStartClass">@NWDAccountServiceWebManager.GetStartDateString(tService)</td>
+                                                                        <td scope="col" class=" @tTdEndClass">@NWDAccountServiceWebManager.GetEndDateString(tService)</td>
+                                                                        <td class="text-end">
+                                                                            @if (tService.Reference != 0)
+                                                                            {
+                                                                                NWDContactUsModel tContactModel = new NWDContactUsModel();
+                                                                                tContactModel.Subject = "Service";
+                                                                                tContactModel.Category = "Service " + @NWDAccountServiceWebManager.GetServiceName(tService);
+                                                                                tContactModel.SubCategory = "Référence " + @tService.Reference;
+
+                                                                                using (Html.BeginForm(nameof(NWDAccountController.ContactUs), NWDHomeController.ASP_Controller()))
+                                                                                {
+                                                                                    @Html.AntiForgeryToken()
+                                                                                    @Html.Hidden(nameof(tContactModel.Subject), tContactModel.Subject)
+                                                                                    @Html.Hidden(nameof(tContactModel.Category), tContactModel.Category)
+                                                                                    @Html.Hidden(nameof(tContactModel.SubCategory), tContactModel.SubCategory)
+                                                                                    @Html.Hidden(nameof(tContactModel.SenderName), tContactModel.SenderName)
+                                                                                    <div class="btn-group">
+                                                                                        @if (tService.ServiceKind != NWDAccountServiceKind.Granted)
+                                                                                        {
+                                                                                            <button class="btn btn-outline-secondary" type="button">
+                                                                                                <span data-bs-toggle="tooltip" data-bs-placement="top" title="View invoices associated" data-bs-original-title="View invoices associated" aria-label="View invoices associated">
+                                                                                                    <span class="fas fa-file-invoice"></span>
+                                                                                                </span>
+                                                                                            </button>
+                                                                                        }
+                                                                                        <button class="btn btn-outline-primary" type="submit">
+                                                                                            <span data-bs-toggle="tooltip" data-bs-placement="top" title="Contact us for this service" data-bs-original-title="Contact us for this service" aria-label="Contact us for this service">
+                                                                                                <span class="far fa-envelope"></span>
+                                                                                            </span>
+                                                                                        </button>
+                                                                                    </div>
+                                                                                }
+                                                                            }
+                                                                        </td>
+                                                                    </tr>
+                                                                }
+                                                            }
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+                                    <div class="card">
+                                        <div class="card-header bg-light border-bottom">
+                                            <h5>Your services</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            No service!
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+                                <div class="card">
+                                    <div class="card-header bg-light border-bottom">
+                                        <h5>Your services</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        No service!
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                }
+            </div>
+        </div>
+    }
+}

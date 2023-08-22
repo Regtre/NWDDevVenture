@@ -1,0 +1,51 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Title>NWDDevServerFront</Title>
+    <Authors>idéMobi</Authors>
+    <Copyright>idéMobi</Copyright>
+    <PackageTags>Net-Worked-Data  Server Front</PackageTags>
+    <PackageVersion>1.1.181</PackageVersion>
+    <PackageProjectUrl>https://gitlab.hephaiscode.com/NetWorkedData/NWDDevServerFront</PackageProjectUrl>
+    <PackageLicense>https://gitlab.hephaiscode.com/NetWorkedData/NWDDevServerFront/-/blob/main/LICENSE.md</PackageLicense>
+    <RepositoryUrl>https://gitlab.hephaiscode.com/NetWorkedData/NWDDevServerFront</RepositoryUrl>
+    <RepositoryType>GitLab CE</RepositoryType>
+    <LangVersion>10</LangVersion>
+    <AssemblyVersion>1.1.181</AssemblyVersion>
+    <FileVersion>1.1.181</FileVersion>
+    <NeutralLanguage>en</NeutralLanguage>
+    <PackageIcon>NWDServerFront.png</PackageIcon>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
+    <RunAnalyzersDuringLiveAnalysis>true</RunAnalyzersDuringLiveAnalysis>
+    <RunAnalyzers>true</RunAnalyzers>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+    <PackageReference Include="runtime.native.System" Version="4.3.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    <!-- <PackageReference Include="NWDServerMiddle" Version="1.1.181" /> -->
+    <!-- <PackageReference Include="NWDPlayerStatistic" Version="1.1.181" /> -->
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\NWDFoundation\NWDFoundation.csproj" />
+    <ProjectReference Include="..\NWDPlayerStatistic\NWDPlayerStatistic.csproj" />
+    <ProjectReference Include="..\NWDRuntime\NWDRuntime.csproj" />
+    <ProjectReference Include="..\NWDEditor\NWDEditor.csproj" />
+    <ProjectReference Include="..\NWDCrucial\NWDCrucial.csproj" />
+    <ProjectReference Include="..\NWDServerMiddle\NWDServerMiddle.csproj" />
+    <ProjectReference Include="..\NWDServerShared\NWDServerShared.csproj" />
+    <ProjectReference Include="..\NWDServerBack\NWDServerBack.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="NWDServerFront.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+  
+</Project>

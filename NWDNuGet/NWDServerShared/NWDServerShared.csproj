@@ -1,0 +1,48 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Title>NWDDevServerShared</Title>
+    <Authors>idéMobi</Authors>
+    <Copyright>idéMobi</Copyright>
+    <PackageTags>Net-Worked-Data Server Shared</PackageTags>
+    <PackageVersion>1.1.181</PackageVersion>
+    <PackageProjectUrl>https://gitlab.hephaiscode.com/NetWorkedData/NWDDevServerShared</PackageProjectUrl>
+    <PackageLicense>https://gitlab.hephaiscode.com/NetWorkedData/NWDDevServerShared/-/blob/main/LICENSE.md</PackageLicense>
+    <RepositoryUrl>https://gitlab.hephaiscode.com/NetWorkedData/NWDDevServerShared</RepositoryUrl>
+    <RepositoryType>GitLab CE</RepositoryType>
+    <LangVersion>10</LangVersion>
+    <AssemblyVersion>1.1.181</AssemblyVersion>
+    <FileVersion>1.1.181</FileVersion>
+    <NeutralLanguage>en</NeutralLanguage>
+    <PackageIcon>NWDServerShared.png</PackageIcon>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
+    <RunAnalyzersDuringLiveAnalysis>true</RunAnalyzersDuringLiveAnalysis>
+    <RunAnalyzers>true</RunAnalyzers>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="7.0.4" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    <!-- <PackageReference Include="NWDEditor" Version="1.1.181" /> -->
+    <!-- <PackageReference Include="NWDCrucial" Version="1.1.181" /> -->
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NWDFoundation\NWDFoundation.csproj" />
+    <ProjectReference Include="..\NWDRuntime\NWDRuntime.csproj" />
+    <ProjectReference Include="..\NWDEditor\NWDEditor.csproj" />
+    <ProjectReference Include="..\NWDCrucial\NWDCrucial.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="NWDServerShared.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+  
+</Project>

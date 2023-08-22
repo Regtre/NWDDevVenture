@@ -1,0 +1,51 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Title>NWDCustomModels</Title>
+    <Authors>idéMobi</Authors>
+    <Copyright>idéMobi</Copyright>
+    <PackageTags>Net-Worked-Data  Runtime</PackageTags>
+    <PackageVersion>1.1.181</PackageVersion>
+    <PackageProjectUrl>https://gitlab.hephaiscode.com/NetWorkedData/NWDCustomModels</PackageProjectUrl>
+    <PackageLicense>https://gitlab.hephaiscode.com/NetWorkedData/NWDCustomModels/-/blob/main/LICENSE.md</PackageLicense>
+    <RepositoryUrl>https://gitlab.hephaiscode.com/NetWorkedData/NWDCustomModels</RepositoryUrl>
+    <RepositoryType>GitLab CE</RepositoryType>
+    <LangVersion>9.0</LangVersion>
+    <AssemblyVersion>1.1.181</AssemblyVersion>
+    <FileVersion>1.1.181</FileVersion>
+    <NeutralLanguage>en</NeutralLanguage>
+    <PackageIcon>NWDCustomModels.png</PackageIcon>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
+    <RunAnalyzersDuringLiveAnalysis>true</RunAnalyzersDuringLiveAnalysis>
+    <RunAnalyzers>true</RunAnalyzers>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- <PackageReference Include="NWDStandardModels" Version="1.1.181" /> -->
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NWDFoundation\NWDFoundation.csproj" />
+    <ProjectReference Include="..\NWDStandardModels\NWDStandardModels.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="NWDCustomModels.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Remove="**/*.meta" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Compile Include="..\..\NWDUnity\Assets\NWDNuGet\NWDCustomModels\Models\*.cs">
+      <Link>Models-from-Unity/%(FileName)%(Extension)</Link>
+    </Compile>
+    <Compile Include="..\..\NWDUnity\Assets\NWDNuGet\NWDCustomModels\NWDVersionDll.cs">
+      <Link>NWDVersionDll.cs</Link>
+    </Compile>
+  </ItemGroup>
+
+</Project>

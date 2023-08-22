@@ -1,0 +1,154 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@using Microsoft.AspNetCore.Http;
+@using NWDWebRuntime.Models
+@using NWDWebStandard.Controllers
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@inject IHttpContextAccessor HttpContextAccessor
+
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item"><a class="nav-link active" id="SignIn-tab" data-bs-toggle="tab" href="#tab-SignIn" role="tab" aria-controls="tab-SignIn" aria-selected="false">SignIn</a></li>
+    <li class="nav-item"><a class="nav-link" id="SignUp-tab" data-bs-toggle="tab" href="#tab-SignUp" role="tab" aria-controls="tab-SignUp" aria-selected="false">SignUp</a></li>
+    <li class="nav-item"><a class="nav-link" id="SignLost-tab" data-bs-toggle="tab" href="#tab-SignLost" role="tab" aria-controls="tab-SignLost" aria-selected="false">SignLost</a></li>
+    <li class="nav-item"><a class="nav-link" id="SignRescue-tab" data-bs-toggle="tab" href="#tab-SignRescue" role="tab" aria-controls="tab-SignRescue" aria-selected="false">SignRescue</a></li>
+    <li class="nav-item"><a class="nav-link" id="SignOut-tab" data-bs-toggle="tab" href="#tab-SignOut" role="tab" aria-controls="tab-SignOut" aria-selected="false">SignOut</a></li>
+    <li class="nav-item"><a class="nav-link" id="SignDelete-tab" data-bs-toggle="tab" href="#tab-SignDelete" role="tab" aria-controls="tab-SignDelete" aria-selected="false">SignDelete</a></li>
+    <li class="nav-item"><a class="nav-link" id="AccountDelete-tab" data-bs-toggle="tab" href="#tab-AccountDelete" role="tab" aria-controls="tab-AccountDelete" aria-selected="false">AccountDelete</a></li>
+</ul>
+
+<div class="tab-content border-x border-bottom p-3" id="myTabContent">
+    <div class="tab-pane show active" id="tab-SignIn" role="tabpanel" aria-labelledby="SignIn-tab">
+        <h3 class="border-bottom mb-3 mt-3">Sign-in Form</h3>
+        @{
+            await Html.RenderPartialAsync(NWDAccountController.K_AccountSignInForm, new NWDAccountSignIn(ViewContext));
+        }
+        <h3 class="border-bottom mb-3 mt-3">Sign-in Form Modal</h3>
+        <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#AccountSignInModalDiv">Launch demo modal</button>
+        @{
+            await Html.RenderPartialAsync(NWDAccountController.K_AccountSignInModalForm, new NWDAccountSignInModal(ViewContext));
+        }
+        <h3 class="border-bottom mb-3 mt-3">Sign-in Form Mini</h3>
+        @{
+            await Html.RenderPartialAsync(NWDAccountController.K_AccountSignInMiniForm, new NWDAccountSignInMini(ViewContext));
+        }
+        <h3 class="border-bottom mb-3 mt-3">Sign-in Welcome</h3>
+        @{
+            await Html.RenderPartialAsync(NWDAccountController.K_AccountSignInWelcome);
+        }
+        <hr />
+        <h3 class="border-bottom mb-3 mt-3">Sign-in  @nameof(NWDAccountController.YouAreAlreadyConnected)</h3>
+        @{
+            await Html.RenderPartialAsync("/Views/Shared/_ToastStandard.cshtml", NWDAccountController.YouAreAlreadyConnected);
+        }
+        <h3 class="border-bottom mb-3 mt-3">Sign-in  @nameof(NWDAccountController.K_SignInSuccess)</h3>
+        @{
+            await Html.RenderPartialAsync("/Views/Shared/_ToastStandard.cshtml", NWDAccountController.K_SignInSuccess);
+        }
+        <h3 class="border-bottom mb-3 mt-3">Sign-in  @nameof(NWDAccountController.SignInFailModelInvalid)</h3>
+        @{
+            await Html.RenderPartialAsync("/Views/Shared/_ToastStandard.cshtml", NWDAccountController.SignInFailModelInvalid);
+        }
+        <h3 class="border-bottom mb-3 mt-3">Sign-in  @nameof(NWDAccountController.SignInFailUnknownAccount)</h3>
+        @{
+            await Html.RenderPartialAsync("/Views/Shared/_ToastStandard.cshtml", NWDAccountController.SignInFailUnknownAccount);
+        }
+    </div>
+
+    <div class="tab-pane fade " id="tab-SignUp" role="tabpanel" aria-labelledby="SignUp-tab">
+        <h3 class="border-bottom mb-3 mt-3">Sign-up Form</h3>
+        @{
+            await Html.RenderPartialAsync(NWDAccountController.K_AccountSignUpForm);
+        }
+        <h3 class="border-bottom mb-3 mt-3">Sign-up Form Modal</h3>
+        <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#NWDAccountSignUpModalDiv">Launch demo modal</button>
+        @{
+            await Html.RenderPartialAsync(NWDAccountController.K_AccountSignUpModalForm, new NWDAccountSignUpModal(ViewContext));
+        }
+        <h3 class="border-bottom mb-3 mt-3">Sign-up Welcome</h3>
+        @{
+            await Html.RenderPartialAsync(NWDAccountController.K_AccountSignUpWelcome);
+        }
+        <hr />
+        <h3 class="border-bottom mb-3 mt-3">Sign-up  @nameof(NWDAccountController.SignUpSuccess)</h3>
+        @{
+            await Html.RenderPartialAsync("/Views/Shared/_ToastStandard.cshtml", NWDAccountController.SignUpSuccess);
+        }
+        <h3 class="border-bottom mb-3 mt-3">Sign-up   @nameof(NWDAccountController.SignUpFailAlreadyAccount)</h3>
+        @{
+            await Html.RenderPartialAsync("/Views/Shared/_ToastStandard.cshtml", NWDAccountController.SignUpFailAlreadyAccount);
+        }
+        <h3 class="border-bottom mb-3 mt-3">Sign-up    @nameof(NWDAccountController.SignUpFailModelInvalid)</h3>
+        @{
+            await Html.RenderPartialAsync("/Views/Shared/_ToastStandard.cshtml", NWDAccountController.SignUpFailModelInvalid);
+        }
+    </div>
+
+    <div class="tab-pane fade " id="tab-SignLost" role="tabpanel" aria-labelledby="SignLost-tab">
+        <h3 class="border-bottom mb-3 mt-3">Sign-Lost Form</h3>
+        @{
+            await Html.RenderPartialAsync(NWDAccountController.K_AccountSignLostForm);
+        }
+        <h3 class="border-bottom mb-3 mt-3">Sign-Lost Success</h3>
+        @{
+            await Html.RenderPartialAsync(NWDAccountController.K_AccountSignLostSuccess);
+        }
+        <hr />
+        <h3 class="border-bottom mb-3 mt-3">Sign-Lost  @nameof(NWDAccountController.SignLostSuccess)</h3>
+        @{
+            await Html.RenderPartialAsync("/Views/Shared/_ToastStandard.cshtml", NWDAccountController.SignLostSuccess);
+        }
+        <h3 class="border-bottom mb-3 mt-3">Sign-Lost  @nameof(NWDAccountController.SignLostFail)</h3>
+        @{
+            await Html.RenderPartialAsync("/Views/Shared/_ToastStandard.cshtml", NWDAccountController.SignLostFail);
+        }
+        <h3 class="border-bottom mb-3 mt-3">Sign-Lost  @nameof(NWDAccountController.SignLostFailModelInvalid)</h3>
+        @{
+            await Html.RenderPartialAsync("/Views/Shared/_ToastStandard.cshtml", NWDAccountController.SignLostFailModelInvalid);
+        }
+
+    </div>
+
+    <div class="tab-pane fade " id="tab-SignOut" role="tabpanel" aria-labelledby="SignOut-tab">
+        <h3 class="border-bottom mb-3 mt-3">Sign-out form @nameof(NWDAccountController.K_AccountSignOutForm)</h3>
+        @{
+            await Html.RenderPartialAsync(NWDAccountController.K_AccountSignOutForm);
+        }
+        <h3 class="border-bottom mb-3 mt-3">Sign-out Bye Bye @nameof(NWDAccountController.K_AccountSignOutByeBye)</h3>
+        @{
+            await Html.RenderPartialAsync(NWDAccountController.K_AccountSignOutByeBye);
+        }
+        <hr />
+        <h3 class="border-bottom mb-3 mt-3">Sign-out   @nameof(NWDAccountController.SignOutFail)</h3>
+        @{
+            await Html.RenderPartialAsync("/Views/Shared/_ToastStandard.cshtml", NWDAccountController.SignOutFail);
+        }
+        <h3 class="border-bottom mb-3 mt-3">Sign-out   @nameof(NWDAccountController.SignOutSuccess)</h3>
+        @{
+            await Html.RenderPartialAsync("/Views/Shared/_ToastStandard.cshtml", NWDAccountController.SignOutSuccess);
+        }
+        <h3 class="border-bottom mb-3 mt-3">Log-out   @nameof(NWDAccountController.LogOutFail)</h3>
+        @{
+            await Html.RenderPartialAsync("/Views/Shared/_ToastStandard.cshtml", NWDAccountController.LogOutFail);
+        }
+        <h3 class="border-bottom mb-3 mt-3">Log-out   @nameof(NWDAccountController.LogOutSuccess)</h3>
+        @{
+            await Html.RenderPartialAsync("/Views/Shared/_ToastStandard.cshtml", NWDAccountController.LogOutSuccess);
+        }
+    </div>
+
+    <div class="tab-pane fade " id="tab-SignDelete" role="tabpanel" aria-labelledby="SignDelete-tab">
+        <div>
+            Sign Delete.
+        </div>
+    </div>
+
+    <div class="tab-pane fade " id="tab-AccountDelete" role="tabpanel" aria-labelledby="AccountDelete-tab">
+        <div>
+            Account Delete.
+        </div>
+    </div>
+</div>

@@ -1,0 +1,134 @@
+@using NWDWebRuntime.Configuration
+@using NWDWebStandard.Controllers
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpersCreateDefaultProjectAndAccoun
+@{
+    Layout = "";
+}
+@if (NWDWebRuntimeConfiguration.KConfig.IsDevelopment == true)
+{
+    <div class="text-end mb-3">
+        <span class="ms-2 badge rounded-pill badge-subtle-success bi-check-circle"> Kortex</span>
+        @* <span class="ms-2 badge rounded-pill badge-subtle-danger bi-x-circle"> Kortex</span> *@
+        @* <span class="ms-2 badge rounded-pill badge-subtle-secondary bi-exclamation-octagon"> Todo : change icons</span> *@
+    </div>
+}
+<div class="container p-0 m-0">
+	<div class="row g-3">
+		<div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+<div class="card">
+    <div class="card-header background-corner-2 border-bottom">
+        <div class="row">
+            <div class="col-8">
+                <h3><span class="bi bi-shield-exclamation"></span> Net-Worked-Data Website error explain!</h3>
+                <p class="mb-0">Error 666-99 ... unknow!</p>
+            </div>
+        </div>
+    </div>
+    <div class="card-body position-relative">
+        <div class="row">
+            <div class="col-6">
+                <table class="table table-hover mb-0">
+                    <thead>
+                    <tr>
+                        <th scope="col">Status</th>
+                        <th scope="col">Badge</th>
+                        <th scope="col">Explain</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (KeyValuePair<int, string> tInformation in NWDWebErrorController._InformationDict)
+                    {
+                        <tr id="status_@tInformation.Key">
+                            <td>@tInformation.Key</td>
+                            <td>
+                                @* <a href="/Error/@tInformation.Key"><span class="badge bg-info">@tInformation.Key</span></a> *@
+                                <span class="badge bg-info">@tInformation.Key</span>
+                            </td>
+                            <td>@tInformation.Value</td>
+                        </tr>
+                    }
+                    @foreach (KeyValuePair<int, string> tSucces in NWDWebErrorController._SuccesDict)
+                    {
+                        <tr id="status_@tSucces.Key">
+                            <td>@tSucces.Key</td>
+                            <td>
+                                @* <a href="/Error/@tSucces.Key"><span class="badge bg-success">@tSucces.Key</span></a> *@
+                                <span class="badge bg-success">@tSucces.Key</span>
+                            </td>
+                            <td>@tSucces.Value</td>
+                        </tr>
+                    }
+                    @foreach (KeyValuePair<int, string> tRedirection in NWDWebErrorController._RedirectionDict)
+                    {
+                        <tr id="status_@tRedirection.Key">
+                            <td>@tRedirection.Key</td>
+                            <td>
+                                @* <a href="/Error/@tRedirection.Key"><span class="badge bg-secondary">@tRedirection.Key</span></a> *@
+                                <span class="badge bg-secondary">@tRedirection.Key</span>
+                            </td>
+                            <td>@tRedirection.Value</td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-6">
+                <table class="table table-hover mb-0">
+                    <thead>
+                    <tr>
+                        <th scope="col">Error</th>
+                        <th scope="col">Badge</th>
+                        <th scope="col">Test</th>
+                        <th scope="col">Explain</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (KeyValuePair<int, string> tError in NWDWebErrorController._ErrorDict)
+                    {
+                        <tr id="status_@tError.Key">
+                            <td>@tError.Key</td>
+                            <td>
+                                 <a href="/Error/@tError.Key">
+                                @if (tError.Key >= 500)
+                                {
+                                    <span class="badge bg-danger">@tError.Key</span>
+                                }
+                                else if (@tError.Key >= 400)
+                                {
+                                    <span class="badge bg-warning">@tError.Key</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-success">@tError.Key</span>
+                                }
+                                 </a>
+                            </td>
+                            <td>
+                                 <a href="/Error/@tError.Key">
+                                @if (tError.Key >= 500)
+                                {
+                                    <span class="btn btn-sm btn-outline-danger">Test</span>
+                                }
+                                else if (@tError.Key >= 400)
+                                {
+                                    <span class="btn btn-sm btn-outline-warning">Test</span>
+                                }
+                                else
+                                {
+                                    <span class="btn btn-sm btn-outline-success">Test</span>
+                                }
+                                 </a>
+                            </td>
+                            <td>@tError.Value</td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+        </div>
+    </div>
+</div>

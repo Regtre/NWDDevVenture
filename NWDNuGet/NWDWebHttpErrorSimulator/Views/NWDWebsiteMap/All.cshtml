@@ -1,0 +1,489 @@
+@using System.Web
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using NWDFoundation.WebEdition.Attributes
+@using NWDFoundation.WebEdition.Enums
+@using NWDWebHttpErrorSimulator.Controllers
+@using NWDWebHttpErrorSimulator.Models
+@using NWDWebRuntime.Configuration
+@using NWDWebRuntime.Tools
+@using NWDWebStandard.Controllers
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<NWDWebsiteMapLibrary>? tWebsiteMapControllerList = ViewData["WebsiteMapControllerList"] as List<NWDWebsiteMapLibrary>;
+    string? tViewAll = ViewData["ViewAllButton"] as string;
+    int tReportTotalExpected = 0;
+}
+
+
+<script xmlns="http://www.w3.org/1999/html">
+var ErrorDict = {"error":"error"};
+var reportTotalExpected=0;
+var reportTotal=0;
+var reportSuccess=0;
+var reportFail=0;
+var reportDico = {};
+var Waiting = 100;
+
+function extractStatusTag(sData) {
+  let res = sData.match(/<meta name=\"@nameof(NWDPageStandardStatusTag)\" content=\"(.*)\">/)|| ['','@nameof(NWDPageStandardStatusTag.None)'];
+  // alert('extractStatusTag : ' + res[0]);
+  // alert('extractStatusTag : ' + res[1]);
+  return res[1];
+}
+function extractStatusCode(sData) {
+  let res = sData.match(/<meta name=\"@nameof(NWDPageStatusCode)\" content=\"(.*)\">/)|| ['','200'];
+   // alert('extractStatusTag : ' + res[0]);
+   // alert('extractStatusTag : ' + res[1]);
+  return parseInt(res[1]);
+ }
+
+function TreatResultAndReplaceContent(sContentToReplaceID, sResult, sExpected, sStatusTag, sData) {
+    var tRoot = $('#'+sContentToReplaceID);
+    var tContent = tRoot.children('#content_to_replace');
+    var tSpinner = tRoot.children('#spinner');
+    var tRootB = $('#Re_'+sContentToReplaceID);
+    var tContentB = tRootB.children('#content_to_replace');
+    var tSpinnerB = tRootB.children('#spinner');
+    var tRootC = $('#Tr_'+sContentToReplaceID);
+    var tRootD= $('#Ic_'+sContentToReplaceID);
+            reportDico[sResult] = (reportDico[sResult]||0)+1;
+            tSpinner.hide();
+            if (sResult>=500)
+                {
+                    tContent.html('<a href="#status_'+sResult+'"><div class="badge bg-danger">'+sResult+'</div></a>');
+                    tRootC.addClass('table-danger border-bottom');
+                    tRootD.html('<span class="bi bi-lightning"></span>');
+                 }
+            else if (sResult>=400)
+                {
+                    tContent.html('<a href="#status_'+sResult+'"><div class="badge bg-warning"">'+sResult+'</div></a>');
+                }
+            else if (sResult>=300)
+                {
+                    tContent.html('<a href="#status_'+sResult+'"><div class="badge bg-warning"">'+sResult+'</div></a>');
+                }
+            else if (sResult == 200)
+                {
+                    tContent.html('<a href="#status_'+sResult+'"><div class="badge bg-success"">'+sResult+'</div></a>');
+                }
+            else 
+                {
+                    tContent.html('<a href="#status_'+sResult+'"><div class="badge bg-info">'+sResult+'</div></a>');
+                }
+            tContent.show();
+            tSpinnerB.hide();
+            if (sResult == sExpected)
+                    {
+                       if (extractStatusTag(sData) == sStatusTag)
+                           {
+                                reportSuccess++;
+                                tContentB.html('<div class="badge bg-success">'+'success'+'</div>');
+                           }
+                       else 
+                           {
+                                reportFail++;
+                                tContentB.html('<div class="badge bg-warning">'+'StatusTag failed'+'</div>');
+                                tRootC.addClass('table-warning border-bottom');
+                                tRootD.html('<span class="bi bi-exclamation-triangle"></span>');
+                           }
+                       }
+                else
+                    {
+                        reportFail++;
+                        tContentB.html('<div class="badge bg-warning">'+'fail (GET)'+'</div>');
+                        tRootC.addClass('table-warning border-bottom');
+                        tRootD.html('<span class="bi bi-exclamation-triangle"></span>');
+                    }
+            tContentB.show();
+    }
+
+function getResultAndReplaceContent(sContentToReplaceID, sUrl, sExpected, sStatusTag) {
+    reportTotal++;
+    var tRoot = $('#'+sContentToReplaceID);
+    var tContent = tRoot.children('#content_to_replace');
+    var tSpinner = tRoot.children('#spinner');
+    var tRootB = $('#Re_'+sContentToReplaceID);
+    var tContentB = tRootB.children('#content_to_replace');
+    var tSpinnerB = tRootB.children('#spinner');
+    tSpinner.show();
+    tContent.hide();
+    tSpinnerB.show();
+    tContentB.hide();
+    setTimeout(function(){
+        $.get(sUrl).done( function (data, status) {
+            var StatusReal = extractStatusCode(data);
+            TreatResultAndReplaceContent(sContentToReplaceID, StatusReal, sExpected, sStatusTag, data);
+            reportReplaceContent();
+        }).fail( function(xhr, status, errorThrown) {
+            TreatResultAndReplaceContent(sContentToReplaceID, xhr.status, sExpected, sStatusTag, '');
+            reportReplaceContent();
+            });}, 10*Waiting++);
+}
+function postResultAndReplaceContent(sContentToReplaceID, sUrl, sJson, sExpected, sStatusTag) {
+    reportTotal++;
+    var tRoot = $('#'+sContentToReplaceID);
+    var tContent = tRoot.children('#content_to_replace');
+    var tSpinner = tRoot.children('#spinner');
+    var tRootB = $('#Re_'+sContentToReplaceID);
+    var tContentB = tRootB.children('#content_to_replace');
+    var tSpinnerB = tRootB.children('#spinner');
+    tSpinner.show();
+    tContent.hide();
+    tSpinnerB.show();
+    tContentB.hide();
+    setTimeout(function(){
+        $.post(sUrl, sJson).done( function (data, status) {
+            var StatusReal = extractStatusCode(data);
+            TreatResultAndReplaceContent(sContentToReplaceID, StatusReal, sExpected, sStatusTag, data);
+            reportReplaceContent();
+        }).fail( function(xhr, status, errorThrown) {
+            TreatResultAndReplaceContent(sContentToReplaceID, xhr.status, sExpected, sStatusTag, '');
+            reportReplaceContent();
+            });}, 10*Waiting++);
+}
+function reportReplaceContent() {
+    var tReportDiv = $('#ReportFinal');
+    var tReportDivResult  = $('#FinalResult');
+    var tText ='';
+    var tTextResult ='';
+    var reportFinish = reportSuccess+reportFail;
+    for (const [key, value] of Object.entries(reportDico)) {
+            if (key>=500)
+            {
+                tText = tText + '<tr><td><span class="bi bi-lightning"></span></td><td><a href="#status_'+key+'"><span class="badge bg-danger">'+key+'</td><td>'+value+'</span></a></td><td>'+ErrorDict[key]+'</td></tr>';
+            }
+        else if (key>=400)
+            {
+                tText = tText + '<tr><td><span class="bi bi-exclamation-triangle"></span></td><td><a href="#status_'+key+'"><span class="badge bg-warning">'+key+'</td><td>'+value+'</span></a></td><td>'+ErrorDict[key]+'</td></tr>';
+            }
+        else if (key>=300)
+            {
+                tText = tText + '<tr><td><span class="bi bi-check-circle"></span></td><td><a href="#status_'+key+'"><span class="badge bg-success">'+key+'</td><td>'+value+'</span></a></td><td>'+ErrorDict[key]+'</td></tr>';
+            }
+        else if (key>=200)
+            {
+                tText = tText + '<tr><td><span class="bi bi-check-circle"></span></td><td><a href="#status_'+key+'"><span class="badge bg-success">'+key+'</td><td>'+value+'</span></a></td><td>'+ErrorDict[key]+'</td></tr>';
+            }
+        else
+            {
+                tText = tText + '<tr><td><span class="bi bi-exclamation-triangle"></span></td><td><a href="#status_'+key+'"><span class="badge bg-info">'+key+'</td><td>'+value+'</span></a></td><td>'+ErrorDict[key]+'</td></tr>';
+            }
+    }
+    tTextResult = '';
+    tTextResult =  tTextResult + '<tr><td><span class="bi bi-check-circle"></span></td><td><span class="badge bg-success">success</td><td>'+reportSuccess+'  </td></tr>';
+    if (reportFail>0)
+        {
+    tTextResult =  tTextResult + '<tr><td><span class="bi bi-exclamation-triangle"></span></td><td><span class="badge bg-warning">fail</td><td>'+reportFail+'  </td></tr>';
+    }
+    if (reportFinish<reportTotalExpected)
+        {
+                tText = tText + '<tr class="border-none"><td></td><td></td><td>'+reportFinish+'/'+reportTotalExpected+'</td><td></td></tr>';
+                tTextResult = tTextResult +'<tr class="border-none"><td><span class=""></span></td><td></td><td>'+reportFinish+'/'+reportTotalExpected+'</td></tr>';
+        }
+    else 
+        {
+                tText = tText + '<tr class="border-none"><td></td><td>Finished</td><td>'+reportFinish+'/'+reportTotalExpected+'</td><td></td></tr>';
+                tTextResult = tTextResult +'<tr class="border-none"><td><span class=""></span></td><td>Finished</td><td>'+reportFinish+'/'+reportTotalExpected+'</td></tr>';
+        }
+    tReportDivResult.html(tText);
+    tReportDiv.html( tTextResult);
+}
+</script>
+
+@foreach (KeyValuePair<int, string> tInformation in NWDWebErrorController._InformationDict)
+{
+    <script>ErrorDict["@tInformation.Key"] = "@tInformation.Value";</script>
+}
+@foreach (KeyValuePair<int, string> tSucces in NWDWebErrorController._SuccesDict)
+{
+    <script>ErrorDict["@tSucces.Key"] = "@tSucces.Value";</script>
+}
+@foreach (KeyValuePair<int, string> tRedirection in NWDWebErrorController._RedirectionDict)
+{
+    <script>ErrorDict["@tRedirection.Key"] = "@tRedirection.Value";</script>
+}
+@foreach (KeyValuePair<int, string> tError in NWDWebErrorController._ErrorDict)
+{
+    <script>ErrorDict["@tError.Key"] = "@tError.Value";</script>
+}
+
+@if (NWDWebRuntimeConfiguration.KConfig.IsDevelopment == true)
+{
+    <div class="text-end mb-3">
+        <span class="ms-2 badge rounded-pill badge-subtle-success bi-check-circle"> Kortex</span>
+        @* <span class="ms-2 badge rounded-pill badge-subtle-danger bi-x-circle"> Kortex</span> *@
+        @* <span class="ms-2 badge rounded-pill badge-subtle-secondary bi-exclamation-octagon"> Todo : change icons</span> *@
+    </div>
+}
+<div class="container p-0 m-0">
+<div class="row g-3">
+<!-- TITLE With background -->
+<div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+<div class="card">
+    <div class="card-header background-corner-2 border-bottom">
+        
+        <div class="row">
+            <div class="col-8">
+                <h3><span class="bi bi-wrench"></span> Net-Worked-Data Website quick auto analyze!</h3>
+                <p class="mb-0">Hope no error 500! Waiting for results!</p>
+            </div>
+        </div>
+    </div>
+    <div class="card-body position-relative">
+        <div class="row">
+            <div class="col-8">
+                Analyze by javascript requests. You must test with account, without account, with admin account, etc. Controller's actions and tests can be tag, prepare or exclude by method's attributs :
+                <ul>
+                    <li> [<b>@nameof(NWDWebMethodTestExcludeAttribute)</b> ()]</li>
+                    <li> [<b>@nameof(NWDWebMethodTestAttribute)</b> (int sExpected = 200, NWDPageStandardStatusTag sStatusTag = NWDPageStandardStatusTag.None)]</li>
+                    <li> [<b>@nameof(NWDWebMethodTestGetAttribute)</b> (string sGetLinearizedParams, int sExpected = 200, NWDPageStandardStatusTag sStatusTag = NWDPageStandardStatusTag.None)]</li>
+                    <li> [<b>@nameof(NWDWebMethodTestPostAttribute)</b> (string sPostLinearized, int sExpected = 200, NWDPageStandardStatusTag sStatusTag = NWDPageStandardStatusTag.None)]</li>
+                </ul>
+            </div>
+            <div class="col-4">
+                <div class="card bg-dark border-primary">
+                    <div class="card-header border-bottom">
+                        Page HTML must containts
+                    </div>
+                    <div class="card-body m-0">
+                        <pre>
+<code>
+...
+    &lt;meta name="@nameof(NWDPageStandardStatusTag)" content="MyStatusTag"&gt;
+    &lt;meta name="@nameof(NWDPageStatusCode)" content="500"&gt;
+...
+</code>
+</pre>
+                    </div>
+                    </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6 border-end">
+                <table class="table table-hover mb-0">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>StatusCode</th>
+                        <th>Count</th>
+                        <th>Information</th>
+                    </tr>
+                    </thead>
+                    <tbody id="FinalResult">
+                    <tr>
+                        <td colspan="4">
+                            <div class="text-center">
+                                <div class="spinner-border text-secondary"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-6">
+
+                <table class="table table-hover mb-0">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>Result</th>
+                        <th>Count</th>
+                    </tr>
+                    </thead>
+                    <tbody id="ReportFinal">
+                    <tr>
+                        <td colspan="3">
+                            <div class="text-center">
+                                <div class="spinner-border text-secondary"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    @if (tViewAll != null)
+    {
+        <div class="card-body position-relative border-top">
+            <a class="btn btn-outline-primary" href="/NWDWebsiteMap/Index"><span class="bi bi-list-task"></span> Access to all controllers unit test!</a>
+            <a class="btn btn-outline-primary" href="#top-of-page" onclick="location.reload();"><span class="bi bi-arrow-repeat"></span> Replay</a>
+        </div>
+    }
+    else
+    {
+        <div class="card-body position-relative border-top">
+            <a class="btn btn-outline-primary" href="#top-of-page" onclick="location.reload();"><span class="bi bi-arrow-repeat"></span> Replay all!</a>
+        </div>
+    }
+</div>
+</div>
+@if (tWebsiteMapControllerList != null)
+{
+    foreach (NWDWebsiteMapLibrary tLibrary in tWebsiteMapControllerList)
+    {
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+        <div id="@tLibrary.LibraryName" class="card">
+            <div class="card-header background-corner-4 border-bottom">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <h3>
+                            <span class="bi bi-puzzle"></span> @tLibrary.LibraryName
+                        </h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+
+        foreach (NWDWebsiteMapClass tMapController in tLibrary.ClassList)
+        {
+            <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+                <div id="@tMapController.ControllerName" class="card mb-3">
+                    <div class="card-header background-corner-3 border-bottom">
+                        <div class="card-title">
+                            <span class="bi bi-tornado"></span> @tMapController.ControllerName mapping and test!
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="table-responsive scrollbar">
+                                    <table class="table table-hover mb-0">
+                                        <thead>
+                                        <tr>
+                                            <th scope="col">
+                                                <span class="bi bi-shield-fill"></span>
+                                            </th>
+                                            <th scope="col">Controller</th>
+                                            <th scope="col">Action</th>
+                                            <th scope="col">Return</th>
+                                            <th scope="col">Expected</th>
+                                            <th scope="col">StatusTag</th>
+                                            <th scope="col">Request</th>
+                                            <th scope="col">Replay</th>
+                                            <th scope="col">StatusCode</th>
+                                            <th scope="col">Result</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        @foreach (NWDWebsiteMapAction tMapAction in tMapController.ActionList)
+                                        {
+
+                                            @foreach (NWDWebsiteMapRequest tRequest in tMapAction.RequestList)
+                                            {
+                                                tReportTotalExpected++;
+                                                string tToken = NWDToolBox.UniqueRandomString(16);
+                                                <tr id="@Html.Raw("Tr_" + tToken)" class="">
+                                                    <td id="@Html.Raw("Ic_" + tToken)" class="">
+                                                        <span class="bi bi-shield"></span>
+                                                    </td>
+                                                    <td>@tRequest.ControllerName</td>
+                                                    <td>@tRequest.ActionName</td>
+                                                    <td>@tRequest.ReturnTypeName</td>
+                                                    <td>
+                                                        @if (tRequest.Expected >= 500)
+                                                        {
+                                                            <div class="badge bg-danger">@tRequest.Expected</div>
+                                                        }
+                                                        else if (@tRequest.Expected >= 400)
+                                                        {
+                                                            <div class="badge bg-warning">@tRequest.Expected</div>
+                                                        }
+                                                        else
+                                                        {
+                                                            <div class="badge bg-success">@tRequest.Expected</div>
+                                                        }
+                                                    </td>
+                                                    <td>@tRequest.StatusTag</td>
+                                                    <td>
+                                                        @if (string.IsNullOrEmpty(tRequest.GetParams) == false)
+                                                        {
+                                                            <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="left" data-bs-content="@HttpUtility.HtmlEncode(tRequest.GetParams.Replace("&", "& "))">Get</button>
+                                                        }
+                                                        @if (string.IsNullOrEmpty(tRequest.PostLinearized) == false)
+                                                        {
+                                                            <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="left" data-bs-content="@HttpUtility.HtmlEncode(tRequest.PostLinearized.Replace("&", "& "))">Post</button>
+                                                        }
+                                                        @if (string.IsNullOrEmpty(tRequest.GetParams) && string.IsNullOrEmpty(tRequest.PostLinearized))
+                                                        {
+                                                            <span>
+                                                                <a href="~/@tRequest.ControllerName/@tRequest.ActionName"> direct access</a>
+                                                            </span>
+                                                        }
+                                                    </td>
+                                                    <td>
+
+                                                        @if (string.IsNullOrEmpty(tRequest.GetParams) == false)
+                                                        {
+                                                            <a class="btn btn-sm btn-outline-primary" href="#@tToken" onclick="getResultAndReplaceContent('@tToken','@NWDWebRuntimeConfiguration.KConfig.GetDnsHttps()/@tRequest.ControllerName/@tRequest.ActionName/@tRequest.GetParams',@tRequest.Expected,'@tRequest.StatusTag.ToString()');"><span class="bi bi-arrow-repeat"></span> Replay</a>
+                                                        }
+                                                        @if (string.IsNullOrEmpty(tRequest.PostLinearized) == false)
+                                                        {
+                                                            <a class="btn btn-sm btn-outline-primary" href="#@tToken" onclick="postResultAndReplaceContent('@tToken','@NWDWebRuntimeConfiguration.KConfig.GetDnsHttps()/@tRequest.ControllerName/@tRequest.ActionName', '@tRequest.PostLinearized',@tRequest.Expected,'@tRequest.StatusTag.ToString()');"><span class="bi bi-arrow-repeat"></span> Replay</a>
+                                                        }
+                                                        @if (string.IsNullOrEmpty(tRequest.GetParams) && string.IsNullOrEmpty(tRequest.PostLinearized))
+                                                        {
+                                                            <a class="btn btn-sm btn-outline-primary" href="#@tToken" onclick="getResultAndReplaceContent('@tToken','@NWDWebRuntimeConfiguration.KConfig.GetDnsHttps()/@tRequest.ControllerName/@tRequest.ActionName',@tRequest.Expected,'@tRequest.StatusTag.ToString()');"><span class="bi bi-arrow-repeat"></span> Replay</a>
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        <div id="@tToken">
+                                                            <div id="spinner" class="text-start">
+                                                                <div class="spinner-border text-primary" role="status"></div>
+                                                            </div>
+                                                            <div id="content_to_replace" class="justify-content-center">
+                                                                @if (string.IsNullOrEmpty(tRequest.GetParams) == false)
+                                                                {
+                                                                    <script>$(document).ready(function () {getResultAndReplaceContent('@tToken','@NWDWebRuntimeConfiguration.KConfig.GetDnsHttps()/@tRequest.ControllerName/@tRequest.ActionName/@tRequest.GetParams',@tRequest.Expected,'@tRequest.StatusTag.ToString()');});</script>
+                                                                }
+                                                                @if (string.IsNullOrEmpty(tRequest.PostLinearized) == false)
+                                                                {
+                                                                    <script>$(document).ready(function () {postResultAndReplaceContent('@tToken','@NWDWebRuntimeConfiguration.KConfig.GetDnsHttps()/@tRequest.ControllerName/@tRequest.ActionName', '@tRequest.PostLinearized',@tRequest.Expected,'@tRequest.StatusTag.ToString()');});</script>
+                                                                }
+                                                                @if (string.IsNullOrEmpty(tRequest.GetParams) && string.IsNullOrEmpty(tRequest.PostLinearized))
+                                                                {
+                                                                    <script>$(document).ready(function () {getResultAndReplaceContent('@tToken','@NWDWebRuntimeConfiguration.KConfig.GetDnsHttps()/@tRequest.ControllerName/@tRequest.ActionName',@tRequest.Expected,'@tRequest.StatusTag.ToString()'); });</script>
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div id="@Html.Raw("Re_" + tToken)">
+                                                            <div id="spinner" class="text-start">
+                                                                <div class="spinner-border text-secondary" role="status"></div>
+                                                            </div>
+                                                            <div id="content_to_replace" class="justify-content-center">
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 mb-3">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        @if (tViewAll == null)
+                        {
+                            <a class="btn btn-outline-primary" href="~/NWDWebsiteMap/UnitTest/?sControllerName=@tMapController.ControllerName"><span class="bi bi-list-task"></span> Access to @tMapController.ControllerName test!</a>
+                        }
+                    </div>
+                </div>
+                </div>
+        }
+    }
+}
+</div>
+</div>
+<script>
+reportTotalExpected = @tReportTotalExpected;
+</script>
+<partial name="/Views/NWDWebError/List.cshtml"/>

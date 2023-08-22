@@ -1,0 +1,103 @@
+/* @override 
+	https://localhost:4051/css/site.css */
+
+/* DEBUG */
+partial {}
+partial:after {content: "⚠️ use @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers ";}
+/* DEBUG END */
+
+.form-label-fix {
+  margin-bottom:0;
+}
+
+.hide-if-empty {
+}
+
+.hide-if-empty:empty {
+  display: none;
+}
+
+.footer-extended:after {
+  content: " ";
+  display: none;
+  height: 100%;
+  width: 300%;
+  position: absolute;
+  text-align: center;
+  z-index: -2;
+  margin-left: -100%;
+  margin-right: -100%;
+  bottom: 0;
+  background-color: #0b1727;
+  overflow: visible;
+  visibility: visible;
+}
+
+.nwd-hr {
+font-family: Arial, sans-serif;
+  text-align: center;
+  line-height: 1px;
+  height: 1px;
+  font-size: 1em;
+	border: 1px none #676767;
+margin: 20px 10px;
+  overflow: visible;
+border-bottom: 1px solid #9e9e9e;
+}
+
+.nwd-hr:after {
+}
+
+
+.btn {
+  transition: 0.3s;
+}
+
+.btn:hover {
+  border-radius: 0.75rem;
+}
+
+.background-half-circle {
+  background: url(./../decorations/half-circle.png) right no-repeat;
+  overflow: hidden;
+}
+
+.background-corner-1 {
+  background: url(./../decorations/corner-1.png) right no-repeat;
+  overflow: hidden;
+}
+.background-corner-2 {
+  background: url(./../decorations/corner-2.png) right no-repeat;
+  overflow: hidden;
+}
+.background-corner-3 {
+  background: url(./../decorations/corner-3.png) right no-repeat;
+  overflow: hidden;
+}
+.background-corner-4 {
+  background: url(./../decorations/corner-4.png) right no-repeat;
+  overflow: hidden;
+}
+.background-corner-5 {
+  background: url(./../decorations/corner-5.png) right no-repeat;
+  overflow: hidden;
+}
+
+.background-animated {
+  animation: 4s ease-in-out infinite backgroundanim;
+  animation-direction: alternate-reverse;
+}
+
+@keyframes backgroundanim {
+  from {
+    background-position-x: 0px;
+  }
+  to {
+    background-position-x: -100px;
+  }
+}
+
+.handleForDragAndDrop {
+  cursor: move;
+  cursor: -webkit-grabbing;
+}

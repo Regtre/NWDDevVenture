@@ -1,0 +1,33 @@
+@using NWDFoundation.Tools
+@model NWDWebStandard.Models.NWDHtmlDivDownload
+@{
+    string tRefLocal = NWDRandom.RandomStringAlpha(32);
+    string tBtnSmall = "btn-sm";
+    if (Model.SmallButton == false)
+    {
+        tBtnSmall = string.Empty;
+    }
+}
+<button class="btn @tBtnSmall btn-@Model.BootstrapKindOfStyle.ToString().ToLower()" type="button" id="copy_@(Html.Raw(tRefLocal))" onclick="@(Html.Raw(tRefLocal))_DownloadButton()" data-bs-toggle="tooltip" data-bs-placement="top" title="@Html.Raw(Model.Filename)" ><span class="bi bi-download"></span> download</button>
+<script>
+function @(Html.Raw(tRefLocal))_DownloadButton() 
+    {
+        // Create element with <a> tag
+        const link = document.createElement("a");
+         const content = '@Html.Raw(Model.Data.Replace("\n", "\\n").Replace("\r", "\\r").Replace("'", "\\\'"))';
+        // Create a blog object with the file content which you want to add to the file
+        const file = new Blob([content], { type: 'text/plain' });
+        // Add file content in the object URL
+        link.href = URL.createObjectURL(file);
+        // Add file name
+        link.download = '@Html.Raw(Model.Filename)';
+        // Add click event to <a> tag to save file.
+        link.click();
+        URL.revokeObjectURL(link.href);
+        
+        navigator.clipboard.writeText('@Html.Raw(Model.Data.Replace("\n", "\\n").Replace("\r", "\\r").Replace("'", "\\\'"))');
+        var tButton = document.querySelector('#copy_@(Html.Raw(tRefLocal))');
+        tButton.className ='btn @tBtnSmall btn-outline-@Model.BootstrapKindOfStyle.ToString().ToLower()';
+        tButton.innerHTML ='<span class="bi bi-download"></span> downloaded';
+    }
+</script>

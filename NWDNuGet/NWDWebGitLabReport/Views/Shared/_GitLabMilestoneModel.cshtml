@@ -1,0 +1,374 @@
+﻿@using System.Globalization
+@using Microsoft.AspNetCore.Http
+@using NWDFoundation.Tools
+@using NWDWebGitLabReport.Managers
+@using NWDWebGitLabReport.Models
+@using NWDWebRuntime.Configuration
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@inject IHttpContextAccessor HttpContextAccessor
+
+<script src="~/vendors/countup/countUp.umd.js"></script>
+
+@model NWDGitLabMilestoneModel
+@{
+    NWDGitLabMilestoneModel tGitLabMilestone = @Model;
+    NWDProjectGitConnection? tGitProject = tGitLabMilestone.GitLabProject;
+    DateTime tDuCrate = tGitLabMilestone.Start;
+    DateTime tDue = tGitLabMilestone.Due;
+}
+
+<!-- TITLE With background -->
+<div class="card mb-3">
+    <div class="card-header">
+        <div class="d-flex flex-between-center pb-0">
+            <h3>
+                <span class="fs-2 bi-file-earmark-richtext me-2"></span>@tGitLabMilestone.Name
+            </h3>
+            <div class="dropdown font-sans-serif btn-reveal-trigger">
+                @{
+                    string tTokenSubMenu = NWDRandom.RandomStringAlpha(64);
+                    string tRefLocal = NWDRandom.RandomStringAlpha(32);
+                }
+                <button class="btn btn-link text-600 btn-sm dropdown-toggle dropdown-caret-none btn-reveal" type="button" id="@tTokenSubMenu" data-bs-toggle="dropdown" data-boundary="viewport" aria-haspopup="true" aria-expanded="false">
+                    <span class="fas fa-ellipsis-h fs--1"></span>
+                </button>
+                <div class="dropdown-menu dropdown-menu-end border py-2" aria-labelledby="@tTokenSubMenu" data-popper-placement="bottom-end">
+                    <a class="dropdown-item" href="@NWDWebRuntimeConfiguration.KConfig.GetDnsHttps()/NWDGitLabReport/View?LocalTokenReport=@tGitProject?.LocalTokenReport"><span class="fs-1 bi-calendar me-2"></span> Return to milestones list</a>
+                    <a class="dropdown-item" href="@tGitProject?.GitUrl.TrimEnd('/')/@tGitProject?.GitProject"><span class="fs-1 bi-calendar-week me-2"></span> View this milestone on Git</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="javascript:@Html.Raw(@tRefLocal)_SecretKey();" onclick="@Html.Raw(@tRefLocal)_SecretKey();"><span class="fs-1 bi-clipboard me-2"></span> Copy this url repport in clipboard</a>
+                </div>
+                <input id="@Html.Raw(@tRefLocal)@nameof(NWDProjectGitConnection.LocalTokenReport)" type="hidden" value="@NWDWebRuntimeConfiguration.KConfig.GetDnsHttps()/NWDGitLabReport/View?LocalTokenReport=@tGitProject?.LocalTokenReport" disabled>
+                <script>function @Html.Raw(@tRefLocal)_SecretKey() {
+                                                            var copyText = document.getElementById('@Html.Raw(@tRefLocal)@nameof(NWDProjectGitConnection.LocalTokenReport)');
+                                                            copyText.select();
+                                                            navigator.clipboard.writeText(copyText.value);
+                                                            // alert(copyText.value);
+                                                        }</script>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Show card -->
+
+@if (tGitProject is {ShowInformation: true })
+{
+    <div class="row g-3 mb-3">
+
+        <div class="col-sm-6 col-md-6 col-lg-4 col-xxl-4">
+            <div class="card h-md-100">
+
+                <div class="card-header d-flex flex-between-center pb-0">
+                    <h6 class="mb-0">
+                        <span class="fs-1 bi-info-circle me-2"></span> @tGitProject.Name
+                    </h6>
+
+                </div>
+                <div class="card-body pt-2">
+                    <p>
+                        @tGitProject.Description
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-6 col-lg-4 col-xxl-4">
+            <div class="card h-md-100">
+                <div class="card-header pb-0">
+                    <h6 class="mb-0"><span class="fs-1 bi-calendar-week me-2"></span> Milestone</h6>
+                </div>
+                <div class="card-body pt-2">
+                    <p>
+                        @tGitLabMilestone.Name
+                        <ul>
+                            @if (tGitLabMilestone.StopAtCommit == null)
+                            {
+                                @if (tGitLabMilestone.MyMilestone?.StartDate != null)
+                                {
+                                    <li>
+                                        start at @tGitLabMilestone.MyMilestone.StartDate
+                                    </li>
+                                }
+                                @if (tGitLabMilestone.MyMilestone?.DueDate != null)
+                                {
+                                    <li>
+                                        due to @tGitLabMilestone.MyMilestone.DueDate
+                                    </li>
+                                }
+                                <li>
+                                    days to release @tGitLabMilestone.AvailableDays days
+                                </li>
+                            }
+                            else
+                            {
+                                <li>
+                                    commit @tGitLabMilestone.StopAtCommit.ShortId
+                                </li>
+                            }
+                        </ul>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-12 col-lg-4 col-xxl-4">
+            <div class="row g-3 mb-3">
+                <div class="col-sm-12 col-md-6 col-lg-6 col-xxl-6">
+                    <div class="card overflow-hidden">
+                        <div class="bg-holder bg-card background-corner-1"></div>
+                        <div class="card-body position-relative">
+                            <h6><span class="fs-1 bi-stickies me-2"></span> Tasks</h6>
+                            <div class="display-4 fs-4 mb-2 fw-normal font-sans-serif text-info" data-countup="{&quot;endValue&quot;:@tGitLabMilestone.IssuesList?.Count.ToString("0.00", CultureInfo.InvariantCulture),&quot;decimalPlaces&quot;:2,&quot;suffix&quot;:&quot;&quot;}">
+                                0
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-6 col-lg-6 col-xxl-6">
+                    <div class="card overflow-hidden">
+                        <div class="bg-holder bg-card background-corner-2"></div>
+                        <div class="card-body position-relative">
+                            <h6><span class="fs-1 bi-files me-2"></span> Planing Poker</h6>
+                            <div class="display-4 fs-4 mb-2 fw-normal font-sans-serif text-warning" data-countup="{&quot;endValue&quot;:@tGitLabMilestone.TaskScoreTotal.ToString("0.00", CultureInfo.InvariantCulture),&quot;decimalPlaces&quot;:2,&quot;suffix&quot;:&quot;&quot;}">
+                                0
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    if (HttpContextAccessor.HttpContext != null && NWDSprintInfoManager.GetSprintInfoForMilestone(tGitLabMilestone.Name, HttpContextAccessor.HttpContext) != null)
+    {
+        <div class="row g-3 mb-3">
+            <div class="col" id="SprintInfoDiv">
+                <partial name="_SprintInfo" model="NWDSprintInfoManager.GetSprintInfoForMilestone(tGitLabMilestone.Name, HttpContextAccessor.HttpContext)"/>
+            </div>
+        </div>
+    }
+
+    @*<div class="card mb-3">
+            <div class="card-header border-bottom bg-light"><h5>Milestone Informations</h5></div>
+            <div class="card-body border-bottom">
+                <div class="input-group mb-3">
+                    <div class="input-group-text">Git Repository</div>
+                    <div class="form-control text-muted">@tGitProject.GitProject</div>
+                    <a class="btn btn-outline-primary" href="@tGitProject.GitUrl.TrimEnd('/')/@tGitProject.GitProject"><span class="fab fa-git-alt"></span> View Git</a>
+                </div>
+
+                <div class="input-group mb-3">
+                    <div class="input-group-text">Milestone</div>
+                    <div class="form-control text-muted">@tGitLabMilestone.Name</div>
+                    <a class="btn btn-outline-primary" href="@tGitLabMilestone.MyMilestone.WebUrl"><span class="far fa-chart-bar"></span> View Milestone on Git</a>
+                </div>
+
+                <div class="input-group mb-3">
+                    <div class="input-group-text">Description</div>
+                    <div class="form-control text-muted">@tGitLabMilestone.MyMilestone.Description</div>
+                </div>
+
+                @if (tGitLabMilestone.StopAtCommit == null)
+                {
+                    @if (tGitLabMilestone.MyMilestone.StartDate != null)
+                    {
+                        <div class="input-group mb-3">
+                            <div class="input-group-text">Start date at</div>
+                            <div class="form-control text-muted">@tGitLabMilestone.MyMilestone.StartDate</div>
+                        </div>
+                    }
+                    @if (tGitLabMilestone.MyMilestone.DueDate != null)
+                    {
+                        <div class="input-group mb-3">
+                            <div class="input-group-text">Due date at</div>
+                            <div class="form-control text-muted">@tGitLabMilestone.MyMilestone.DueDate</div>
+                        </div>
+                    }
+                    <div class="input-group mb-3">
+                        <div class="input-group-text">Days to release</div>
+                        <div class="form-control text-muted">@tGitLabMilestone.AvailableDays days</div>
+                    </div>
+                }
+                else
+                {
+                    <div class="input-group mb-3">
+                        <div class="input-group-text">Commit</div>
+                        <div class="form-control text-muted">@tGitLabMilestone.StopAtCommit.ShortId</div>
+                    </div>
+                }
+
+                <div class="input-group mb-3">
+                    <div class="input-group-text">Planning Poker total</div>
+                    <div class="form-control text-muted">@tGitLabMilestone.TaskScoreTotal.ToString("00.0")</div>
+                </div>
+
+                <div class="input-group mb-3">
+                    <div class="input-group-text">Task</div>
+                    <div class="form-control text-muted">@tGitLabMilestone.IssuesList.Count</div>
+                </div>
+            </div>
+            <div class="card-footer">
+            </div>
+        </div>*@
+}
+
+<div class="row g-3 mb-3">
+    @if (tGitProject is {ShowBurnUpChart: true })
+    {
+        <div class="col-sm-12 col-md-12 col-lg-6 col-xxl-6">
+            <div class="card h-md-100">
+                <div class="card-header border-bottom">
+                    <h6 class="mb-0"><span class="fs-2 bi-graph-down me-2"></span>Burndown Chart</h6>
+                </div>
+                <div class="card-body pt-2 mb-5" style="height: 300px;">
+                    <canvas id="@Html.Raw(@tGitLabMilestone.RandomKey + "BurnUpChart")"></canvas>
+                </div>
+            </div>
+        </div>
+    }
+    @if (tGitProject is {ShowBurnDownChart: true })
+    {
+        <div class="col-sm-12 col-md-12 col-lg-6 col-xxl-6">
+            <div class="card h-md-100">
+                <div class="card-header border-bottom">
+                    <h6 class="mb-0"><span class="fs-2 bi-graph-down me-2"></span>Burndown Chart</h6>
+                </div>
+                <div class="card-body pt-2 mb-5" style="height: 300px;">
+                    <canvas id="@Html.Raw(@tGitLabMilestone.RandomKey + "BurndownChart")"></canvas>
+                </div>
+            </div>
+        </div>
+    }
+    @if (tGitProject is {ShowTaskChart: true })
+    {
+        <div class="col-sm-12 col-md-12 col-lg-6 col-xxl-6">
+            <div class="card h-md-100">
+                <div class="card-header border-bottom">
+                    <h6 class="mb-0"><span class="fs-2 bi-thermometer-sun me-2"></span>Tasks chart</h6>
+                </div>
+                <div class="card-body pt-2 mb-5" style="height: 300px;">
+                    <canvas id="@Html.Raw(@tGitLabMilestone.RandomKey + "TaskChart")"></canvas>
+                </div>
+            </div>
+        </div>
+    }
+    @if (tGitProject is {ShowTaskStateChart: true })
+    {
+        <div class="col-sm-12 col-md-12 col-lg-6 col-xxl-6">
+            <div class="card h-md-100">
+                <div class="card-header border-bottom">
+                    <h6 class="mb-0"><span class="fs-2 bi-stickies me-2"></span>Tasks state</h6>
+                </div>
+                <div class="card-body pt-2 mb-5" style="height: 300px;">
+                    <canvas id="@Html.Raw(@tGitLabMilestone.RandomKey + "TaskStateChart")"></canvas>
+                </div>
+            </div>
+        </div>
+    }
+    @if (tGitProject is {ShowTask: true })
+    {
+        <div class="col-md-12 col-xxl-12">
+            <div class="card h-100">
+                <div class="card-header bg-light border-bottom">
+                    <h5 class="mb-0"><span class="fs-2 bi-stickies me-2"></span>Tasks list</h5>
+                </div>
+                <div class="card-body p-2">
+                    <div class="table-responsive scrollbar">
+                        <table class="table table-striped">
+                            <thead >
+                            <tr>
+                                <th></th>
+                                <th>Task</th>
+                                <th>Labels</th>
+                                <th>Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @if (tGitLabMilestone.IssuesList != null)
+                            {
+                                foreach (GitLabApiClient.Models.Issues.Responses.Issue tIssue in tGitLabMilestone.IssuesList)
+                                {
+                                    string tButtonClass = "btn btn-sm btn-outline-primary";
+                                    string tButtonIcon = "bi-sticky";
+                                    DateTime tDdC = tIssue.CreatedAt;
+                                    DateTime? tDdd = tIssue.ClosedAt ?? null;
+                                    if (tDdC >= tDuCrate)
+                                    {
+                                        tButtonClass = "btn btn-sm btn-outline-success";
+                                        tButtonIcon = "bi-file-earmark-plus";
+                                    }
+                                    if (tIssue.ClosedAt != null)
+                                    {
+                                        tDdd = (DateTime)tIssue.ClosedAt;
+                                        if (tDdd <= tDue)
+                                        {
+                                            tButtonClass = "btn btn-sm btn-outline-danger";
+                                            tButtonIcon = "bi-file-earmark-lock";
+                                        }
+                                        else
+                                        {
+                                            tButtonClass = "btn btn-sm btn-outline-primary";
+                                            tButtonIcon = "bi-file-earmark";
+                                        }
+                                    }
+
+                                    <tr class="">
+                                        <td class="">
+                                            <span class="fs-1 bi-sticky me-2"></span>
+                                        </td>
+                                        <td class="">@tIssue.Title </td>
+                                        <td class="">
+                                            @foreach (string tIssueStr in tIssue.Labels)
+                                            {
+                                                string tBackColor = @tGitLabMilestone.LabelsDicoColor?[tIssueStr] + "33";
+                                                <span class="badge badge-soft-light" style=" border-width: 0px; border-color: @tGitLabMilestone.LabelsDicoColor?[tIssueStr]; background-color: @tBackColor;"> @Html.Raw(tIssueStr.Replace(" ", "&nbsp;"))</span>
+                                            }
+                                        </td>
+                                        <td class="">
+                                            <a class="@tButtonClass" href="@tIssue.WebUrl">
+                                                <span class="fs-1 @tButtonIcon me-2"></span> #@tIssue.Iid
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                @* <div class="card-footer p-3"> *@
+                @*     <div class="row align-items-center"> *@
+                @*         <div class="col align-items-center"> *@
+                @*             <span class="btn btn-sm btn-outline-primary">Task opened</span> *@
+                @*             <span class="btn btn-sm btn-outline-success">Task opened and added</span> *@
+                @*             <span class="btn btn-sm btn-outline-danger">Task closed</span> *@
+                @*         </div> *@
+                @*     </div> *@
+                @* </div> *@
+            </div>
+        </div>
+    }
+</div>
+<script src="~/vendors/chart/chart.min.js"></script>
+<script type="text/javascript">
+    @if (tGitProject is {ShowBurnUpChart: true })
+    {
+        @Html.Raw(tGitLabMilestone.BurnupGraph?.CreateChartCode(tGitLabMilestone.RandomKey + "BurnUpChart"))
+        ;
+    }
+    @if (tGitProject is {ShowBurnDownChart: true })
+    {
+        @Html.Raw(tGitLabMilestone.BurndownGraph?.CreateChartCode(tGitLabMilestone.RandomKey + "BurndownChart"))
+    }
+    @if (tGitProject is {ShowTaskChart: true })
+    {
+        @Html.Raw(tGitLabMilestone.TasksGraph?.CreateChartCode(tGitLabMilestone.RandomKey + "TaskChart"))
+    }
+    @if (tGitProject is {ShowTaskStateChart: true })
+    {
+        @Html.Raw(tGitLabMilestone.TasksStateGraph?.CreateChartCode(tGitLabMilestone.RandomKey + "TaskStateChart"))
+    }
+</script>

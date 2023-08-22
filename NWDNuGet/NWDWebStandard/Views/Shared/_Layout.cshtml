@@ -1,0 +1,592 @@
+﻿@using Microsoft.AspNetCore.Http;
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Microsoft.AspNetCore.Localization
+@using NWDFoundation.Models
+@using NWDFoundation.WebEdition.Enums
+@using NWDWebRuntime
+@using NWDWebRuntime.Configuration
+@using NWDWebRuntime.Models
+@using NWDWebRuntime.Models.Enums
+@using NWDWebStandard.Configuration
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    var tRequestCulture = Context.Features.Get<IRequestCultureFeature>()?.RequestCulture;
+    NWDPageStandard? tPageStandard = ViewData[nameof(NWDPageStandard)] as NWDPageStandard;
+    // Prevent page standard is null
+    if (tPageStandard == null)
+    {
+        tPageStandard = new NWDPageStandard();
+    }
+}
+
+<!DOCTYPE html>
+<html lang="@tRequestCulture?.UICulture.Name">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>@tPageStandard.Title - @NWDWebStandardConfiguration.KConfig.WebSiteName</title>
+    <meta name="GitCommit" content="@NWDWebRuntimeConfiguration.KConfig.GitCommit"/>
+    <meta name="keywords" content="@tPageStandard.GetKeywordsMeta()"/>
+    <meta name="description" content="@tPageStandard.Description"/>
+    <meta name="theme-color" content="#ffffff"/>
+    <meta name="@nameof(NWDPageStandardStatusTag)" content="@tPageStandard.StatusTag"/>
+
+    <!-- ===============================================-->
+    <!--    Favicons     -->
+    <!-- ===============================================-->
+
+    <link rel="apple-touch-icon" sizes="180x180" href="~/favicons/apple-touch-icon.png"/>
+    <link rel="icon" type="image/png" sizes="32x32" href="~/favicons/favicon-32x32.png"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="~/favicons/favicon-16x16.png"/>
+    <link rel="icon" type="image/png" sizes="32x32" href="~/favicons/favicon-48x48.png"/>
+    @* <link rel="icon" type="image/x-icon" href="~/favicons/favicon.ico"> *@
+    @* <link rel="manifest" href="~/favicons/manifest.json"> *@
+
+    <!-- ===============================================-->
+    <!--    Stylesheets    -->
+    <!-- ===============================================-->
+
+    <link rel="preconnect" href="https://fonts.gstatic.com"/>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,600,700%7cPoppins:300,400,500,600,700,800,900&amp;display=swap" rel="stylesheet"/>
+    <link href="~/vendors/simplebar/simplebar.min.css" rel="stylesheet"/>
+    <link href="~/assets/css/theme-rtl.min.css" rel="stylesheet" id="style-rtl"/>
+    <link href="~/assets/css/theme.min.css" rel="stylesheet" id="style-default"/>
+    <link href="~/assets/css/user-rtl.min.css" rel="stylesheet" id="user-style-rtl"/>
+    <link href="~/assets/css/user.min.css" rel="stylesheet" id="user-style-default"/>
+    <link href="~/css/site.css" rel="stylesheet" id="website-style"/>
+    <link href="~/NetWorkedData.css" rel="stylesheet" id="nwd-style"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    @foreach (string tCssPath in tPageStandard.CssPathAddonList)
+    {
+        <link href="@tCssPath" rel="stylesheet"/>
+    }
+
+    <!-- ===============================================-->
+    <!--    Scripts    -->
+    <!-- ===============================================-->
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+    <script src="~/assets/js/config.js"></script>
+    <script src="~/js/site.js"></script>
+    <script src="~/js/NWDWebRuntime.js"></script>
+    <script src="~/js/NWDWebStandard.js"></script>
+    <script src="~/js/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/vendors/overlayscrollbars/OverlayScrollbars.min.js"></script>
+    <script src="~/vendors/tinymce/tinymce.min.js"></script>
+    <script src="~/vendors/simplebar/simplebar.min.js"></script>
+
+    @foreach (string tJavascriptPath in tPageStandard.JavascriptPathAddonList)
+    {
+        <script src="@tJavascriptPath"></script>
+    }
+    <!-- ===============================================-->
+    <!--    Modules external  -->
+    <!-- ===============================================-->
+    <!--    Swiper  -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
+    <!--    Crypto-js  -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js" integrity="sha512-E8QSvWZ0eCLGk4km3hxSsNmGWbLtSCSUcewDQPQWZF6pEU8GlT8a5fF32wOl1i8ftdMhssTrF/OhyGWwonTcXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- ===============================================-->
+    <!--    Scripts    -->
+    <!-- ===============================================-->
+    <script>var isRTL = JSON.parse(localStorage.getItem('isRTL'));
+              if (isRTL) {
+                  var linkDefault = document.getElementById('style-default');
+                  var userLinkDefault = document.getElementById('user-style-default');
+                  linkDefault.setAttribute('disabled', true);
+                  userLinkDefault.setAttribute('disabled', true);
+                  document.querySelector('html').setAttribute('dir', 'rtl');
+              } else {
+                  var linkRTL = document.getElementById('style-rtl');
+                  var userLinkRTL = document.getElementById('user-style-rtl');
+                  linkRTL.setAttribute('disabled', true);
+                  userLinkRTL.setAttribute('disabled', true);
+              }</script>
+</head>
+<body>
+@switch (tPageStandard.PageStyle)
+{
+    case NWDPageContainer.PdfPage:
+    {
+        @RenderBody()
+    }
+        break;
+    case NWDPageContainer.IndependentPage:
+    {
+        @RenderBody()
+    }
+        break;
+    case NWDPageContainer.ContainerPage:
+    {
+        <!-- ===============================================-->
+        <!--    Main ContainerPagination Start    -->
+        <!-- ===============================================-->
+        @if (tPageStandard.SideBarBlockList.Count > 0 || tPageStandard.SideBarAnnexeList.Count > 0)
+        {
+            <main class="main" id="top">
+                <div class="container" data-layout="container">
+                    <script>var isFluid = JSON.parse(localStorage.getItem('isFluid'));
+                            if (isFluid) {
+                                var container = document.querySelector('[data-layout]');
+                                container.classList.remove('container');
+                                container.classList.add('container-fluid');
+                            }</script>
+                    <!-- ===============================================-->
+                    <!--    Sidebar Start   -->
+                    <!-- ===============================================-->
+                    <nav class="navbar navbar-vertical navbar-expand-xl navbar-light">
+                        <script>var navbarStyle = localStorage.getItem("navbarStyle");
+                                if (navbarStyle && navbarStyle !== 'transparent') {
+                                    document.querySelector('.navbar-vertical').classList.add(`navbar-${navbarStyle}`);
+                                }</script>
+                        <div class="d-flex align-items-center">
+                            <div class="toggle-icon-wrapper">
+                                <button class="btn navbar-toggler-humburger-icon navbar-vertical-toggle" data-bs-toggle="tooltip" data-bs-placement="left" title="Toggle Navigation">
+                                    <span class="navbar-toggle-icon">
+                                        <span class="toggle-line"></span>
+                                    </span>
+                                </button>
+                            </div>
+                            <a class="navbar-brand" href="/">
+                                <div class="d-flex align-items-center py-3">
+                                    <img class="me-2" src="~/favicons/favicon-80x80.png" alt="" width="40"/>
+                                    @* <span class="font-sans-serif">@NWDWebRuntimeConfiguration.KConfig.WebSiteShortName</span> *@
+                                </div>
+                            </a>
+                        </div>
+                        <div class="collapse navbar-collapse" id="navbarVerticalCollapse">
+                            <div class="navbar-vertical-content scrollbar">
+                                @if (tPageStandard.SideBarBlockList.Count > 0)
+                                {
+                                    <ul class="navbar-nav flex-column mb-3" id="navbarVerticalNav">
+                                        @foreach (NWDSideBarBlock tBlock in tPageStandard.SideBarBlockList)
+                                        {
+                                            <partial name="_NWDSideBarBlock" model="@tBlock"/>
+                                        }
+                                    </ul>
+                                }
+                                @if (tPageStandard.SideBarAnnexeList.Count > 0)
+                                {
+                                    <div class="settings mb-3">
+                                        @foreach (NWDSideBarAnnexe tAnnexe in tPageStandard.SideBarAnnexeList)
+                                        {
+                                            <partial name="_NWDSideBarAnnexe" model="@tAnnexe"/>
+                                        }
+                                    </div>
+                                }
+
+                            </div>
+                        </div>
+                    </nav>
+                    <!-- ===============================================-->
+                    <!--    Sidebar End   -->
+                    <!-- ===============================================-->
+                    <div class="content">
+                        <!-- ===============================================-->
+                        <!--    Navbar Start   -->
+                        <!-- ===============================================-->
+                        <nav class="navbar navbar-light navbar-glass navbar-top navbar-expand-lg" data-move-target="#navbarVerticalNav" data-navbar-top="combo">
+
+                            <button class="btn navbar-toggler-humburger-icon navbar-toggler me-1 me-sm-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalCollapse" aria-controls="navbarVerticalCollapse" aria-expanded="false" aria-label="Toggle Navigation">
+                                <span class="navbar-toggle-icon">
+                                    <span class="toggle-line"></span>
+                                </span>
+                            </button>
+                            <a class="navbar-brand me-1 me-sm-3" href="/">
+                                <div class="d-flex align-items-center">
+                                    <img class="me-2" src="~/favicons/favicon-80x80.png" alt="" width="40"/>
+                                    @* <span class="font-sans-serif">@NWDWebRuntimeConfiguration.KConfig.WebSiteShortName</span> *@
+                                </div>
+                            </a>
+
+                            <div class="collapse navbar-collapse scrollbar" id="navbarStandard">
+                                <ul class="navbar-nav" data-top-nav-dropdowns="data-top-nav-dropdowns">
+                                    
+                                @if (tPageStandard.NavBarMenuList.Count > 0)
+                                {
+                                        @foreach (NWDNavBarMenu tBlock in tPageStandard.NavBarMenuList)
+                                        {
+                                            <partial name="_NWDNavBarMenu" model="@tBlock"/>
+                                        }
+                                }
+                                
+                                    @* @{ *@
+                                    @*     string tNavBarFile = "/Views/Shared/_Navbar_" + tPageStandard.NavBarStyle.ToString() + ".cshtml"; *@
+                                    @*     <partial name="@tNavBarFile"/> *@
+                                    @* } *@
+                                </ul>
+                            </div>
+                            <partial name="/Views/Shared/_Navbar_Account.cshtml"/>
+                        </nav>
+                        <!-- ===============================================-->
+                        <!--    Navbar End   -->
+                        <!-- ===============================================-->
+                        <div id="top-of-page">
+                            @foreach (NWDToastStandard tToast in tPageStandard.ActualToastList)
+                            {
+                                if (tToast.Layout == NWDWebNotificationLayoutStyle.Alert)
+                                {
+                                    Html.RenderPartial("/Views/Shared/_ToastStandard.cshtml", tToast);
+                                @* <partial name="/Views/Shared/_ToastStandard.cshtml" model="@tToast"/> *@
+                                }
+                            }
+                            @{
+                                #if DEBUG
+                                if (NWDWebRuntimeStartupService.CookieDebugInformation.GetValue(HttpContextAccessor.HttpContext))
+                                {
+                                    <div class="mt-3">
+                                        <partial name="/Views/Shared/_PageInformationDebug.cshtml"/>
+                                    </div>
+                                }
+                                #endif
+                            }
+                            <partial name="/Views/Shared/_AccountServiceAlert.cshtml"/>
+                            @RenderBody()
+                            <partial name="/Views/Shared/_NWDSocialShareableUrl.cshtml" model="@tPageStandard.SocialShareableUrl"/>
+                            <partial name="/Views/Shared/_FrequentlyAskedQuestionsList.cshtml" model="@tPageStandard.FrequentlyAskedQuestionsList"/>
+                        </div>
+                        <partial name="/Views/Shared/_Footer_Shield.cshtml"/>
+                        <div>
+                            @if (tPageStandard.NavFooterMenu.Categories.Count > 0)
+                            {
+                                <partial name="/Views/Shared/_Footer.cshtml" model="@tPageStandard.NavFooterMenu"/>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </main>
+        }
+        else
+        {
+            <main class="main" id="top">
+                <div class="container" data-layout="container">
+                    <script>
+                      var isFluid = JSON.parse(localStorage.getItem('isFluid'));
+                      if (isFluid) {
+                        var container = document.querySelector('[data-layout]');
+                        container.classList.remove('container');
+                        container.classList.add('container-fluid');
+                      }
+                    </script>
+                    <nav class="navbar navbar-light navbar-glass navbar-top navbar-expand-lg">
+                        <button class="btn navbar-toggler-humburger-icon navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarStandard" aria-controls="navbarStandard" aria-expanded="false" aria-label="Toggle Navigation">
+                            <span class="navbar-toggle-icon">
+                                <span class="toggle-line"></span>
+                            </span>
+                        </button>
+                        <a class="navbar-brand" href="/">
+                            <div class="d-flex align-items-center py-3">
+                                <img class="me-2" src="~/favicons/favicon-80x80.png" alt="" width="40"/>
+                                @* <span class="font-sans-serif">@NWDWebRuntimeConfiguration.KConfig.WebSiteShortName</span> *@
+                            </div>
+                        </a>
+                        <div class="collapse navbar-collapse scrollbar" id="navbarStandard">
+                            <ul class="navbar-nav" data-top-nav-dropdowns="data-top-nav-dropdowns">
+                                
+                                @if (tPageStandard.NavBarMenuList.Count > 0)
+                                {
+                                        @foreach (NWDNavBarMenu tBlock in tPageStandard.NavBarMenuList)
+                                        {
+                                            <partial name="_NWDNavBarMenu" model="@tBlock"/>
+                                        }
+                                }
+                                @* @{ *@
+                                @*     string tNavBarFile = "/Views/Shared/_Navbar_" + tPageStandard.NavBarStyle.ToString() + ".cshtml"; *@
+                                @*     <partial name="@tNavBarFile"/> *@
+                                @* } *@
+                            </ul>
+                        </div>
+                        <partial name="/Views/Shared/_Navbar_Account.cshtml"/>
+                    </nav>
+                    <div class="content">
+                        <div id="top-of-page">
+                            @foreach (NWDToastStandard tToast in tPageStandard.ActualToastList)
+                            {
+                                if (tToast.Layout == NWDWebNotificationLayoutStyle.Alert)
+                                {
+                                    Html.RenderPartial("/Views/Shared/_ToastStandard.cshtml", tToast);
+                                @* <partial name="/Views/Shared/_ToastStandard.cshtml" model="@tToast"/> *@
+                                }
+                            }
+                            @{
+                                #if DEBUG
+                                if (NWDWebRuntimeStartupService.CookieDebugInformation.GetValue(HttpContextAccessor.HttpContext))
+                                {
+                                    <div class="mt-3">
+                                        <partial name="/Views/Shared/_PageInformationDebug.cshtml"/>
+                                    </div>
+                                }
+                                #endif
+                            }
+                            <partial name="/Views/Shared/_AccountServiceAlert.cshtml"/>
+                            @RenderBody()
+                            <partial name="/Views/Shared/_NWDSocialShareableUrl.cshtml" model="@tPageStandard.SocialShareableUrl"/>
+                            <partial name="/Views/Shared/_FrequentlyAskedQuestionsList.cshtml" model="@tPageStandard.FrequentlyAskedQuestionsList"/>
+                        </div>
+                        <partial name="/Views/Shared/_Footer_Shield.cshtml"/>
+                        <div>
+                            @if (tPageStandard.NavFooterMenu.Categories.Count > 0)
+                            {
+                                <partial name="/Views/Shared/_Footer.cshtml" model="@tPageStandard.NavFooterMenu"/>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </main>
+        }
+        <!-- ===============================================-->
+        <!--    Main ContainerPagination End    -->
+        <!-- ===============================================-->
+    }
+        break;
+    /*  case NWDPageContainer.DoubleTopPage:
+    {
+        <!-- ===============================================-->
+        <!--    Main ContainerPagination End    -->
+        <!-- ===============================================-->
+        <main class="main" id="top">
+            <div class="container" data-layout="container">
+                <script>
+          var isFluid = JSON.parse(localStorage.getItem('isFluid'));
+          if (isFluid) {
+            var container = document.querySelector('[data-layout]');
+            container.classList.remove('container');
+            container.classList.add('container-fluid');
+          }
+        </script>
+                <nav class="navbar navbar-light navbar-glass navbar-top navbar-expand-lg" data-double-top-nav="data-double-top-nav">
+                    <div class="w-100">
+                        <div class="d-flex flex-between-center">
+                            <button class="btn navbar-toggler-humburger-icon navbar-toggler me-1 me-sm-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarDoubleTop" aria-controls="navbarDoubleTop" aria-expanded="false" aria-label="Toggle Navigation">
+                                <span class="navbar-toggle-icon">
+                                    <span class="toggle-line"></span>
+                                </span>
+                            </button>
+
+                            <a class="navbar-brand" href="/">
+                                <div class="d-flex align-items-center py-3">
+                                    <img class="me-2" src="~/favicons/favicon-80x80.png" alt="" width="40"/>
+                                    @* <span class="font-sans-serif">@NWDWebRuntimeConfiguration.KConfig.WebSiteShortName</span> *@
+                                </div>
+                            </a>
+                            <div class="collapse navbar-collapse scrollbar" id="navbarStandard">
+                                <ul class="navbar-nav">
+                                    @{
+                                        string tNavBarFile = "/Views/Shared/_Navbar_" + tPageStandard.NavBarStyle.ToString() + ".cshtml";
+                                        <partial name="@tNavBarFile"/>
+                                    }
+                                </ul>
+                            </div>
+                            <partial name="/Views/Shared/_Navbar_Account.cshtml"/>
+
+                        </div>
+                        <hr class="my-2 d-none d-lg-block">
+                        <div class="collapse navbar-collapse scrollbar py-lg-2" id="navbarDoubleTop">
+                            <ul class="navbar-nav" data-top-nav-dropdowns="data-top-nav-dropdowns">
+                                @{
+                                    string tSideBarFile = "/Views/Shared/_Sidebar_Tools.cshtml";
+                                }
+                                <partial name="@tSideBarFile"/>
+                            </ul>
+                            <partial name="/Views/Shared/_SideBar_Annexe.cshtml"/>
+                        </div>
+                    </div>
+                </nav>
+                <div class="content">
+                    <div id="top-of-page">
+                        @foreach (NWDToastStandard tToast in tPageStandard.ToastList)
+                        {
+                            if (tToast.Layout == NWDWebNotificationLayoutStyle.Alert)
+                            {
+                                Html.RenderPartial("/Views/Shared/_ToastStandard.cshtml", tToast);
+                                          @* <partial name="/Views/Shared/_ToastStandard.cshtml" model="@tToast"/> *@
+                            }
+                        }
+                        @{
+                            #if DEBUG
+                            if (NWDWebRuntimeStartupService.CookieDebugInformation.GetValue(HttpContextAccessor.HttpContext))
+                            {
+                                <div class="mt-3">
+                                    <partial name="/Views/Shared/_PageInformationDebug.cshtml"/>
+                                </div>
+                            }
+                            #endif
+                        }
+                        <partial name="/Views/Shared/_AccountServiceAlert.cshtml"/>
+                        @RenderBody()
+                        <partial name="/Views/Shared/_NWDSocialShareableUrl.cshtml" model="@tPageStandard.SocialShareableUrl"/>
+                        <partial name="/Views/Shared/_FrequentlyAskedQuestionsList.cshtml" model="@tPageStandard.FrequentlyAskedQuestionsList"/>
+                    </div>
+                    <partial name="/Views/Shared/_Footer.cshtml"/>
+                </div>
+            </div>
+        </main>
+        <!-- ===============================================-->
+        <!--    Main LandingPagination Start    -->
+        <!-- ===============================================-->
+    }
+        break;
+        */
+    case NWDPageContainer.LandingPage:
+    {
+        <!-- ===============================================-->
+        <!--    Main LandingPagination Start    -->
+        <!-- ===============================================-->
+        <main class="main" id="top">
+            <nav class="navbar navbar-standard navbar-expand-lg fixed-top navbar-dark" data-navbar-darken-on-scroll="data-navbar-darken-on-scroll">
+                <div class="container">
+                    <!--    Icon and Website name  start  -->
+                    <a class="navbar-brand me-1 me-sm-3" href="/">
+                        <div class="d-flex align-items-center">
+                            <img class="me-2" src="~/favicons/favicon-80x80.png" alt="" width="40"/>
+                            @* <span class="font-sans-serif">@NWDWebRuntimeConfiguration.KConfig.WebSiteShortName</span> *@
+                        </div>
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarStandard" aria-controls="navbarStandard" aria-expanded="true" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <!--    sNavBarKind     -->
+                    <div class="collapse navbar-collapse scrollbar" id="navbarStandard">
+                        @* <ul class="navbar-nav"> *@
+                        @*     @{ *@
+                        @*         string tNavBarFile = "/Views/Shared/_Navbar_" + tPageStandard.NavBarStyle.ToString() + ".cshtml"; *@
+                        @*     } *@
+                        @*     <partial name="@tNavBarFile"/> *@
+                        @* </ul> *@
+                        <partial name="/Views/Shared/_Navbar_Account.cshtml"/>
+                    </div>
+
+                </div>
+            </nav>
+            <partial name="/Views/Shared/_AccountServiceAlert.cshtml"/>
+            @RenderBody()
+            <partial name="/Views/Shared/_NWDSocialShareableUrl.cshtml" model="@tPageStandard.SocialShareableUrl"/>
+            <partial name="/Views/Shared/_FrequentlyAskedQuestionsList.cshtml" model="@tPageStandard.FrequentlyAskedQuestionsList"/>
+            <div id="top-of-page">
+                @{
+                    #if DEBUG
+                    if (NWDWebRuntimeStartupService.CookieDebugInformation.GetValue(HttpContextAccessor.HttpContext))
+                    {
+                        <div class="mt-3">
+                            <partial name="/Views/Shared/_PageInformationDebug.cshtml"/>
+                        </div>
+                    }
+                    #endif
+                }
+            </div>
+            @foreach (NWDToastStandard tToast in tPageStandard.ActualToastList)
+            {
+                if (tToast.Layout == NWDWebNotificationLayoutStyle.Alert)
+                {
+                    tToast.Layout = NWDWebNotificationLayoutStyle.PopUp;
+                }
+            }
+            <partial name="/Views/Shared/_Footer_Shield.cshtml"/>
+                        <div>
+                            @if (tPageStandard.NavFooterMenu.Categories.Count > 0)
+                            {
+                                <partial name="/Views/Shared/_Footer.cshtml" model="@tPageStandard.NavFooterMenu"/>
+                            }
+                        </div>
+
+        </main>
+        <!-- ===============================================-->
+        <!--    Main LandingPagination End    -->
+        <!-- ===============================================-->
+    }
+        break;
+}
+
+@switch (tPageStandard.PageStyle)
+{
+    case NWDPageContainer.PdfPage:
+    case NWDPageContainer.IndependentPage:
+    {
+        <!-- nothing -->
+    }
+        break;
+    default:
+    {
+        <!-- ===============================================-->
+        <!--   Toasts container -->
+        <!-- ===============================================-->
+        <div id="toastContainer" class="toast-container position-fixed bottom-0 end-0 p-3">
+            @foreach (NWDToastStandard tToast in tPageStandard.ActualToastList)
+            {
+                if (tToast.Layout == NWDWebNotificationLayoutStyle.PopUp)
+                {
+                    await Html.RenderPartialAsync("/Views/Shared/_ToastStandard.cshtml", tToast);
+                }
+            }
+        </div>
+        <!-- ===============================================-->
+        <!--   Cookie notice -->
+        <!-- ===============================================-->
+        <partial name="/Views/Shared/_CookieConsentPartial.cshtml"/>
+        <!-- ===============================================-->
+        <!--   Customizer container -->
+        <!-- ===============================================-->
+        <partial name="/Views/Shared/_Customize.cshtml"/>
+    }
+        break;
+}
+<!-- ===============================================-->
+<!--   Modal List -->
+<!-- ===============================================-->
+
+<div class="ModalBody" id="ModalBody">
+    <div id="content_to_replace" class="justify-content-center">
+        <partial name="_Modals" model="tPageStandard.Notifications.GetModalNotification().Select(tNotif => tNotif.Modal)"/>
+    </div>
+</div>
+
+<!-- ===============================================-->
+<!--   JavaScripts and CSS After Start -->
+<!-- ===============================================-->
+<script src="~/vendors/popper/popper.min.js">
+</script>
+<script src="~/vendors/bootstrap/bootstrap.min.js"></script>
+<script src="~/vendors/anchorjs/anchor.min.js"></script>
+<script src="~/vendors/is/is.min.js"></script>
+<script src="~/vendors/prism/prism.js"></script>
+@* <script src="~/vendors/swiper/swiper-bundle.min.js"></script> *@
+<script src="~/vendors/typed.js/typed.js"></script>
+@*<script src="@cWwwroot_WebStandard/vendors/echarts/echarts.min.js"></script>*@
+@*<script src="@cWwwroot_WebStandard/vendors/chart/chart.min.js"></script>*@
+<script src="~/vendors/fontawesome/all.min.js"></script>
+<script src="~/vendors/lodash/lodash.min.js"></script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=window.scroll"></script>
+<script src="~/vendors/list.js/list.min.js"></script>
+<script src="~/assets/js/theme.js"></script>
+
+<script src="~/vendors/jquery/jquery.min.js"></script>
+<script src="~/vendors/select2/select2.min.js"></script>
+<script src="~/vendors/select2/select2.full.min.js"></script>
+<link href="~/vendors/select2/select2.min.css" rel="stylesheet"/>
+<link href="~/vendors/select2-bootstrap-5-theme/select2-bootstrap-5-theme.min.css" rel="stylesheet"/>
+
+<script src="~/vendors/choices/choices.min.js"></script>
+<link href="~/vendors/choices/choices.min.css" rel="stylesheet"/>
+
+<script src="~/vendors/simplebar/simplebar.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+@await RenderSectionAsync("Scripts", required: false)
+
+@if (tPageStandard != null && tPageStandard.JavascriptCodeAtEndOfPage != null)
+{
+    <script>
+        @string.Join("\n", tPageStandard.JavascriptCodeAtEndOfPage)
+    </script>
+}
+<!-- ===============================================-->
+<!--    JavaScripts and CSS  After End -->
+<!-- ===============================================-->
+</body>
+</html>

@@ -1,0 +1,330 @@
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using NWDFoundation.Configuration
+@using NWDFoundation.Tools
+@using NWDWebRuntime.Configuration
+@using NWDWebStandard.Models
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    string tLoremIpsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
+    string tLoremIpsumShort = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
+    string tDivContainer = "\n@if (NWDWebRuntimeConfiguration.KConfig.IsDevelopment == true)\n\t{\n\t<div class=\"text-end mb-3\">\n\t\t<span class=\"ms-2 badge rounded-pill badge-subtle-success bi-check-circle\"> Kortex</span>\n\t\t@* <span class=\"ms-2 badge rounded-pill badge-subtle-danger bi-x-circle\"> Kortex</span> *@\n\t</div>\n\t}\n\t" +
+                           "\n<div class=\"container p-0 m-0\">\n\t<div class=\"row g-3\">\n\t\t<div class=\"col-sx-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12\">\n\t\t...\n\t\t</div>\n\t\t<div class=\"col-sx-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 col-xxl-6\">\n\t\t...\n\t\t</div>\n\t</div>\n</div>";
+}
+@if (NWDWebRuntimeConfiguration.KConfig.IsDevelopment == true)
+{
+    <div class="text-end mb-3">
+        <span class="ms-2 badge rounded-pill badge-subtle-success bi-check-circle"> Kortex</span>
+        @* <span class="ms-2 badge rounded-pill badge-subtle-danger bi-x-circle"> Kortex</span> *@
+    </div>
+}
+
+
+<!-- TITLE With background -->
+<div class="container p-0 m-0">
+<div class="row g-3">
+
+<partial name="/Views/NWDWebHtmlLayout/HtmlLayout_Header.cshtml"/>
+
+<partial name="/Views/NWDWebHtmlLayout/HtmlLayout_Header_mini.cshtml"/>
+
+<div class="col-sx-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+    <div class="card" ondblclick="AddShowAndCopySourceCodeToElement(this, false, false);">
+        <div class="card-header background-corner-2 border-bottom">
+            <div class="row">
+                <div class="col-8">
+                    <h3><span class="fas fa-shield-alt"></span> List of templates to use! </h3>
+                    <p class="mb-0 text-warning">Double click for javascript interactivity!</p>
+                </div>
+            </div>
+        </div>
+        <div class="card-body position-relative">
+            @tLoremIpsum
+            <code>
+                <pre>
+@tDivContainer
+                        </pre>
+            </code>
+        </div>
+    </div>
+</div>
+
+<div class="col-sx-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+    <div class="card background-corner-1" ondblclick="AddShowAndCopySourceCodeToElement(this, false, false);">
+        <div class="card-header bg-light row">
+            <div class="col-8">
+                <h1><span class="fas fa-shield-alt"></span> Title H1</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-sx-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+    <div class="card background-corner-2" ondblclick="AddShowAndCopySourceCodeToElement(this, false, false);">
+        <div class="card-header bg-light row">
+            <div class="col-8">
+                <h1><span class="fas fa-shield-alt"></span> Title H1</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-sx-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+    <div class="card background-corner-3" ondblclick="AddShowAndCopySourceCodeToElement(this, false, false);">
+        <div class="card-header bg-light row">
+            <div class="col-8">
+                <h1><span class="fas fa-shield-alt"></span> Title H1</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-sx-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+    <div class="card background-corner-4" ondblclick="AddShowAndCopySourceCodeToElement(this, false, false);">
+        <div class="card-header bg-light row">
+            <div class="col-8">
+                <h1><span class="fas fa-shield-alt"></span> Title H1</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="col-sx-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+    <div class="card" ondblclick="AddShowAndCopySourceCodeToElement(this, false, false);">
+        <div class="card-header background-corner-2 border-bottom">
+            <div class="row">
+                <div class="col-8">
+                    <h2><span class="fas fa-shield-alt"></span> Title h2 with sentence to explain and corner</h2>
+                    <p class="mb-0">You are my only hope!</p>
+                </div>
+            </div>
+        </div>
+        <div class="card-body position-relative">
+            @tLoremIpsum
+        </div>
+    </div>
+</div>
+
+<div class="col-sx-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+    <div class="card" ondblclick="AddShowAndCopySourceCodeToElement(this, false, false);">
+        <div class="card-header background-corner-3 border-bottom">
+            <div class="row">
+                <div class="col-8">
+                    <h3><span class="fas fa-shield-alt"></span> Title h3 with sentence to explain and corner</h3>
+                    <p class="mb-0">You are my only hope!</p>
+                </div>
+            </div>
+        </div>
+        <div class="card-body position-relative">
+            @tLoremIpsum
+        </div>
+    </div>
+</div>
+
+<div class="col-sx-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 col-xxl-6">
+    <div class="card" ondblclick="AddShowAndCopySourceCodeToElement(this, false, false);">
+        <div class="card-header background-corner-2 border-bottom">
+            <h3><span class="fas fa-shield-alt"></span> Title for card with corner</h3>
+        </div>
+        <div class="card-body position-relative">
+            @tLoremIpsum
+        </div>
+    </div>
+</div>
+
+
+
+<div class="col-sx-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 col-xxl-6">
+    <div class="card" ondblclick="AddShowAndCopySourceCodeToElement(this, false, false);">
+        <div class="card-header background-corner-2 border-bottom">
+            <h3><span class="fas fa-shield-alt"></span> Title for card with corner</h3>
+        </div>
+        <div class="card-body position-relative border-bottom">
+            @tLoremIpsum
+        </div>
+        <div class="card-footer d-flex justify-content-between">
+            <a href="/NWDProject/" class="btn  btn-sm btn-outline-secondary">
+                                        <span class="fs-1 bi-pencil me-2"></span>Edit this project
+                                    </a>
+                                    <a href="/NWDProject/" class="btn  btn-sm btn-outline-secondary">
+                                        <span class="fs-1 bi-trash me-2"></span>Delete this project
+                                    </a>
+        </div>
+    </div>
+</div>
+
+
+<div class="col-sx-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 col-xxl-6">
+    <div class="card" ondblclick="AddShowAndCopySourceCodeToElement(this, false, false);">
+        <div class="card-header background-corner-2 border-bottom d-flex justify-content-between">
+            <div>
+                <h3><span class="fas fa-shield-alt"></span> Title for card with corner</h3>
+            </div>
+            <div class="align-text-top">
+                <div class="">
+                    <button class="btn  btn-sm btn-outline-secondary dropdown-toggle dropdown-caret-none btn-reveal" type="button" id="OUSEOFXXPOGEXGLBVFARZIEIXCAORRDZYJRXPYMMKUFMYNOWKUQKCQONJYJQKFSG" data-bs-toggle="dropdown" data-boundary="viewport" aria-haspopup="true" aria-expanded="false">
+                        <span class="fas fa-ellipsis-h fs--1"></span>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end border py-2" aria-labelledby="OUSEOFXXPOGEXGLBVFARZIEIXCAORRDZYJRXPYMMKUFMYNOWKUQKCQONJYJQKFSG" data-popper-placement="bottom-end">
+                        <a href="/NWDProject/" class="dropdown-item">
+                            <span class="fs-1 bi-pencil me-2"></span>Edit this project
+                        </a>
+                        <a href="/NWDProject/" class="dropdown-item">
+                            <span class="fs-1 bi-trash me-2"></span>Delete this project
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body position-relative">
+            @tLoremIpsum
+        </div>
+    </div>
+</div>
+
+<div class="col-sx-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 col-xxl-6">
+    <div class="card" ondblclick="AddShowAndCopySourceCodeToElement(this, false, false);">
+        <div class="card-header background-corner-2 border-bottom">
+            <h3><span class="fas fa-shield-alt"></span> Title for card with corner</h3>
+        </div>
+        <div class="card-body position-relative border-bottom">
+            @tLoremIpsum
+        </div>
+        <div class="card-body position-relative p-0 m-0">
+             <div class="table-responsive scrollbar" id="myTableId">
+            <table class="table table-sm mb-0 fs--1">
+            <thead class="text-800 bg-light">
+                <tr>
+                    <th class="align-middle" scope="col"></th>
+                    <th class="align-middle" scope="col"><a href="#myTableId" class="text-primary">Cookie</a></th>
+                    <th class="align-middle" scope="col">Value</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>
+                        icon
+                    </td>
+                    <td>
+                        value
+                    </td>
+                    <td>
+                        text
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        icon
+                    </td>
+                    <td>
+                        value
+                    </td>
+                    <td>
+                        text
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        icon
+                    </td>
+                    <td>
+                        value
+                    </td>
+                    <td>
+                        text
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        </div>
+        <div class="card-footer position-relative">
+            footer
+        </div>
+    </div>
+</div>
+
+<div class="col-sx-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 col-xxl-6">
+    <div class="card" ondblclick="AddShowAndCopySourceCodeToElement(this, false, false);">
+        <div class="card-header background-corner-2 border-bottom">
+            <h3><span class="fas fa-shield-alt"></span> Title for card with corner</h3>
+        </div>
+        <div class="card-body position-relative border-bottom">
+            @tLoremIpsum
+            <table class="table table-hover mb-0">
+                <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">Cookie</th>
+                    <th scope="col">Value</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>
+                        icon
+                    </td>
+                    <td>
+                        value
+                    </td>
+                    <td>
+                        text
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        icon
+                    </td>
+                    <td>
+                        value
+                    </td>
+                    <td>
+                        text
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        icon
+                    </td>
+                    <td>
+                        value
+                    </td>
+                    <td>
+                        text
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer position-relative">
+            footer
+        </div>
+    </div>
+</div>
+
+<div class="col-sx-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 col-xxl-6">
+    <div class="card" ondblclick="AddShowAndCopySourceCodeToElement(this, false, false);">
+        <div class="card-header background-corner-2 border-bottom">
+            <h3><span class="fas fa-shield-alt"></span> Title for card with corner</h3>
+        </div>
+        <div class="card-body position-relative border-bottom">
+            <p>@tLoremIpsum</p>
+            <p>
+                <h5 class="fs-0">How does Falcon's pricing work?</h5>
+                <p class="fs--1">@tLoremIpsumShort</p>
+                <h5 class="fs-0">How does Falcon's pricing work?</h5>
+                <p class="fs--1">@tLoremIpsumShort</p>
+                <h5 class="fs-0">How does Falcon's pricing work?</h5>
+                <p class="fs--1">@tLoremIpsumShort</p>
+            </p>
+        </div>
+        <div class="card-footer position-relative">
+            footer
+        </div>
+    </div>
+</div>
+
+</div>
+</div>

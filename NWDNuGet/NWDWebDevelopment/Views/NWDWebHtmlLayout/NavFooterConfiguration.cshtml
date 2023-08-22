@@ -1,0 +1,86 @@
+@using NWDFoundation.Configuration
+@using NWDFoundation.Tools
+@using NWDWebRuntime.Configuration
+@using NWDWebRuntime.Facades
+@using NWDWebStandard.Models
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (NWDWebRuntimeConfiguration.KConfig.IsDevelopment == true)
+{
+    <div class="text-end mb-3">
+        <span class="ms-2 badge rounded-pill badge-subtle-success bi-check-circle"> Kortex</span>
+        @* <span class="ms-2 badge rounded-pill badge-subtle-danger bi-x-circle"> Kortex</span> *@
+    </div>
+}
+
+
+<!-- TITLE With background -->
+<div class="container p-0 m-0" >
+    <div class="row g-3">
+        <div class="col-sx-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+            <div class="card" >
+                <div class="card-header bg-light border-bottom">
+                    <div class="card-title">
+                        <h1><span class="fas fa-shield-alt"></span> @nameof(INWDNavFooter) generation from configuration</h1>
+                    </div>
+                </div>
+                <div class="card-body position-relative border-bottom">
+                    <div class="row g-3">
+                        <div class="col-sx-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 col-xxl-6">
+                            To insert a footer automatically simply declare a class that responds to the interfaces <span class="text-primary">@nameof(INWDNavFooter)</span> and insert in <span class="text-primary">@nameof(NWDWebRuntimeConfiguration)</span>.
+                        </div>
+                        <div class="col-sx-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 col-xxl-6">
+<pre><code class="language-csharp">
+using Microsoft.AspNetCore.Http;
+using NWDWebRuntime.Models;
+using NWDWebRuntime.Facades;
+using NWDWebRuntime.Models.Enums;
+
+namespace NWDWebDevelopment.Managers
+{
+    [Serializable]
+    public class NWDWebDevelopmentNavFooter :  <span class="text-primary">INWDNavFooter</span>
+    {
+        public NWDNavBarCategory[]? AddNavFooterMenu(HttpContext sHttpContext)
+            {
+                NWDNavBarCategory tCategory = new NWDNavBarCategory()
+                    {
+                        ...
+                    }
+                return new []{tCategory};
+            }
+    }
+}
+</code></pre>
+                        </div>
+                        <div class="col-sx-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 col-xxl-6">
+                            Just insert in <span class="text-primary">@nameof(NWDWebRuntimeConfiguration)</span> in configuration of your project.
+                        </div>
+                        <div class="col-sx-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 col-xxl-6">
+<pre><code class="language-csharp">
+public class NWDWebDevelopmentConfiguration
+    {
+        ...
+        
+        public void PrepareAfterConfiguration()
+        {
+            ...
+            NWDWebRuntimeConfiguration.KConfig.<span class="text-primary">@nameof(NWDWebRuntimeConfiguration.NavFooterInterfaceAdd)</span>(new NWDWebDevelopmentNavFooter());
+            ...
+        }
+
+        ...
+}
+</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+        </div>
+    </div>
+</div>

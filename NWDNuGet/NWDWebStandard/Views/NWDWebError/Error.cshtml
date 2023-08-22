@@ -1,0 +1,114 @@
+@using Microsoft.AspNetCore.Http;
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Microsoft.AspNetCore.Localization
+@using NWDFoundation.Models
+@using NWDFoundation.WebEdition.Enums
+@using NWDWebRuntime
+@using NWDWebRuntime.Configuration
+@using NWDWebRuntime.Models
+@using NWDWebRuntime.Models.Enums
+@using NWDWebStandard.Configuration
+@using NWDWebStandard.Controllers
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+    var tRequestCulture = Context.Features.Get<IRequestCultureFeature>()?.RequestCulture;
+    NWDWebError? tError = ViewData[nameof(NWDWebError)] as NWDWebError;
+    if (tError == null)
+    {
+        tError = new NWDWebError();
+    }
+    string tColorHeader = string.Empty;
+    if (tError.Error == 500)
+    {
+       // tColorHeader =" bg-warning";
+    }
+    NWDPageStandard? tPageStandard = ViewData[nameof(NWDPageStandard)] as NWDPageStandard;
+    // Prevent page standard is null
+    if (tPageStandard == null)
+    {
+        tPageStandard = new NWDPageStandard();
+    }
+}
+
+<!DOCTYPE html>
+<html lang="@tRequestCulture?.UICulture.Name">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title> @tError.Title - @NWDWebStandardConfiguration.KConfig.WebSiteName</title>
+    <meta name="GitCommit" content="@NWDWebRuntimeConfiguration.KConfig.GitCommit"/>
+    <meta name="keywords" content="error @tError.Title"/>
+    <meta name="description" content="@tError.Description"/>
+    <meta name="theme-color" content="#ffffff">
+    <meta name="@nameof(NWDPageStandardStatusTag)" content="@tPageStandard.StatusTag">
+    <meta name="@nameof(NWDPageStatusCode)" content="@tError.Error">
+
+    <!-- ===============================================-->
+    <!--    Favicons     -->
+    <!-- ===============================================-->
+
+    <link rel="apple-touch-icon" sizes="180x180" href="~/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="~/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="~/favicons/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="~/favicons/favicon-48x48.png">
+
+    <!-- ===============================================-->
+    <!--    Stylesheets    -->
+    <!-- ===============================================-->
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,600,700%7cPoppins:300,400,500,600,700,800,900&amp;display=swap" rel="stylesheet">
+    <link href="~/vendors/overlayscrollbars/OverlayScrollbars.min.css" rel="stylesheet">
+    <link href="~/assets/css/theme-rtl.min.css" rel="stylesheet" id="style-rtl">
+    <link href="~/assets/css/theme.min.css" rel="stylesheet" id="style-default">
+    <link href="~/assets/css/user-rtl.min.css" rel="stylesheet" id="user-style-rtl">
+    <link href="~/assets/css/user.min.css" rel="stylesheet" id="user-style-default">
+    <link href="~/css/site.css" rel="stylesheet" id="website-style">
+    <link href="~/NetWorkedData.css" rel="stylesheet" id="nwd-style">
+    <link href="~/error.css" rel="stylesheet" id="nwd-style-error">
+
+</head>
+<body>
+<!-- ===============================================-->
+<!--    Main Content  -->
+<!-- ===============================================-->
+<main class="main" id="top">
+    <div class="container-fluid" data-layout="container">
+        <div class="row flex-center min-vh-100 py-6 text-center">
+            <div class="col-sm-10 col-md-8 col-lg-6 col-xxl-5">
+                <div class="card mb-3">
+                    <div class="card-header border-bottom @tColorHeader">
+                        <img class="rounded error-logo" src="~/favicons/favicon-80x80.png" alt="error" width="40px" height="40px">
+                    </div>
+                    <div class="card-body border-bottom">
+                        <h4 class="fw-black lh-1 text-200  error-effect">@tError.Error</h4>
+                        <div class="">Error @tError.Title</div>
+                        <div class="">@tError.OriginalUrl</div>
+                        <div class="">@tError.Description</div>
+                        <div class="lead mt-3 mb-3  text-800 font-sans-serif fw-semi-bold">Whoops, something went wrong!</div>
+                        <div class="d-flex flex-center mb-4">
+                            <a class="btn btn-sm btn-outline-primary" href="@NWDWebRuntimeConfiguration.KConfig.GetDnsHttps()"><span class="bi bi-back"></span> back to @NWDWebStandardConfiguration.KConfig.WebSiteName</a>
+                        </div>
+                        <hr>
+                        <p>
+                            Try going back and attempting the action again.<br/> If this problem persists,
+                            <a asp-area="" asp-controller="@NWDHomeController.ASP_Controller()" asp-action="@nameof(NWDHomeController.ContactUs)"><span class="nav-link-icon far fa-envelope"></span> contact-us</a>.
+                        </p>
+                    </div>
+                </div>
+                <div class="commit-infos">
+                    @* <div class="commit-separator"></div> *@
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<!-- ===============================================-->
+<!--    End of Main Content  -->
+<!-- ===============================================-->
+</body>
+</html>

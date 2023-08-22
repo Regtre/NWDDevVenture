@@ -1,0 +1,139 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<link href="~/vendors/dropzone/dropzone.min.css" rel="stylesheet"/>
+<script src="~/vendors/dropzone/dropzone.min.js"></script>
+@using NWDWebDownloader.Managers
+@using ByteSizeLib
+
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using NWDWebUploader.Configuration
+@using NWDWebUploader.Models
+@model NWDWebDownloader.Configuration.NWDDownloadConfig?
+@{ Layout = "~/Views/Shared/_Layout.cshtml"; }
+@if (Model != null)
+{
+        <div class="row">
+            <div class="col-12">
+                <partial name="_DownloadHeader"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-8">
+                <div class="card mb-3">
+    <div class="card-header bg-light background-corner-3 border-bottom">
+        <div class="card-title">
+            <span class="bi bi-file-earmark-text me-2"></span>Uploader</div>
+                    </div>
+                    <div class="card-body">
+
+                        <form class="dropzone dropzone-multiple p-0" id="my-awesome-dropzone" data-dropzone="data-dropzone"
+                              data-options='{"url":"@Url.Action("Upload", "NWDWebUploader")","maxFilesize": @NWDWebUploaderConfiguration.MaxUploadSizeInBytes}'>
+                            @await Html.PartialAsync("_Category", NWDDownloadManager.GetDirectories(Model))
+                            @Html.Hidden(nameof(NWDUploadFile.RootPath), Model.RootPath)
+                            @Html.Hidden("sDownloadPageNameFor", Model.PageName)
+                            <div class="fallback">
+                                <input name="file" type="file" multiple="multiple"/>
+                            </div>
+                            <div class="dz-message" data-dz-message="data-dz-message">
+                                <span class="fas fa-cloud-upload-alt me-2"></span>Drop your files here
+                            </div>
+                            <div class="dz-preview dz-preview-multiple m-0 d-flex flex-column" style="min-height: auto;">
+                                <div class="d-flex media mb-3 pb-3 border-bottom btn-reveal-trigger">
+                                    <span class="far fa-file fs-5 me-2"></span>
+                                    <div class="flex-1 d-flex flex-between-center">
+                                        <div>
+                                            <h6 data-dz-name="data-dz-name"></h6>
+                                            <div class="d-flex align-items-center">
+                                                <p class="mb-0 fs--1 text-400 lh-1" data-dz-size="data-dz-size"></p>
+                                                <div class="dz-progress">
+                                                    <span class="dz-upload" data-dz-uploadprogress=""></span>
+                                                </div>
+                                            </div><span class="fs--2 text-danger" data-dz-errormessage="data-dz-errormessage"></span>
+                                        </div>
+                                        <div class="dropdown font-sans-serif">
+                                            <button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal dropdown-caret-none" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <span class="fas fa-ellipsis-h"></span>
+                                            </button>
+                                            <div class="dropdown-menu dropdown-menu-end border py-2">
+                                                <a class="dropdown-item" href="#!" data-dz-remove="data-dz-remove">Remove File</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button id="uploadFormSubmitBtn" class="btn btn-sm btn-primary"><span class="bi bi-save2 me-2"></span> Upload</button>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="card mb-3">
+                    <div class="card-header bg-light background-corner-3 border-bottom">
+                        <div class="card-title">
+                            <span class="fas fa-info-circle me-2"></span> Information
+                        </div>
+                    </div>
+                    <div class="card-body border-bottom">
+                        <ul>
+                            <li>Upload a <span class="fst-italic">@Model.HeaderFileName</span> file to update the desciption of the header of the Uploader/Downloader page</li>
+                            <li>Upload a <span class="fst-italic">@Model.FooterFileName</span> file to update the desciption of the footer of the Uploader/Downloader page</li>
+                            <li>Upload a <span class="fst-italic">@Model.DescriptionFileName</span> file in a category to update his description</li>
+                        </ul>
+                    </div>
+                    <div class="card-body border-bottom">
+                        <ul >
+                            <li>
+                                Extension allowed :
+                                <ul>
+                                    @foreach (string tS in Model.MimeTypeAuthorized)
+                                    {
+                                        <li>@tS</li>
+                                    }
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body border-bottom">
+                        <ul>
+                            <li>The size limit is @ByteSize.FromBytes(NWDWebUploaderConfiguration.MaxUploadSizeInBytes)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div  id="DownloadByCategory" data-url="@Url.Action("DownloadList", "NWDWebUploader", new { sName = Model.PageName })">
+            <div id="spinner" class="card-body border-bottom text-center">
+                        <div class="spinner-border text-primary" role="status"></div>
+            </div>
+            <div id="content_to_replace" class="row">
+                <script>$(document).ready(function () {
+                        startRequestAndReplaceContent('DownloadByCategory');
+                        });
+                        </script>
+            </div>
+        </div>
+    <div class="row">
+        <div class="col-12">
+            <partial name="_DownloadFooter"/>
+        </div>
+    </div>
+    <div id="toastUpload"></div>
+    <script>
+     Dropzone.autoDiscover = false;
+     $(document).ready(function() {
+     const myDropzone = Dropzone.forElement(".dropzone");
+     
+    myDropzone.on("success", function(file, response) {
+         $('#toastContainer').html(response);
+     });
+
+       $('#uploadFormSubmitBtn').on('click',function(e){
+         const myDropzone = Dropzone.forElement(".dropzone");
+         e.preventDefault();
+         myDropzone.processQueue();
+         startRequestAndReplaceContent('DownloadByCategory');
+       });   
+     });
+</script>
+}
+@{ await Html.RenderPartialAsync("_AddCategoryModal", Model); }

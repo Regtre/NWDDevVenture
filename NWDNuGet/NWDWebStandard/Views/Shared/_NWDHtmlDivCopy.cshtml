@@ -1,0 +1,20 @@
+@using NWDFoundation.Tools
+@model NWDWebStandard.Models.NWDHtmlDivCopy
+@{
+    string tRefLocal = NWDRandom.RandomStringAlpha(32);
+    string tBtnSmall = "btn-sm";
+    if (Model.SmallButton == false)
+    {
+        tBtnSmall = string.Empty;
+    }
+}
+<button class="btn @tBtnSmall btn-@Model.BootstrapKindOfStyle.ToString().ToLower()" type="button" id="copy_@(Html.Raw(tRefLocal))" onclick="@(Html.Raw(tRefLocal))_CopyButton()"><span class="bi bi-clipboard"></span> copy</button>
+<script>
+function @(Html.Raw(tRefLocal))_CopyButton() 
+    {
+        navigator.clipboard.writeText('@Html.Raw(Model.Data.Replace("\n", "\\n").Replace("\r", "\\r").Replace("'", "\\\'"))');
+        var tButton = document.querySelector('#copy_@(Html.Raw(tRefLocal))');
+        tButton.className ='btn @tBtnSmall btn-outline-@Model.BootstrapKindOfStyle.ToString().ToLower()';
+        tButton.innerHTML ='<span class="bi bi-clipboard-check"></span> copied';
+    }
+</script>

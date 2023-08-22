@@ -1,0 +1,122 @@
+﻿@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using NWDWebRuntime.Models
+@using NWDWebStandard.Configuration
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@inject IHttpContextAccessor HttpContextAccessor
+
+@model NWDNavBarMenu
+<!-- ===============================================-->
+<!--    Footer Start   -->
+<!-- ===============================================-->
+<section class="bg-dark pt-8 pb-4 light footer-extended">
+    <div class="container">
+        <div class="position-absolute btn-back-to-top bg-dark">
+            <a class="text-600" href="#top-of-page" data-bs-offset-top="0" data-scroll-to="#top-of-page">
+                <span class="fas fa-chevron-up" data-fa-transform="rotate-45"></span>
+            </a>
+        </div>
+        @if (Model != null)
+        {
+            <div class="row">
+                @foreach (NWDNavBarCategory tCategory in Model.Categories)
+                {
+                    int tcoll = 2;
+                    @if (string.IsNullOrEmpty(tCategory.Description) == false)
+                    {
+                         tcoll = 4;
+                    }
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-@tcoll col-lx-@tcoll">
+                        <h5 class="text-uppercase opacity-85 mb-3 mt-5">@tCategory.Name</h5>
+                        @if (string.IsNullOrEmpty(tCategory.Description) == false)
+                        {
+                            <p class="text-600">@tCategory.Description</p>
+                        }
+<ul class="navbar-nav">
+                        @foreach (NWDNavBarElement tElement in tCategory.Elements)
+                        {
+                            <a class="link-600 " href="@Html.Raw(tElement.Url())">
+                               <span class="nav-link-icon @tElement.Icon"></span> @tElement.Name
+                                @if (string.IsNullOrEmpty(tElement.BadgeText) == false)
+                                {
+                                     <span class="ms-2 badge rounded-pill badge-subtle-@tElement.BadgeStyle.ToString().ToLower()">@tElement.BadgeText</span>
+                                }
+                            </a>
+                        }
+</ul>
+                    </div>
+                }
+            </div>
+        }
+        <div class="row g-3">
+            <div class="col-12">
+                <div class="icon-group mt-4">
+                    @if (string.IsNullOrEmpty(NWDWebStandardConfiguration.KConfig.PageUrlOnFacebook) == false)
+                    {
+                        <a class="icon-item bg-white text-facebook" href="@NWDWebStandardConfiguration.KConfig.PageUrlOnFacebook" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Follow-us on Facebook">
+                            <span class="fab fa-facebook-f"></span>
+                        </a>
+                    }
+                    @if (string.IsNullOrEmpty(NWDWebStandardConfiguration.KConfig.PageUrlOnGooglePlus) == false)
+                    {
+                        <a class="icon-item bg-white text-google-plus" href="@NWDWebStandardConfiguration.KConfig.PageUrlOnGooglePlus" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Follow-us on Google+">
+                            <span class="fab fa-google-plus-g"></span>
+                        </a>
+                    }
+                    @if (string.IsNullOrEmpty(NWDWebStandardConfiguration.KConfig.PageUrlOnInstagram) == false)
+                        {
+                            <a class="icon-item bg-white text-instagram" href="@NWDWebStandardConfiguration.KConfig.PageUrlOnInstagram" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Follow-us on Instagram">
+                                <span class="fab fa-instagram"></span>
+                            </a>
+                        }
+                    @if (string.IsNullOrEmpty(NWDWebStandardConfiguration.KConfig.PageUrlOnWeibo) == false)
+                        {
+                            <a class="icon-item bg-white text-weibo" href="@NWDWebStandardConfiguration.KConfig.PageUrlOnWeibo" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Follow-us on Weibo">
+                                <span class="fab fa-weibo"></span>
+                            </a>
+                        }
+                    @if (string.IsNullOrEmpty(NWDWebStandardConfiguration.KConfig.PageUrlOnReddIt) == false)
+                        {
+                            <a class="icon-item bg-white text-reddit" href="@NWDWebStandardConfiguration.KConfig.PageUrlOnReddIt" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Follow-us on Reddit">
+                                <span class="fab fa-reddit"></span>
+                            </a>
+                        }
+                    @if (string.IsNullOrEmpty(NWDWebStandardConfiguration.KConfig.PageUrlOnTwitter) == false)
+                        {
+                            <a class="icon-item bg-white text-twitter" href="@NWDWebStandardConfiguration.KConfig.PageUrlOnTwitter" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Follow-us on Twitter">
+                                <span class="fab fa-twitter"></span>
+                            </a>
+                        }
+                    @if (string.IsNullOrEmpty(NWDWebStandardConfiguration.KConfig.PageUrlOnPinterest) == false)
+                        {
+                            <a class="icon-item bg-white text-pinterest" href="@NWDWebStandardConfiguration.KConfig.PageUrlOnPinterest" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Follow-us on Pinterest">
+                                <span class="fab fa-pinterest"></span>
+                            </a>
+                        }
+                    @if (string.IsNullOrEmpty(NWDWebStandardConfiguration.KConfig.PageUrlOnLinkedIn) == false)
+                        {
+                            <a class="icon-item bg-white text-linkedin" href="@NWDWebStandardConfiguration.KConfig.PageUrlOnLinkedIn" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Follow-us on LinkedIn">
+                                <span class="fab fa-linkedin-in"></span>
+                            </a>
+                        }
+                    @if (string.IsNullOrEmpty(NWDWebStandardConfiguration.KConfig.PageUrlOnDiscord) == false)
+                        {
+                            <a class="icon-item bg-white text-discord" href="@NWDWebStandardConfiguration.KConfig.PageUrlOnDiscord" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Follow-us on Discord">
+                                <span class="fab fa-discord"></span>
+                            </a>
+                        }
+                    @if (string.IsNullOrEmpty(NWDWebStandardConfiguration.KConfig.PageUrlOnTwitch) == false)
+                        {
+                            <a class="icon-item bg-white text-twitch" href="@NWDWebStandardConfiguration.KConfig.PageUrlOnTwitch" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Follow-us on Twitch">
+                                <span class="fab fa-twitch"></span>
+                            </a>
+                        }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ===============================================-->
+<!--    Footer End   -->
+<!-- ===============================================-->

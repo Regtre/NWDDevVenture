@@ -1,0 +1,25 @@
+@using NWDFoundation.Configuration
+@{
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+    NWDLibraryInfos? tFileVersionInfo = ViewData[nameof(NWDLibraryInfos)] as NWDLibraryInfos;
+}
+@if (tFileVersionInfo != null)
+{
+    if (tFileVersionInfo.Information != null)
+    {
+        <div class="card mb-3">
+            <div class="card-header bg-light m-0 p-0 border-bottom background-corner-3">
+                <div class="card-title">
+                    <img class="img-fluid p-2" src="/@tFileVersionInfo.Information.ProductName/@Html.Raw(tFileVersionInfo.Information.ProductName + ".png")" alt="" width="80"/> @tFileVersionInfo.Information.ProductName
+                </div>
+            </div>
+            <div class="card-body">
+                @if (tFileVersionInfo.SetUpPage == true)
+                {
+                    string tSetUp = "/Views/Shared/_" + tFileVersionInfo.Information.ProductName + "_SetUp.cshtml";
+                    <partial name="@tSetUp"/>
+                }
+            </div>
+        </div>
+    }
+}

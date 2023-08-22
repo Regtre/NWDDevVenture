@@ -1,0 +1,28 @@
+@model NWDWebRuntime.Models.NWDModal
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@if (Model != null)
+{
+    <div class="modal fade" id="@Model.Id" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 500px">
+            <div class="modal-content position-relative">
+                <div class="modal-header">
+                    <h4 class="mb-1" id="modalExampleDemoLabel">@Model.Title</h4>
+                    <button type="button" class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="p-4">
+                        @Model.Body
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-secondary" type="button" href="@Model.ButtonFooterPositiveURL">@Model.ButtonFooterPositiveLabel</a>
+                    <a class="btn btn-primary" type="button" href="@Model.ButtonFooterNegativeURL">@Model.ButtonFooterNegativeLabel </a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+
+</script>

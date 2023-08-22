@@ -1,0 +1,24 @@
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using NWDWebRuntime.Configuration
+@using NWDWebStandard.Controllers
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div>
+    <!-- TITLE With background -->
+    <div class="card mb-3">
+        <div class="card-header mb-3 border-bottom background-corner-1">
+            <div class="card-title">
+                <h3 class="text-danger"><span class="fas fa-bug"></span> Error</h3>  
+            </div>
+            <p class="">
+                Something went wrong.
+            </p>
+        </div>
+        <div class="card-body">
+                We cannot process your request at this time. If error persists, please, <a asp-area="" asp-controller="@NWDHomeController.ASP_Controller()" asp-action="@nameof(NWDHomeController.ContactUs)"><span class="nav-link-icon far fa-envelope"></span> contact-us</a>!
+        </div>
+    </div>
+</div>

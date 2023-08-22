@@ -1,0 +1,217 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@using Microsoft.AspNetCore.Http;
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using System.Text;
+@using System.Text.RegularExpressions;
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using NWDWebRuntime.Configuration
+@using NWDWebRuntime.Tools.Cookies
+@using NWDWebRuntime.Tools.Sessions
+@using NWDWebStandard.Configuration
+
+@inject IHttpContextAccessor HttpContextAccessor
+@if (NWDWebRuntimeConfiguration.KConfig.IsDevelopment == true)
+	{
+	<div class="text-end mb-3">
+		<span class="ms-2 badge rounded-pill badge-subtle-success bi-check-circle"> Kortex</span>
+		@* <span class="ms-2 badge rounded-pill badge-subtle-danger bi-x-circle"> Kortex</span> *@
+	</div>
+	}
+<div class="container p-0 m-0">
+<div class="row g-3">
+<div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+        <!-- TITLE With background -->
+        <div class="card">
+            <div class="card-body position-relative background-corner-2">
+                <div class="row">
+                    <div class="col-8">
+                        <h3><span class="fas fa-database"></span> General Data Protection Regulation</h3>
+                        <p class="mb-0">In accordance with the recommendations of the European Union, we show you all the information we have about you. This information is not permanently stored but generated and kept alive during your use of the @NWDWebStandardConfiguration.KConfig.WebSiteName website.</p>
+                        <p class="mb-0"> In accordance with our <a asp-area="" asp-controller="NWDPrivacy" asp-action="TermsAndConditions">Terms and Conditions</a> and our <a asp-area="" asp-controller="NWDPrivacy" asp-action="PrivacyPolicy">Privacy Policy</a>, we do not resell any of this data, we do not provide any of this data to a third party.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 col-xxl-6">
+        <div class="card ">
+            <div class="card-header border-bottom  background-corner-1">
+                <div class="card-title">Request ID in the logs</div>
+            </div>
+            <div class="card-body">
+                <span class="fas fa-microchip pe-1"></span>@ViewData["TraceIdentifier"]
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 col-xxl-6">
+        <div class="card  ">
+            <div class="card-header border-bottom background-corner-2">
+                <div class="card-title">IP adress</div>
+            </div>
+            <div class="card-body">
+                    <span class="fas fa-network-wired pe-1"></span>@ViewData["RemoteIpAddress"]
+            </div>
+        </div>
+    </div>
+<div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+        <div class="card">
+            <div class="card-header border-bottom background-corner-1">
+                <div class="card-title">
+                    Data recorded for the session of this website
+                </div>
+                <p class="fs--1">
+                    Datas compliant with European rights. Complies with French, European and American legislation
+                </p>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive scrollbar">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col"></th>
+                                <th scope="col">Variable</th>
+                                <th scope="col">Kind</th>
+                                <th scope="col">Description</th>
+                                <th scope="col">Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                @foreach (KeyValuePair<string, NWDSessionDefinition> tSession in NWDSessionGlobal.KDictionary)
+                                {
+                                    if (tSession.Value.Group != NWDSessionDefinitionGroup.Invisible)
+                                    {
+                                        <tr>
+                                            <td><span class="fas fa-microchip"></span></td>
+                                            <td>@tSession.Key</td>
+                                            <td>@tSession.Value.Group</td>
+                                            <td><b>@tSession.Value.Title</b><br/>@tSession.Value.Explication</td>
+                                            <td>@Html.Raw(tSession.Value.GetValueAsString(HttpContextAccessor.HttpContext, true))</td>
+                                        </tr>
+                                    }
+                                }
+                                if (HttpContextAccessor.HttpContext?.Session.Keys is { })
+                                {
+                                    foreach (string tKey in HttpContextAccessor.HttpContext?.Session.Keys!)
+                                    {
+                                        if (NWDSessionGlobal.KDictionary.ContainsKey(tKey) == false)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <span class="fas fa-microchip"></span>
+                                                </td>
+                                                <td>@tKey</td>
+                                                <td>@NWDSessionDefinitionGroup.Navigation.ToString()</td>
+                                                <td></td>
+                                                <td>@HttpContextAccessor.HttpContext.Session.GetString(tKey)</td>
+                                            </tr>
+                                        }
+                                    }
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                </div>
+            </div>
+    </div>
+
+<div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+            <div class="card">
+                <div class="card-header border-bottom background-corner-1">
+                    <div class="card-title">
+                        Cookie saved for this website
+                    </div>
+                    <p class="fs--1">
+                        Cookies compliant with European rights. Complies with French, European and American legislation
+                    </p>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive scrollbar">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col"></th>
+                                    <th scope="col">Cookie</th>
+                                    <th scope="col">Kind</th>
+                                    <th scope="col">Description</th>
+                                    <th scope="col">Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            @{
+                                if (HttpContextAccessor.HttpContext != null)
+                                {
+                                    foreach (var tCookie in HttpContextAccessor.HttpContext.Request.Cookies)
+                                    {
+                                        string tV = Regex.Replace(tCookie.Value, ".{8}", "$0 ");
+                                        if (tCookie.Key.Contains(".AspNetCore.Antiforgery"))
+                                        {
+                                            <tr>
+                                                <td><span class="fas fa-cookie-bite"></span></td>
+                                                <td>@tCookie.Key.Replace(".", ". ")</td>
+                                                <td>security</td>
+                                                <td>security</td>
+                                                <td>
+                                                    <span>@Html.Raw(tV)</span>
+                                                </td>
+                                            </tr>
+                                        }
+                                        else if (tCookie.Key.Contains(".AspNet.Consent"))
+                                        {
+                                            <tr>
+                                                <td><span class="fas fa-cookie-bite"></span></td>
+                                                <td>@tCookie.Key.Replace(".", ". ")</td>
+                                                <td>consent</td>
+                                                <td>consent</td>
+                                                <td>
+                                                    <span>@Html.Raw(tV)</span>
+                                                </td>
+                                            </tr>
+                                        }
+                                        else if (tCookie.Key.Contains(NWDWebRuntimeConfiguration.KConfig.SessionCookieName))
+                                        {
+                                            <tr>
+                                                <td><span class="fas fa-cookie-bite"></span></td>
+                                                <td>@tCookie.Key.Replace(".", ". ")</td>
+                                                <td>session</td>
+                                                <td>session</td>
+                                                <td>
+                                                    <span>@Html.Raw(tV)</span>
+                                                </td>
+                                            </tr>
+                                        }
+                                        else
+                                        {
+                                        }
+                                    }
+                                }
+                                }
+                                @foreach (KeyValuePair<string, NWDCookieDefinition> tCookieKeyValue in NWDCookieGlobal.KDictionary)
+                                {
+                                    NWDCookieDefinition tCookie = tCookieKeyValue.Value;
+                                    if (HttpContextAccessor.HttpContext != null && tCookie.Exists(HttpContextAccessor.HttpContext))
+                                    {
+                                        <tr>
+                                            <td><span class="fas fa-cookie-bite"></span></td>
+                                            <td>@tCookie.Name.Replace(".", ". ")</td>
+                                            <td>@tCookie.Group.ToString()</td>
+                                            <td><b>@tCookie.Title</b><br />@tCookie.Explication</td>
+                                            <td>@Html.Raw(tCookie.GetValueAsString(HttpContextAccessor.HttpContext, true))</td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    </div>
+                </div>
+        </div>
+
+</div>
+</div>

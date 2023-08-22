@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+	  <Features>strict</Features>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'NWDWebDemo-Release' " />
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'NWDWebDemo-MariaDB' " />
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'NWDWebDemo-MySQL' " />
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'NWDWebDemo-NoSQL' " />
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'NWDWebDemo-SQLite' " />
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NWDNuGet\NWDCustomModels\NWDCustomModels.csproj" />
+    <ProjectReference Include="..\NWDNuGet\NWDDatabaseAccess\NWDDatabaseAccess.csproj" />
+    <ProjectReference Include="..\NWDNuGet\NWDEditor\NWDEditor.csproj" />
+    <ProjectReference Include="..\NWDNuGet\NWDFoundation\NWDFoundation.csproj" />
+    <ProjectReference Include="..\NWDNuGet\NWDRuntime\NWDRuntime.csproj" />
+    <ProjectReference Include="..\NWDNuGet\NWDStandardModels\NWDStandardModels.csproj" />
+    <ProjectReference Include="..\NWDNuGet\NWDWebDevelopment\NWDWebDevelopment.csproj" />
+    <ProjectReference Include="..\NWDNuGet\NWDWebEditor\NWDWebEditor.csproj" />
+    <ProjectReference Include="..\NWDNuGet\NWDWebGitLabReport\NWDWebGitLabReport.csproj" />
+    <ProjectReference Include="..\NWDNuGet\NWDWebHttpErrorSimulator\NWDWebHttpErrorSimulator.csproj" />
+    <ProjectReference Include="..\NWDNuGet\NWDWebRuntime\NWDWebRuntime.csproj" />
+    <ProjectReference Include="..\NWDNuGet\NWDWebStandard\NWDWebStandard.csproj" />
+    <ProjectReference Include="..\NWDNuGet\NWDWebTrackException\NWDWebTrackException.csproj" />
+    <ProjectReference Include="..\NWDNuGet\NWDIdemobi\NWDIdemobi.csproj" />
+  </ItemGroup>
+
+</Project>

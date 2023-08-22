@@ -1,0 +1,78 @@
+﻿@using Microsoft.AspNetCore.Http
+@using NWDWebRuntime.Configuration
+@using NWDWebRuntime.Managers
+@using NWDWebRuntime.Models
+@using NWDWebStandard.Controllers
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@if (NWDAccountWebManager.AccountIsConnected(HttpContextAccessor.HttpContext) == true)
+{
+@if (NWDWebRuntimeConfiguration.KConfig.IsDevelopment == true)
+{
+    <div class="text-end mb-3">
+        <span class="ms-2 badge rounded-pill badge-subtle-success bi-check-circle"> Kortex</span>
+        @* <span class="ms-2 badge rounded-pill badge-subtle-danger bi-x-circle"> Kortex</span> *@
+    </div>
+}
+    <div class="container p-0 m-0 mb-3">
+        <div class="row g-3">
+            <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+                <!-- TITLE With background -->
+                <div class="card">
+                    <div class="bg-holder d-none d-lg-block bg-card background-corner-4">
+                    </div>
+                    <div class="card-body position-relative">
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <h3>Manage your account</h3>
+                                <p class="mb-0">You can consult on this page the different information of your account on this site.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+                <div class="card">
+                    <div class="card-header bg-light border-bottom">
+                        <h5>
+                            Your account
+                            @if (string.IsNullOrEmpty(NWDAccountInfoManager.GetAccountInfo(HttpContextAccessor.HttpContext).Nickname) == false)
+                            {
+                                <span class=""> @NWDAccountInfoManager.GetAccountInfo(HttpContextAccessor.HttpContext).Nickname</span>
+                            }
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        Your account ID is <b>@NWDAccountWebManager.GetAccountInContext(HttpContextAccessor.HttpContext).Reference</b> - <i>@NWDWebRuntimeConfiguration.KConfig.GetProjectId()</i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Sign List With background -->
+    {
+        await Html.RenderPartialAsync("~/Views/Shared/_AccountSignsList.cshtml");
+    }
+    <!-- Services List With background -->
+    {
+        await Html.RenderPartialAsync("~/Views/Shared/_AccountServicesList.cshtml");
+    }
+    <!-- AccountInfo -->
+    {
+        await Html.RenderPartialAsync("~/Views/Shared/_AccountInfo.cshtml", NWDAccountInfoManager.GetAccountInfo(HttpContextAccessor.HttpContext));
+    }
+    await Html.RenderPartialAsync(NWDAccountController.K_AccountSignOutForm, @ViewData[typeof(NWDAccountSignOut).Name]);
+    await Html.RenderPartialAsync(NWDAccountController.K_AccountDeleteForm, @ViewData[typeof(NWDAccountDelete).Name]);
+}
+else
+{
+    await Html.RenderPartialAsync(NWDAccountController.K_AccountSignInForm, @ViewData[typeof(NWDAccountSignIn).Name]);
+}

@@ -1,0 +1,302 @@
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using NWDFoundation.Configuration
+@using NWDFoundation.Models
+@using NWDWebRuntime.Configuration
+@using NWDWebRuntime.Models
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    NWDLibraryInfos[]? tFileVersionInfoList = ViewData[nameof(NWDLibraryInfos)] as NWDLibraryInfos[];
+}
+
+<!-- TITLE With background -->
+<div class="card mb-3">
+    <div class="bg-holder d-none d-lg-block bg-card background-corner-4">
+    </div>
+    <div class="card-body position-relative">
+        <div class="row">
+            <div class="col-lg-8">
+                <h3>SetUp your website with Net-Worked-Data</h3>
+                <p class="mb-0">Instruction to setup your website with Net-Worked-Data, connect contact email, add social signs, etc. </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-lg-12 mb-3">
+    <div class="card">
+        <div class="card-header border-bottom background-corner-1">
+            <div class="card-title">
+                Install Net-Worked-Data in your project!
+            </div>
+            <div class="card-body m-0">
+                In your ASP Core NET 6 <b>project</b> add these repositories :
+                <ul>
+                    @if (tFileVersionInfoList != null)
+                    {
+                        foreach (NWDLibraryInfos tFileVersionInfo in tFileVersionInfoList)
+                        {
+                            if (tFileVersionInfo.Information != null)
+                            {
+                                <li>@tFileVersionInfo.Information.ProductName (<a href="https://gitlab.hephaiscode.com/NetWorkedData/@tFileVersionInfo.Information.ProductName">repository</a> or NuGet)</li>
+                            }
+                        }
+                    }
+                    <li>NWDWebWwwRoot (<a href="https://gitlab.hephaiscode.com/NetWorkedData/NWDWebWwwRoot">repository</a>) to implement CSS and Images. You can use this project to create your owner Website Style!</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="col-lg-12 mb-3">
+    <div class="card">
+        <div class="card-header border-bottom">
+            <div class="row">
+                <div class="col-lg-6 mb-3">
+                    <div class="card-title">
+                        Edit your <b>Program.cs</b> file.
+                    </div>
+                    <div class="card-body m-0">
+                        In <b>Program.cs</b> file add these lines :
+                        <ul>
+                            @* <li> *@
+                            @*     <span class="text-primary">using NWDWebWwwRoot;</span> *@
+                            @* </li> *@
+                            @if (tFileVersionInfoList != null)
+                            {
+                                foreach (NWDLibraryInfos tFileVersionInfo in tFileVersionInfoList)
+                                {
+                                    @if (tFileVersionInfo.SetUpPage)
+                                    {
+                                        if (tFileVersionInfo.Information != null)
+                                        {
+                                            <li>
+                                                <span class="text-primary">using @tFileVersionInfo.Information.ProductName.@nameof(NWDWebRuntime.Configuration);</span>
+                                            </li>
+                                        }
+                                    }
+                                }
+                                @foreach (NWDLibraryInfos tFileVersionInfo in tFileVersionInfoList)
+                                {
+                                    @if (tFileVersionInfo.SetUpPage)
+                                    {
+                                        if (tFileVersionInfo.Information != null)
+                                        {
+                                            <li>
+                                                <span class="text-primary">@tFileVersionInfo.Information.ProductName.@nameof(NWDWebRuntimeConfiguration.LoadFromBuilder)<span>(builder)</span>;</span>
+                                            </li>
+                                        }
+                                    }
+                                }
+                            }
+                            <li>
+                                <span class="text-primary">@nameof(NWDWebRuntimeConfiguration).@nameof(NWDWebRuntimeConfiguration.UseApp)<span>(app)</span>;</span>
+                            </li>
+                        </ul>
+                        In <b>Program.cs</b> verify these lines :
+                        <ul>
+                            <li>
+                                <span class="text-warning">app.UseStaticFiles();</span>
+                            </li>
+                            <li>
+                                <span class="text-warning">app.UseRouting();</span>
+                            </li>
+                            <li>
+                                <span class="text-warning">app.UseAuthorization();</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="card-title">
+                        Manage your cshtml file.
+                    </div>
+                    <div class="card-body m-0">
+                        Delete <b>/Views/Shared/_Layout.cshtml</b> file in your project to force to use the @nameof(NWDWebStandard) <b>_Layout.cshtml</b>.
+                    </div>
+                </div>
+                <div class="col-lg-6 mb-3">
+                    <div class="card bg-dark border-primary">
+                        <div class="card-header border-bottom">
+                            Program.cs
+                        </div>
+                        <div class="card-body m-0">
+                            <pre><code>
+@if (tFileVersionInfoList != null)
+{
+    foreach (NWDLibraryInfos tFileVersionInfo in tFileVersionInfoList)
+    {
+        if (tFileVersionInfo.SetUpPage)
+        {
+            if (tFileVersionInfo.Information != null)
+            {
+                <span class="text-primary">using @tFileVersionInfo.Information.ProductName.@nameof(NWDWebRuntime.Configuration);</span>
+            }
+        }
+    }
+}
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+builder.Services.AddControllersWithViews();
+<span class="text-primary">/*--- Add ---*/</span>
+@if (tFileVersionInfoList != null)
+{
+foreach (NWDLibraryInfos tFileVersionInfo in tFileVersionInfoList)
+{
+    if (tFileVersionInfo.SetUpPage)
+    {
+        if (tFileVersionInfo.Information != null)
+        {
+            <span class="text-primary">@tFileVersionInfo.Information.ProductName.@nameof(NWDWebRuntimeConfiguration.LoadFromBuilder)<span>(builder)</span>;</span>
+        }
+    }
+}
+}
+<span class="text-primary">/*--- --- ---*/</span>
+
+var app = builder.Build();
+
+<span class="text-warning">app.UseStaticFiles();</span>
+
+<span class="text-warning">app.UseRouting();</span>
+
+<span class="text-primary">/*--- Add ---*/</span>
+<span class="text-primary">@nameof(NWDWebRuntimeConfiguration).@nameof(NWDWebRuntimeConfiguration.UseApp)<span>(app)</span>;</span>
+<span class="text-primary">/*--- --- ---*/</span>
+
+<span class="text-warning">app.UseAuthorization();</span>
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+app.Run();
+
+                        </code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- TITLE With background -->
+
+@if (tFileVersionInfoList != null)
+{
+    foreach (NWDLibraryInfos tFileVersionInfo in tFileVersionInfoList)
+    {
+        @if (tFileVersionInfo.SetUpPage == true)
+        {
+            if (tFileVersionInfo.Information != null)
+            {
+                <div class="card mb-3">
+                    <div class="card-header bg-light m-0 p-0 border-bottom background-corner-3">
+                        <div class="card-title">
+                            <img class="img-fluid p-2" src="/@tFileVersionInfo.Information.ProductName/@Html.Raw(tFileVersionInfo.Information.ProductName + ".png")" alt="" width="80"/> @tFileVersionInfo.Information.ProductName @tFileVersionInfo.Information.FileVersion
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        @{
+                            string tSetUp = "/Views/Shared/_" + tFileVersionInfo.Information.ProductName + "_SetUp.cshtml";
+                        }
+                        <partial name="@tSetUp"/>
+                    </div>
+                </div>
+            }
+        }
+    }
+}
+
+<div class="col-lg-12 mb-3">
+    <div class="card">
+        <div class="card-header border-bottom">
+            <div class="row">
+                <div class="col-lg-6 mb-3">
+                    <div class="card-title">
+                        Create custom controller
+                    </div>
+                    <div class="card-body">
+                        You want create a controller and use @nameof(NWDPageStandard) and authorization by @nameof(NWDAccountService) !?
+                        Just create a controller like this :
+                    </div>
+                </div>
+                <div class="col-lg-6 mb-3">
+                    <div class="card bg-dark border-primary">
+                        <div class="card-header border-bottom">MyNewController.cs</div>
+                        <div class="card-body m-0">
+                            <pre><code>
+using System.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
+using NWDWebStandard;
+
+namespace MyProject.Controllers;
+
+public class MyNewController : NWDBasicController&lt;MyNewController&gt;
+{
+    private readonly ILogger&lt;MyNewController&gt; _logger;
+
+    public HomeController(ILogger&lt;MyNewController&gt; logger)
+    {
+        _logger = logger;
+    }
+
+    public IActionResult Index()
+    {
+        return View();
+    }
+
+    public IActionResult MyAction()
+    {
+        return View();
+    }
+}
+                        </code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-lg-12 mb-3">
+    <div class="card">
+        <div class="card-header border-bottom">
+            <div class="row">
+                <div class="col-lg-6 mb-3">
+                    <div class="card-title">
+                        Finish! ... You want to disable this page?!
+                    </div>
+                    <div class="card-body m-0">
+                        In <b>appsetting.json</b> file in section <b>@nameof(NWDWebRuntimeConfiguration)</b> add :
+                        <ul>
+                            <li> <span class="text-primary">@nameof(NWDWebRuntimeConfiguration.SetUpPage)</span> set to "<span class="text-warning">false</span>"</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-6 mb-3">
+                    <div class="card bg-dark border-primary">
+                        <div class="card-header border-bottom">appsettings.json</div>
+                        <div class="card-body m-0">
+                            <pre><code>
+{
+    ...
+    <span class="text-primary">"@nameof(NWDWebRuntimeConfiguration)": {</span>
+        ...
+        <span class="text-primary"> "@nameof(NWDWebRuntimeConfiguration.SetUpPage)": "<span class="text-warning">false</span>"</span>
+    <span class="text-primary">},</span>
+    ...
+}
+                        </code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

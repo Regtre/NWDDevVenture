@@ -1,0 +1,56 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@using Microsoft.AspNetCore.Http
+@using NWDFoundation.Models
+@using NWDWebRuntime.Managers
+
+@inject IHttpContextAccessor HttpContextAccessor
+
+@model NWDAccountService
+<div class="services-item">
+    <h4>Service @NWDAccountServiceWebManager.GetServiceName(Model)</h4>
+    @if (string.IsNullOrEmpty(@Model.Message) == false)
+    {
+        <div class="message">
+            Message : @Model.Message
+        </div>
+    }
+    @if (@Model.Account != NWDAccountWebManager.GetAccountInContext(HttpContextAccessor.HttpContext).Reference)
+    {
+        <div class="message">
+            Ce service vous est octroyé par le service partagé d'un autre compte.
+        </div>
+    }
+    else
+    {
+        @if (string.IsNullOrEmpty(@Model.Ip))
+        {
+            <div class="message">
+                Ce service est limité à votre compte.
+            </div>
+        }
+        else
+        {
+            <div class="message">
+                Ce service est partagé par votre compte.
+            </div>
+        }
+    }
+    <table class="services-infos">
+        <tr>
+            <td>Référence</td>
+            <td>@Model.Reference</td>
+        </tr>
+        @if (string.IsNullOrEmpty(@Model.Ip) == false)
+        {
+            <tr>
+                <td>IP Réferent</td>
+                <td>@Model.Ip</td>
+            </tr>
+        }
+        <tr>
+            <td>Date de fin du service</td>
+            <td>@NWDAccountServiceWebManager.GetEndDateString(Model)</td>
+        </tr>
+    </table>
+</div>

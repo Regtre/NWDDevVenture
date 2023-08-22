@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="NWDMauiDemo.Views.MainPage"
+             BackgroundColor="FloralWhite">
+
+    <ScrollView>
+        <VerticalStackLayout
+            Spacing="25"
+            Padding="30,0"
+            VerticalOptions="Center">
+            
+            <VerticalStackLayout Spacing="5">
+                <Label Text="Welcome!" FontSize="28" TextColor="Gray" HorizontalTextAlignment="Center" />
+                <Label Text="Login to your account" FontSize="18" TextColor="Gray" HorizontalTextAlignment="Center" />
+            </VerticalStackLayout>
+            
+            <Label
+                Text="Welcome to .NET Multi-platform App UI"
+                SemanticProperties.HeadingLevel="Level2"
+                SemanticProperties.Description="Welcome to the MAUI demo of NWD"
+                FontSize="18"
+                HorizontalOptions="Center" />
+           
+            <Button
+                x:Name="CounterBtn"
+                Text="Send Request"
+                Clicked="TestRequest"
+                SemanticProperties.Hint="Counts the number of times you click"
+                HorizontalOptions="Center" />
+            <Button
+                x:Name="Clear"
+                Text="Clear"
+                Clicked="Clear_OnClicked"
+                HorizontalOptions="Center" />
+            
+            <Button
+                x:Name="Profile"
+                Text="Profile"
+                Clicked="GoToProfile"
+                HorizontalOptions="Center" />
+            
+            <Button
+                BackgroundColor="{DynamicResource SecondaryColor}"
+                Text="Sign In with Email/Password"
+                TextColor="{DynamicResource PrimaryColor}"
+                Clicked="GoToSignInEmailPassword"></Button>
+            <Button
+                BackgroundColor="{DynamicResource SecondaryColor}"
+                Text="Sign In With Login/Password"
+                TextColor="{DynamicResource PrimaryColor}"
+                Clicked="GoToSignInLoginPassword"></Button>
+            <Button
+                BackgroundColor="{DynamicResource SecondaryColor}"
+                Text="Sign Up"
+                TextColor="{DynamicResource PrimaryColor}"
+                Clicked="GoToSignUp"></Button>
+            <Label
+                x:Name="Status"
+                Text="Status"
+                HorizontalOptions="Center" >
+            </Label>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

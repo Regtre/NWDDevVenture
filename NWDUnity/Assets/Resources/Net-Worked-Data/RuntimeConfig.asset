@@ -1,0 +1,10 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!49 &4900000
+TextAsset:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: RuntimeConfig
+  m_Script: '{"WebEditor":"https://localhost:2051","ProjectId":18446744073237406404,"ProjectKey":"TINRFOSZ-FFRJCSSU-GJVIOPVM-HEAZIEQS-JPQTFLDR-MKKTSHHB-HEMNVLLN-AOVSNTZM-OPEIFSFO-SFHKGTAM","Track":{"Track":186,"StalkedReference":284345683274,"Kind":0,"Name":"T2","Color":"00ff2a","ProjectId":0,"Creation":0,"Modification":0,"Active":true,"Trashed":false,"Reference":927795866060}}'

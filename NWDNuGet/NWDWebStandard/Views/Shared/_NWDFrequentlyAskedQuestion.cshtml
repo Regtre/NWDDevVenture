@@ -1,0 +1,81 @@
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Http.Extensions
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using NWDFoundation.Models
+@using NWDFoundation.Models.Enums
+@using NWDFoundation.Tools
+@using NWDWebRuntime.Managers
+@using NWDWebRuntime.Models
+@model NWDFrequentlyAskedQuestion
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    Layout = null;
+}
+@if (Model.IsVisible || NWDAuthorizeAdminOnly.ValidFor(HttpContextAccessor.HttpContext))
+{
+    string tVisible = "";
+    @if (Model.IsVisible == false)
+    {
+        tVisible = "opacity-25";
+    }
+    <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 col-xxl-6">
+        <div class="d-flex justify-content-between">
+            <h5 class="fs-0 @tVisible">@Model.Question</h5>
+            @if (NWDAuthorizeAdminOnly.ValidFor(HttpContextAccessor.HttpContext))
+            {
+                NWDModelModalEdit tEdit = new NWDModelModalEdit()
+                {
+                    Title = "Edit ", 
+                    Description = "Edit this item", 
+                    ClassType = typeof(NWDFrequentlyAskedQuestion), 
+                    Reference = Model.Reference,
+                    UrlReload = HttpContextAccessor.HttpContext?.Request.GetDisplayUrl(),
+                }; 
+                @if (Model.IsVisible == false)
+                {
+                    <div>This item is not visible!</div>
+                }
+                <partial name="_NWDModelModalEdit" model="@tEdit"/>
+            }
+        </div>
+        <div class="d-flex justify-content-between @tVisible">
+            <div>
+                @if (Model.AppConcerned.HasFlag(NWDNavigatorFlag.Edge))
+                {
+                    <span class="text-500 fab fa-edge"></span>
+                }
+                @if (Model.AppConcerned.HasFlag(NWDNavigatorFlag.Chrome))
+                {
+                    <span class="text-500 fab fa-chrome"></span>
+                }
+                @if (Model.AppConcerned.HasFlag(NWDNavigatorFlag.Safari))
+                {
+                    <span class="text-500 fab fa-safari"></span>
+                }
+                @if (Model.AppConcerned.HasFlag(NWDNavigatorFlag.Firefox))
+                {
+                    <span class="text-500 fab fa-firefox"></span>
+                }
+            </div>
+            <div>
+                @if (Model.SystemConcerned.HasFlag(NWDNavigatorOSFlag.Windows))
+                {
+                    <span class="text-500 fab fa-windows"></span>
+                }
+                @if (Model.SystemConcerned.HasFlag(NWDNavigatorOSFlag.MacOS))
+                {
+                    <span class="text-500 fab fa-apple"></span>
+                }
+                @if (Model.SystemConcerned.HasFlag(NWDNavigatorOSFlag.Linux))
+                {
+                    <span class="text-500 fab fa-linux"></span>
+                }
+            </div>
+        </div>
+        <p class="fs--1  @tVisible">@Model.Answer</p>
+    </div>
+}

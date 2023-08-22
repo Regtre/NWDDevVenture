@@ -1,0 +1,42 @@
+@using System.Reflection
+@using NWDFoundation.WebEdition.Attributes
+@using NWDFoundation.WebEdition.Enums
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string? tControllerName = ViewData["ControllerName"] as string;
+    string? tModelToUse = ViewData["ModelToUse"] as string;
+    Type? tModel = Type.GetType(tModelToUse ?? string.Empty);
+    object? tResultToUse = ViewData["ResultToUse"];
+
+    PropertyInfo? tReferenceProp = tModel?.GetProperty("Reference");
+    string tReference = ((ulong)(tReferenceProp?.GetValue(tResultToUse) ?? 0)).ToString();
+}
+
+<div class="btn-group">
+    <span class="btn btn-outline-secondary align-self-center"><i class="bi-file-earmark"></i> @tReference</span>
+    <a href="@Url.Action("Modify", tControllerName)?sReference=@tReference" class="btn btn-outline-secondary align-self-center">
+        <i class="bi-pencil"></i>
+    </a>
+    <a href="@Url.Action("Trash", tControllerName)?sReference=@tReference" class="btn btn-outline-primary align-self-center">
+        <i class="bi-trash"></i>
+    </a>
+</div>
+<div class="card mb-3">
+    <div class="card-body">
+        <div>@tReference</div>
+        @foreach (PropertyInfo tProp in tModel?.GetProperties(BindingFlags.Public | BindingFlags.Instance)!)
+        {
+            if (tProp != null)
+            {
+                NWDWebPropertyDescriptionAttribute? tAttribute = tProp.GetCustomAttribute<NWDWebPropertyDescriptionAttribute>();
+                object? tVa = tProp.GetValue(tResultToUse, null);
+                ViewData["Attribute"] = tAttribute;
+                ViewData["Item"] = tResultToUse;
+                <partial name="_NWDWebEditionStyleSwitchShow" model="tProp"/>
+            }
+        }
+        
+    </div>
+</div>
+@Html.Raw("<script>"+(ViewData["Javascript"]as string ?? string.Empty)+"</script>")

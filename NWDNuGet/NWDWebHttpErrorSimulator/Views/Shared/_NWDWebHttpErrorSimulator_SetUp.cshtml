@@ -1,0 +1,23 @@
+@using NWDFoundation.Tools
+@using NWDWebHttpErrorSimulator.Configuration
+@using NWDWebHttpErrorSimulator.Controllers
+@using NWDWebStandard.Controllers
+<div class="card-title">
+    Parameter @nameof(NWDWebHttpErrorSimulator) for your project!
+</div>
+<div class="card-body m-0">
+    Nothing to do to configure this package.
+</div>
+<div class="card-title">
+    Examples
+    <div class="card-body m-0">
+        <ul>
+            @foreach (KeyValuePair<int, string> tError in NWDWebErrorController._ErrorDict)
+            {
+                <li>
+                    <a href="/Error-@tError.Key">https://..../Error-@tError.Key for error @tError.Value</a>
+                </li>
+            }
+        </ul>
+    </div>
+</div>

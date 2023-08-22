@@ -1,0 +1,48 @@
+﻿@model NWDWebGitLabReport.Models.NWDSprintInfo
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+
+<div class="card mb-3">
+    <div class="card-header">
+        <div class="d-flex flex-between-center">
+            <h3><span class="fs-2 bi-file-earmark-richtext me-2"></span>Sprint Info</h3>
+        </div>
+    </div>
+    <div class="card-body">
+        <form method="post" id="SprintInfoForm">
+            <div class="form-group mb-3">
+                @Html.LabelFor(model => model.Capacity)
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.Capacity, new { @class = "form-control",type="number" })
+                </div>
+            </div>
+            <div class="form-group mb-3">
+                @Html.LabelFor(model => model.Velocity)
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.Velocity, new { @class = "form-control",type="number" })
+                </div>
+            </div>
+            @Html.HiddenFor(m=>m.MilestoneName)
+            @Html.HiddenFor(m=>m.Reference)
+            @Html.HiddenFor(m => m.Reference)
+            @Html.HiddenFor(m => m.ProjectId)
+            @Html.HiddenFor(m => m.RowId)
+        </form>
+        <button class="btn btn-primary" onclick="postRequestAndReplaceContent('SprintInfoDiv','@Url.Action("SprintInfo", "NWDWebGitLabReport")','SprintInfoForm')">
+            <i class="bi bi-save2"></i>
+        </button>
+    </div>
+
+</div>
+
+<script>
+function postRequestAndReplaceContent(contentToreplaceID, url,formID) {
+    var cardContent = $('#'+contentToreplaceID);
+   cardContent.hide('slow', function() {
+            $.post(url,$('#'+formID).serialize(), function (data) {
+                cardContent.html(data);
+                cardContent.slideDown( "slow" );
+            });
+        });
+}
+</script>

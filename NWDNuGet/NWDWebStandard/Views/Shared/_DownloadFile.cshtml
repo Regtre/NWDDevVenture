@@ -1,0 +1,40 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@*@using System.Web
+    @using System.IO
+
+    @using StandardWebSite
+    @using StandardWebSite.Models
+    @using StandardWebSite.Controllers
+
+
+    @model DownloadFile
+    @if (Model.OS == "iOS")
+    {
+        @if (System.IO.Path.GetExtension(Model.Path) == ".plist")
+        {
+            <tr>
+                <td>@Model.Name</td>
+                <td>
+                    <a href="@Model.URLFile">Install App</a>
+                </td>
+            </tr>
+        }
+        else
+        {
+        }
+    }
+    else
+    {
+        <tr>
+            <td>@Model.Name</td>
+            <td>
+                @using (Html.BeginForm("Download", "Download"))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(Model => Model.Name)
+                    @Html.HiddenFor(Model => Model.Path)
+                    <input type="submit" value="Download File" />
+                }
+            </td>
+        </tr>
+    }*@

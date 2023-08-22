@@ -1,0 +1,294 @@
+﻿@using Microsoft.AspNetCore.Http
+@using System.Globalization
+@using Microsoft.AspNetCore.Builder
+@using Microsoft.AspNetCore.Http.Extensions
+@using Microsoft.AspNetCore.Localization
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Microsoft.Extensions.Options
+@using NWDWebRuntime
+@using NWDWebRuntime.Configuration
+@using NWDWebRuntime.Facades
+@using NWDWebRuntime.Managers
+@using NWDWebRuntime.Models
+@using NWDWebStandard.Configuration
+@using NWDWebStandard.Controllers
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@* @inject IViewLocalizer Localizer *@
+@inject IOptions<RequestLocalizationOptions> LocOptions
+
+@{
+    string? tController = ViewContext.RouteData.Values["controller"]?.ToString();
+    string? tAction = ViewContext.RouteData.Values["action"]?.ToString();
+    NWDPageStandard tPageStandard = (NWDPageStandard)ViewData[nameof(NWDPageStandard)]!;
+
+    // Add partials views
+    // List<NWDPartialView> tPartialViewList = new List<NWDPartialView>();
+    // foreach (NWDPartialView tPartial in NWDWebRuntimeConfiguration.KConfig.AccountAnnexeMenuPartialList)
+    // {
+    //     tPartialViewList.Add(tPartial);
+    // }
+    // if (tPageStandard != null)
+    // {
+    //     foreach (NWDPartialView tPartial in tPageStandard.AccountAnnexeMenuPartialList)
+    //     {
+    //         tPartialViewList.Add(tPartial);
+    //     }
+    // }
+    //TODO sort bye order ... 
+    // Add partials views
+    // List<NWDPartialView> tPartialAdminViewList = new List<NWDPartialView>();
+    // foreach (NWDPartialView tPartial in NWDWebRuntimeConfiguration.KConfig.AdminNavBarPartialList)
+    // {
+    //     tPartialAdminViewList.Add(tPartial);
+    // }
+    // if (tPageStandard != null)
+    // {
+    //     foreach (NWDPartialView tPartial in tPageStandard.AdminNavBarPartialList)
+    //     {
+    //         tPartialAdminViewList.Add(tPartial);
+    //     }
+    // }
+    //TODO sort bye order ... 
+    // Add partials views
+    // List<NWDPartialView> tPartialAppViewList = new List<NWDPartialView>();
+    // foreach (NWDPartialView tPartial in NWDWebRuntimeConfiguration.KConfig.AppNavBarPartialList)
+    // {
+    //     tPartialAppViewList.Add(tPartial);
+    // }
+    // if (tPageStandard != null)
+    // {
+    //     foreach (NWDPartialView tPartial in tPageStandard.AppNavBarPartialList)
+    //     {
+    //         tPartialAppViewList.Add(tPartial);
+    //     }
+    // }
+    //TODO sort bye order ... 
+    // Add partials views
+    // List<NWDPartialView> tPartialDebugViewList = new List<NWDPartialView>();
+    // foreach (NWDPartialView tPartial in NWDWebRuntimeConfiguration.KConfig.DebugNavBarPartialList)
+    // {
+    //     tPartialDebugViewList.Add(tPartial);
+    // }
+    // if (tPageStandard != null)
+    // {
+    //     foreach (NWDPartialView tPartial in tPageStandard.DebugNavBarPartialList)
+    //     {
+    //         tPartialDebugViewList.Add(tPartial);
+    //     }
+    // }
+    //TODO sort bye order ... 
+}
+
+@inject IHttpContextAccessor HttpContextAccessor
+
+<ul class="navbar-nav navbar-nav-icons ms-auto flex-row align-items-center">
+
+<!-- Dark Light theme -->
+
+<li class="nav-item ms-2">
+    <div class="theme-control-toggle nav-link px-0">
+        <input class="form-check-input ms-0 theme-control-toggle-input" id="themeControlToggle" type="checkbox" data-theme-control="theme" value="dark"/>
+        <label class="mb-0 theme-control-toggle-label theme-control-toggle-light" for="themeControlToggle" data-bs-toggle="tooltip" data-bs-placement="left" title="Switch to light theme">
+            <span class="fas fa-sun fs-0"></span>
+        </label>
+        <label class="mb-0 theme-control-toggle-label theme-control-toggle-dark" for="themeControlToggle" data-bs-toggle="tooltip" data-bs-placement="left" title="Switch to dark theme">
+            <span class="fas fa-moon fs-0"></span>
+        </label>
+    </div>
+</li>
+
+<!-- Shop cart -->
+
+@if (NWDWebStandardConfiguration.KConfig.ShopIsEnabled)
+{
+    <li class="nav-item no-selectable">
+        <a class="nav-link px-0  ms-2 notification-indicator notification-indicator-warning notification-indicator-fill fa-icon-wait" href="@NWDWebStandardConfiguration.KConfig.ShopCartEndPoint">
+            <div class="" data-bs-toggle="tooltip" data-bs-placement="top" title="Cart">
+                <span class="fas fa-shopping-cart" data-fa-transform="shrink-7" style="font-size: 33px;"></span>
+                <span class="notification-indicator-number">@tPageStandard?.ItemsInCartCount</span>
+            </div>
+        </a>
+    </li>
+}
+
+<!-- Notification -->
+
+@if (NWDWebStandardConfiguration.KConfig.NotificationIsEnabled && NWDAuthorizeByAuthentication.ValidFor(HttpContextAccessor.HttpContext, true))
+{
+    <li class="nav-item dropdown ms-2 no-selectable" id="NotificationsBody">
+        <div id="content_to_replace" class="justify-content-center">
+            <partial name="_NavBar_Account_Notification" model="tPageStandard.Notifications"/>
+        </div>
+    </li>
+
+    <script>
+    setInterval(function(){
+        getRequestAndReplaceContentWithoutHideShow('NotificationsBody','@Url.Action("GetNotifications", "NWDNotification")');
+        getRequestAndAppendContentWithoutHideShow('ModalBody','@Url.Action("GetNewModalsFromNotif", "NWDNotification")')}, @NWDWebStandardConfiguration.KConfig.NotificationRefreshTimeInMilliseconds);
+    </script>
+}
+
+@if (HttpContextAccessor.HttpContext != null)
+{
+   if (NWDAuthorizeAdminOnlyInRelease.ValidFor(HttpContextAccessor.HttpContext))
+   {
+       <partial name="_NWDNavBarMenu" model="@tPageStandard.NavBarDebug"/>
+   }
+}
+@if (HttpContextAccessor.HttpContext != null)
+{
+    if (NWDAuthorizeAdminOnly.ValidFor(HttpContextAccessor.HttpContext))
+    {
+        <partial name="_NWDNavBarMenu" model="@tPageStandard.NavBarAdmin"/>
+    }
+}
+@if (NWDWebStandardConfiguration.KConfig.ApplicationsAreEnabled)
+{
+    <partial name="_NWDNavBarMenu" model="@tPageStandard.NavBarApp"/>
+}
+    <!-- Language -->
+
+@if (LocOptions.Value.SupportedUICultures is {Count: > 1 })
+{
+    <li class="nav-item dropdown no-selectable">
+        <a class="nav-link px-0 ms-2" id="LanguageListDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <div class="" data-bs-toggle="tooltip" data-bs-placement="top" title="Language">
+                <span class="fas fa-language fs-4" data-fa-transform="shrink-7"></span>
+            </div>
+        </a>
+        <div class="dropdown-menu dropdown-caret p-0 dropdown-menu-end" aria-labelledby="LanguageListDropdown">
+            <div class="card navbar-card shadow-none dark__bg-1000 ">
+                <div class=" max-h-dropdown mt-3 scrollbar">
+                    <div class="" style="overflow-x:hidden;">
+                    <div class="dropdown-item text-primary disabled text-end border-bottom">Change language</div>
+                    @{
+                        CultureInfo tRequestCulture = Context.Features.Get<IRequestCultureFeature>()?.RequestCulture.UICulture;
+                    }
+
+                    <div class="row mb-3">
+                        <div class="col-sxm-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12" style="min-width: 180px;">
+                            <div class="nav flex-column">
+                                @* <p class="nav-link text-700 mb-0 fw-bold"> *@
+                                @*     <span class=""><span class="me-2 fas fa-language"></span>Languages available</span> *@
+                                @* </p> *@
+
+                                @foreach (CultureInfo tCulture in LocOptions.Value.SupportedUICultures)
+                                {
+                                    if (HttpContextAccessor.HttpContext != null)
+                                    {
+                                        if (tRequestCulture.Name == tCulture.Name)
+                                        {
+                                            <span class="dropdown-item active disabled">@tCulture.DisplayName</span>
+                                        }
+                                        else
+                                        {
+                                            <a class="dropdown-item" href="@HttpContextAccessor.HttpContext.Request.GetEncodedUrl()" onclick="@Html.Raw(NWDWebRuntimeStartupService.CookieLanguage.GenerateOnClick(CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(tCulture, tCulture))))">@tCulture.DisplayName</a>
+                                        }
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+
+                @if (NWDWebStandardConfiguration.KConfig.ShowIdemobiEngine)
+                {
+                    <div class="dropdown-item border-top disabled text-end text-300">Engine by idéMobi©</div>
+                }
+            </div>
+        </div>
+    </li>
+}
+
+<!-- account -->
+
+<li class="nav-item dropdown no-selectable">
+    <a class="nav-link px-0 ms-2" id="navbarDropdownUser" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <div class="avatar avatar-xl" data-bs-toggle="tooltip" data-bs-placement="right" title="Account">
+            <img class="rounded-circle" src="https://www.gravatar.com/avatar/@NWDAccountInfoManager.GetAccountInfo(HttpContextAccessor.HttpContext).GravatarHash?d=mp" alt="">
+        </div>
+    </a>
+    <div class="dropdown-menu dropdown-caret p-0 dropdown-menu-end" aria-labelledby="navbarDropdownUser">
+        <div class="card navbar-card shadow-none dark__bg-1000 " style="width: 200px;">
+            <div class=" max-h-dropdown mt-3 scrollbar">
+                    <div class="" style="overflow-x:hidden;">
+                @if (string.IsNullOrEmpty(NWDAccountInfoManager.GetAccountInfo(HttpContextAccessor.HttpContext).Nickname))
+                {
+                    <div class="dropdown-item text-primary disabled text-end border-bottom">My account</div>
+                }
+                else
+                {
+                    <div class="dropdown-item text-primary disabled text-end border-bottom">Hello @NWDAccountInfoManager.GetAccountInfo(HttpContextAccessor.HttpContext).Nickname</div>
+                }
+                <div class="row mb-3">
+                        <div class="col-sxm-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12" style="min-width: 180px;">
+                            <div class="nav flex-column">
+                                <p class="nav-link text-700 mb-0 fw-bold">
+                                    <span class=""><span class="me-2 far fa-address-card"></span>Account</span>
+                                </p>
+                                @if (NWDAccountWebManager.AccountIsConnected(HttpContextAccessor.HttpContext))
+                                {
+                                    <a class="dropdown-item py-1 link-600 fw-medium" asp-area="" asp-controller="@NWDAccountController.ASP_Controller()" asp-action="@nameof(NWDAccountController.Index)">My account</a>
+                                    <a class="dropdown-item py-1 link-600 fw-medium" asp-area="" asp-controller="@NWDAccountController.ASP_Controller()" asp-action="@nameof(NWDAccountController.SignsList)">Authentification</a>
+                                    <a class="dropdown-item py-1 link-600 fw-medium" asp-area="" asp-controller="@NWDAccountController.ASP_Controller()" asp-action="@nameof(NWDAccountController.ServicesList)">Services</a>
+                                    @switch (NWDWebStandardConfiguration.KConfig.SignOutMethodInMenu)
+                                    {
+                                        case NWDSignOutMethodInMenu.LogOut:
+                                            <a class="dropdown-item py-1 link-600 fw-medium" asp-area="" asp-controller="@NWDAccountController.ASP_Controller()" asp-action="@nameof(NWDAccountController.LogOut)">Log out</a>
+                                            break;
+                                        case NWDSignOutMethodInMenu.SignOut:
+                                            <a class="dropdown-item py-1 link-600 fw-medium" asp-area="" asp-controller="@NWDAccountController.ASP_Controller()" asp-action="@nameof(NWDAccountController.SignOutForm)">Sign-out</a>
+                                            break;
+                                    }
+                                }
+                                else
+                                {
+                                    <a class="dropdown-item py-1 link-600 fw-medium" asp-area="" asp-controller="@NWDAccountController.ASP_Controller()" asp-action="@nameof(NWDAccountController.SignInForm)">Sign-in</a>
+                                    <a class="dropdown-item py-1 link-600 fw-medium" asp-area="" asp-controller="@NWDAccountController.ASP_Controller()" asp-action="@nameof(NWDAccountController.SignUpForm)">Sign-up</a>
+                                    <a class="dropdown-item py-1 link-600 fw-medium" asp-area="" asp-controller="@NWDAccountController.ASP_Controller()" asp-action="@nameof(NWDAccountController.SignLostForm)">Sign lost</a>
+                                }
+                            </div>
+                        </div>
+                        <div class="col-sxm-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12" style="min-width: 180px;">
+                        <div class="nav flex-column">
+                            <p class="nav-link text-700 mb-0 fw-bold">
+                                <span class=""><span class="me-2 fas fa-landmark"></span>Legacy</span>
+                            </p>
+                            <a class="dropdown-item py-1 link-600 fw-medium" asp-area="" asp-controller="@NWDPrivacyController.ASP_Controller()" asp-action="@nameof(NWDPrivacyController.TermsAndConditions)">Terms and conditions</a>
+                            <a class="dropdown-item py-1 link-600 fw-medium" asp-area="" asp-controller="@NWDPrivacyController.ASP_Controller()" asp-action="@nameof(NWDPrivacyController.TermsOfService)">Terms of service</a>
+                        </div>
+                    </div>
+                        <div class="col-sxm-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12" style="min-width: 180px;">
+                        <div class="nav flex-column">
+                            <p class="nav-link text-700 mb-0 fw-bold">
+                                <span class=""><span class="me-2 fas fa-shield-alt"></span>Privacy</span>
+                            </p>
+                            <a class="dropdown-item py-1 link-600 fw-medium" asp-area="" asp-controller="@NWDPrivacyController.ASP_Controller()" asp-action="@nameof(NWDPrivacyController.PrivacyPolicy)">Privacy policy</a>
+                                <a class="dropdown-item py-1 link-600 fw-medium" asp-area="" asp-controller="@NWDPrivacyController.ASP_Controller()" asp-action="@nameof(NWDPrivacyController.GeneralDataProtectionRegulation)">GDPR</a>
+                                <a class="dropdown-item py-1 link-600 fw-medium" asp-area="" asp-controller="@NWDPrivacyController.ASP_Controller()" asp-action="@nameof(NWDPrivacyController.CookiesManagement)">Cookies</a>
+                        </div>
+                    </div>
+                        <div class="col-sxm-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12" style="min-width: 180px;">
+                        <div class="nav flex-column">
+                            <p class="nav-link text-700 mb-0 fw-bold">
+                                <span class=""><span class="me-2 far fa-lightbulb"></span>Other</span>
+                            </p>
+                            <a class="dropdown-item py-1 link-600 fw-medium" asp-area="" asp-controller="@NWDHomeController.ASP_Controller()" asp-action="@nameof(NWDHomeController.ContactUs)">Contact us</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+            @if (NWDWebStandardConfiguration.KConfig.ShowIdemobiEngine)
+            {
+                <div class="dropdown-item border-top disabled text-end text-300">Engine by idéMobi©</div>
+            }
+        </div>
+    </div>
+</li>
+</ul>

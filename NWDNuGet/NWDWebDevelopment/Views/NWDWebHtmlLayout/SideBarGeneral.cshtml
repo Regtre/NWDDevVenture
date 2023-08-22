@@ -1,0 +1,184 @@
+@using NWDFoundation.Configuration
+@using NWDFoundation.Tools
+@using NWDWebRuntime.Configuration
+@using NWDWebRuntime.Facades
+@using NWDWebRuntime.Models
+@using NWDWebStandard.Models
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (NWDWebRuntimeConfiguration.KConfig.IsDevelopment == true)
+{
+    <div class="text-end mb-3" xmlns="http://www.w3.org/1999/html">
+        <span class="ms-2 badge rounded-pill badge-subtle-success bi-check-circle"> Kortex</span>
+        @* <span class="ms-2 badge rounded-pill badge-subtle-danger bi-x-circle"> Kortex</span> *@
+    </div>
+}
+
+
+<!-- TITLE With background -->
+<div class="container p-0 m-0" NavBar>
+    <div class="row g-3">
+
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+            <div class="card" NavBar>
+                <div class="card-header bg-light background-corner-1 border-bottom">
+                    <div class="card-title">
+                        <h1><span class="fas fa-shield-alt"> </span>@nameof(NWDSideBar)</h1>
+                    </div>
+                </div>
+                <div class="card-body position-relative border-bottom">
+                    The management of the sidebar is done directly in the code. You can add menus from a controller or from an interface class <span class="text-primary">@nameof(INWDSideBar)</span>. The <span class="text-primary">@nameof(NWDSideBarBlock)</span> class is the starting point for inserting a side block. The <span class="text-primary">@nameof(NWDSideBarAnnexe)</span> class is the starting point for inserting an annexe toast.
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+            <div class="card" NavBar>
+                <div class="card-header bg-light background-corner-1 border-bottom">
+                    <div class="card-title">
+                        <h1><span class="fas fa-shield-alt"></span>Classes</h1>
+                    </div>
+                </div>
+                <div class="card-body position-relative border-bottom">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                        <tr>
+                            <th scope="col"></th>
+                            <th scope="col">Class</th>
+                            <th scope="col">Usage</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>
+                                <span class="fas fa-shield-alt"></span>
+                            </td>
+                            <td>
+                                <span class="text-primary">@nameof(INWDSideBar)</span>
+                            </td>
+                            <td>
+                                Interface to declare a class to inject at <span class=" text-primary"> NWDWebRuntimeConfiguration.KConfig.@nameof(NWDWebRuntimeConfiguration.KConfig.SideBarInterfaceAdd) (INWDSideBar sSideBar</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="fas fa-shield-alt"></span>
+                            </td>
+                            <td>
+                                <span class="text-primary">@nameof(NWDSideBarBlock)</span>
+                            </td>
+                            <td>
+                                Block
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="fas fa-shield-alt"></span>
+                            </td>
+                            <td>
+                                <span class="text-primary">@nameof(NWDSideBarCategory)</span>
+                            </td>
+                            <td>
+                                Category in block
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="fas fa-shield-alt"></span>
+                            </td>
+                            <td>
+                                <span class="text-primary">@nameof(NWDSideBarElement)</span>
+                            </td>
+                            <td>
+                                Element in category
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="fas fa-shield-alt"></span>
+                            </td>
+                            <td>
+                                <span class="text-primary">@nameof(NWDSideBarAnnexe)</span>
+                            </td>
+                            <td>
+                                Annexe toast
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-sx-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+            <div class="card" NavBar>
+                <div class="card-header bg-light background-corner-1 border-bottom">
+                    <div class="card-title">
+                        <h1><span class="fas fa-shield-alt"></span>Methods</h1>
+                    </div>
+                </div>
+                <div class="card-body position-relative border-bottom">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                        <tr>
+                            <th scope="col"></th>
+                            <th scope="col">Class</th>
+                            <th scope="col">Method</th>
+                            <th scope="col">Usage</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>
+                                <span class="fas fa-shield-alt"></span>
+                            </td>
+                            <td>
+                                <span class="text-primary">@nameof(NWDWebRuntimeConfiguration)</span>
+                            </td>
+                            <td>
+                                @nameof(NWDWebRuntimeConfiguration.SideBarInterfaceAdd) (INWDSideBar sSideBarManager)
+                            </td>
+                            <td>
+                                Add sub-manager to general sidebar manager generation process.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="fas fa-shield-alt"></span>
+                            </td>
+                            <td>
+                                <span class="text-primary">@nameof(NWDPageStandard)</span>
+                            </td>
+                            <td>
+                                @nameof(NWDPageStandard.SetSideBarKind) (NWDSideBarKind sSideBarStyle, NWDSideBarBlock[]? sBlocks, NWDSideBarAnnexe[]? sAnnexes, HttpContext sHttpContext)
+                            </td>
+                            <td>
+                                Replace sidebar by style result of general sidebar manager and add specific Block and Annexe for this page.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="fas fa-shield-alt"></span>
+                            </td>
+                            <td>
+                                <span class="text-primary">@nameof(NWDPageStandard)</span>
+                            </td>
+                            <td>
+                                @nameof(NWDPageStandard.AddSideBar) (NWDSideBarBlock[]? sBlocks, NWDSideBarAnnexe[]? sAnnexes, HttpContext sHttpContext)
+                            </td>
+                            <td>
+                                Add specific Block and Annexe for this page to result of general sidebar manager.
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

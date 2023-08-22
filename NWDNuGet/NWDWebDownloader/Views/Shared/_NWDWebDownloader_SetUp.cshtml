@@ -1,0 +1,49 @@
+@using NWDFoundation.Tools
+@using NWDWebDownloader.Configuration
+
+        <div class="row">
+            <div class="col-lg-6 mb-3">
+                <div class="card-title">
+                    Parameter @nameof(NWDWebDownloader) for your project!
+                </div>
+                <div class="card-body m-0">
+                    In <b>appsetting.json</b> file add a section <b>@nameof(NWDWebDownloaderConfiguration)</b>.
+                    <br/>
+                    Inside this section add :
+                    <ul>
+                        <li> <span class="text-primary">@nameof(NWDWebDownloaderConfiguration.Downloads)</span></li>
+                        <li> And add a list of <span class="text-primary">@nameof(NWDDownloadConfig)</span></li>
+                        <li> <span class="text-primary">@nameof(NWDDownloadConfig)</span></li>
+                        <li> <span class="text-primary">@nameof(NWDDownloadConfig.PageName)</span> (example : my pag of apps)</li>
+                        <li> <span class="text-primary">@nameof(NWDDownloadConfig.RootPath)</span> (example : ../../DirectoryName)</li>
+                        <li> <span class="text-primary">@nameof(NWDDownloadConfig.BuildListSize)</span> (example : 10)</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-6 mb-3">
+                <div class="card bg-dark border-primary">
+                    <div class="card-header border-bottom">
+                        appsettings.json
+                    </div>
+                    <div class="card-body m-0">
+                        <pre><code>
+        {
+            "Logging": {...},
+            "AllowedHosts": "*",
+            "Kestrel": {...},
+            ...
+            <span class="text-primary">"@nameof(NWDWebDownloaderConfiguration)": {
+                "@nameof(NWDWebDownloaderConfiguration.Downloads)":[
+                        {
+                            "@nameof(NWDDownloadConfig.PageName)": "<span class="text-warning">your webhook URL</span>",
+                            "@nameof(NWDDownloadConfig.RootPath)": "<span class="text-warning">../NWDWebDownloader/Test/Test2</span>",
+                            "@nameof(NWDDownloadConfig.BuildListSize)": "<span class="text-warning">8</span>",
+                        },
+                        ...
+                ]
+            }</span>
+</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>

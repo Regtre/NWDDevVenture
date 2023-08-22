@@ -1,0 +1,113 @@
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using NWDFoundation.Models
+@using NWDHub.Models
+@using NWDWebRuntime.Models
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    NWDProject? tResultToUse = ViewData["ResultToUse"] as NWDProject;
+    if (tResultToUse != null)
+    {
+        NWDSideBarBlock tBlock = new NWDSideBarBlock()
+        {
+            Name = "Project" + tResultToUse.Name, BadgeText = "test",
+            Categories = new List<NWDSideBarCategory>()
+            {
+                new NWDSideBarCategory()
+                {
+                    Name = "Dashboard",
+                    IconStyle = "far fa-comment-alt", BadgeText = "test",
+                    Elements = new List<NWDSideBarElement>()
+                    {
+                        new NWDSideBarElement()
+                        {
+                            Name = "Information", ActionName = "Show", ControllerName = "NWDProject", UrlParameter = "sReference=" + tResultToUse.Reference, BadgeText = "test",
+                        },
+                        new NWDSideBarElement()
+                        {
+                            Name = "Instructions", ActionName = "Instructions", ControllerName = "NWDProject", UrlParameter = "sReference=" + tResultToUse.Reference
+                        },
+                        new NWDSideBarElement()
+                        {
+                            Name = "Roles", ActionName = "Roles", ControllerName = "NWDProject", UrlParameter = "sReference=" + tResultToUse.Reference
+                        },
+                        new NWDSideBarElement()
+                        {
+                            Name = "Services", ActionName = "Services", ControllerName = "NWDProject", UrlParameter = "sReference=" + tResultToUse.Reference
+                        },
+                        new NWDSideBarElement()
+                        {
+                            Name = "Environments", ActionName = "Environments", ControllerName = "NWDProject", UrlParameter = "sReference=" + tResultToUse.Reference
+                        },
+                        new NWDSideBarElement()
+                        {
+                            Name = "Keys", ActionName = "Keys", ControllerName = "NWDProject", UrlParameter = "sReference=" + tResultToUse.Reference
+                        },
+                        new NWDSideBarElement()
+                        {
+                            Name = "WebSetting", ActionName = "WebSetting", ControllerName = "NWDProject", UrlParameter = "sReference=" + tResultToUse.Reference
+                        },
+                        new NWDSideBarElement()
+                        {
+                            Name = "Custom classes", ActionName = "CustomClasses", ControllerName = "NWDProject", UrlParameter = "sReference=" + tResultToUse.Reference
+                        }
+                    }
+                },
+                new NWDSideBarCategory()
+                {
+                    Name = "Billing",
+                    IconStyle = "far fa-file-alt",
+                    Elements = new List<NWDSideBarElement>()
+                    {
+                        new NWDSideBarElement()
+                        {
+                            Name = "Estimates", ActionName = "Estimates", ControllerName = "NWDProject", UrlParameter = "sReference=" + tResultToUse.Reference
+                        },
+                        new NWDSideBarElement()
+                        {
+                            Name = "Billings", ActionName = "Billings", ControllerName = "NWDProject", UrlParameter = "sReference=" + tResultToUse.Reference
+                        },
+                    }
+                },
+                new NWDSideBarCategory()
+                {
+                    Name = "Other actions",
+                    IconStyle = "fas fa-tools",
+                    Elements = new List<NWDSideBarElement>()
+                    {
+                        new NWDSideBarElement()
+                        {
+                            Name = "Publish", ActionName = "Publish", ControllerName = "NWDProject", UrlParameter = "sReference=" + tResultToUse.Reference
+                        },
+                        new NWDSideBarElement()
+                        {
+                            Name = "DeleteInstructions", ActionName = "Delete", ControllerName = "NWDProject", UrlParameter = "sReference=" + tResultToUse.Reference
+                        },
+                    }
+                },
+                new NWDSideBarCategory()
+                {
+                    Name = "Your Website",
+                    IconStyle = "fas fa-tools",
+                    Elements = new List<NWDSideBarElement>()
+                    {
+                        new NWDSideBarElement()
+                        {
+                            Name = "Generate CSProj", ActionName = "Publish", ControllerName = "NWDProject", UrlParameter = "sReference=" + tResultToUse.Reference
+                        },
+                        new NWDSideBarElement()
+                        {
+                            Name = "Install your website", ActionName = "Delete", ControllerName = "NWDProject", UrlParameter = "sReference=" + tResultToUse.Reference, BadgeText = "test"
+                        },
+                        new NWDSideBarElement()
+                        {
+                            Name = "Use our Yaml (gitlab)", ActionName = "Delete", ControllerName = "NWDProject", UrlParameter = "sReference=" + tResultToUse.Reference
+                        },
+                    }
+                }
+            }
+        };
+    <partial name="_NWDSideBarBlock" model="@tBlock"/>
+    }
+}

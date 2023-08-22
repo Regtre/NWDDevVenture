@@ -1,0 +1,383 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using NWDFoundation.Models
+@using NWDFoundation.Models.Enums
+@using NWDWebRuntime.Configuration
+@using NWDWebRuntime.Managers
+@using NWDWebRuntime.Models
+@using NWDWebStandard.Configuration
+@using NWDWebStandard.Extensions
+@using NWDWebStandard.Models
+@using NWDWebStandard.Controllers
+
+@inject IHttpContextAccessor HttpContextAccessor
+
+@if (HttpContextAccessor.HttpContext != null && NWDAccountWebManager.AccountIsConnected(HttpContextAccessor.HttpContext) == true)
+{
+    List<NWDAccountSign> tSignList = NWDAccountSignWebManager.GetAccountSigns(HttpContextAccessor.HttpContext);
+    int tSignCount = 0;
+    @foreach (NWDAccountSign tSign in tSignList)
+    {
+        if (tSign.SignType != NWDAccountSignType.DeviceId)
+        {
+            tSignCount++;
+        }
+    }
+    if (tSignList.Count > 0)
+    {
+        <!-- Sign List With background -->
+        <div class="container p-0 m-0 mb-3">
+        <div class="row g-3">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+        <div class="card">
+        <div class="card-header bg-light border-bottom">
+            <h5>Your signs to authentificate</h5>
+        </div>
+        <div class="card-body">
+        <div class="tab-content">
+        <div class="table-responsive scrollbar">
+        <table class="table">
+        <thead>
+        <tr>
+            <th scope="col"></th>
+            <th scope="col">Sign</th>
+            <th scope="col">Reference</th>
+            <th scope="col">Kind</th>
+            <th class="text-end" scope="col">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        @{
+            bool tEmailPassword = false;
+            bool tLoginPassword = false;
+            bool tLoginPasswordEmail = false;
+            bool tGoogle = false;
+            bool tFacebook = false;
+            bool tDiscord = false;
+            bool tApple = false;
+            bool tMicrosoft = false;
+            bool tTwitter = false;
+            bool tLinkedIn = false;
+        }
+        @foreach (NWDAccountSign tSign in tSignList)
+        {
+            @switch (tSign.SignType)
+            {
+                case NWDAccountSignType.DeviceId:
+                {
+                    tEmailPassword = true;
+                    <tr>
+                        <td scope="row">
+                            <span class="text-500 fas fa-tablet-alt"></span>
+                        </td>
+                        <td scope="row">
+                            @tSign.DecryptName()
+                        </td>
+                        <td scope="row">
+                            @tSign.Reference
+                        </td>
+                        <td>
+                            Email and Password
+                        </td>
+                        <td class="text-end">
+                            <div class="btn-group">
+                                <a class="btn btn-danger btn-sm" asp-area="" asp-controller="@NWDAccountController.ASP_Controller()" asp-action="@nameof(NWDAccountController.RevokeSign)" asp-route-id="@tSign.Reference">
+                                    <span data-bs-toggle="tooltip" data-bs-placement="top" title="Delete sign" data-bs-original-title="Delete sign" aria-label="Delete sign">
+                                        <span class="fas fa-trash"></span>
+                                    </span>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+                    break;
+
+                case NWDAccountSignType.EmailPassword:
+                {
+                    tEmailPassword = true;
+                    <tr>
+                        <td scope="row">
+                            <span class="text-500 fas fa-file-signature"></span>
+                        </td>
+                        <td scope="row">
+                            @tSign.DecryptName()
+                        </td>
+                        <td scope="row">
+                            @tSign.Reference
+                        </td>
+                        <td>
+                            Email and Password
+                        </td>
+                        <td class="text-end">
+                            <div class="btn-group">
+                                <a class="btn btn-outline-secondary btn-sm" asp-area="" asp-controller="@NWDAccountController.ASP_Controller()" asp-action="@nameof(NWDAccountController.ModifyEmailPassword)" asp-route-id="@tSign.Reference">
+                                    <span data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Email Password" data-bs-original-title="Edit Email Password" aria-label="Edit Email Password"><span class="fas fa-edit"></span> Edit</span>
+                                </a>
+                                @if (tSignCount > 1)
+                                {
+                                    <a class="btn btn-danger btn-sm" asp-area="" asp-controller="@NWDAccountController.ASP_Controller()" asp-action="@nameof(NWDAccountController.RevokeSign)" asp-route-id="@tSign.Reference">
+                                        <span data-bs-toggle="tooltip" data-bs-placement="top" title="Delete sign" data-bs-original-title="Delete sign" aria-label="Delete sign">
+                                            <span class="fas fa-trash"></span>
+                                        </span>
+                                    </a>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+                    break;
+
+                case NWDAccountSignType.LoginPassword:
+                {
+                    tLoginPassword = true;
+                    <tr>
+                        <td scope="row">
+                            <span class="text-500 fas fa-file-signature"></span>
+                        </td>
+                        <td scope="row">
+                            @tSign.DecryptName()
+                        </td>
+                        <td scope="row">
+                            @tSign.Reference
+                        </td>
+                        <td>
+                            Login and Password
+                        </td>
+                        <td class="text-end">
+                            <div class="btn-group">
+                                <a class="btn btn-outline-secondary btn-sm" asp-area="" asp-controller="@NWDAccountController.ASP_Controller()" asp-action="@nameof(NWDAccountController.ModifyLoginPassword)" asp-route-id="@tSign.Reference">
+                                    <span data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Login Password" data-bs-original-title="Edit Login Password" aria-label="Edit Login Password"><span class="fas fa-edit"></span> Edit</span>
+                                </a>
+                                @if (tSignCount > 1)
+                                {
+                                    <a class="btn btn-danger btn-sm" asp-area="" asp-controller="@NWDAccountController.ASP_Controller()" asp-action="@nameof(NWDAccountController.RevokeSign)" asp-route-id="@tSign.Reference">
+                                        <span data-bs-toggle="tooltip" data-bs-placement="top" title="Delete sign" data-bs-original-title="Delete sign" aria-label="Delete sign">
+                                            <span class="fas fa-trash"></span>
+                                        </span>
+                                    </a>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+                    break;
+
+                case NWDAccountSignType.LoginEmailPassword:
+                {
+                    tLoginPasswordEmail = true;
+                    <tr>
+                        <td scope="row">
+                            <span class="text-500 fas fa-file-signature"></span>
+                        </td>
+                        <td scope="row">
+                            @tSign.DecryptName()
+                        </td>
+                        <td scope="row">
+                            @tSign.Reference
+                        </td>
+                        <td>
+                            Login, Email and Password
+                        </td>
+                        <td class="text-end">
+                            <div class="btn-group">
+                                <a class="btn btn-outline-secondary btn-sm " asp-area="" asp-controller="@NWDAccountController.ASP_Controller()" asp-action="@nameof(NWDAccountController.ModifyLoginPasswordEmail)" asp-route-id="@tSign.Reference">
+                                    <span data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Login Password Email" data-bs-original-title="Edit Login Password Email" aria-label="Edit Login Password Email"><span class="fas fa-edit"></span> Edit</span>
+                                </a>
+
+                                @if (tSignCount > 1)
+                                {
+                                    <a class="btn btn-danger btn-sm " asp-area="" asp-controller="@NWDAccountController.ASP_Controller()" asp-action="@nameof(NWDAccountController.RevokeSign)" asp-route-id="@tSign.Reference">
+                                        <span data-bs-toggle="tooltip" data-bs-placement="top" title="Delete sign" data-bs-original-title="Delete sign" aria-label="Delete sign">
+                                            <span class="fas fa-trash"></span>
+                                        </span>
+                                    </a>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+                    break;
+
+
+                case NWDAccountSignType.Google:
+                case NWDAccountSignType.Facebook:
+                case NWDAccountSignType.Discord:
+                case NWDAccountSignType.Apple:
+                case NWDAccountSignType.Microsoft:
+                case NWDAccountSignType.Twitter:
+                case NWDAccountSignType.LinkedIn:
+                {
+                    <tr>
+                        <td scope="row">
+                            <span class="text-500 fas fa-file-signature"></span>
+                        </td>
+                        <td scope="row">
+                            @tSign.DecryptName()
+                        </td>
+                        <td scope="row">
+                            @tSign.Reference
+                        </td>
+                        <td>
+                            @switch (tSign.SignType)
+                            {
+                                case NWDAccountSignType.Google:
+                                {
+                                    tGoogle = true;
+                                    <span><span class="fab fa-google-plus-g me-2"></span> Google</span>
+                                }
+                                    break;
+                                case NWDAccountSignType.Facebook:
+                                {
+                                    tFacebook = true;
+                                    <span><span class="fab fa-facebook-square me-2"></span> Facebook</span>
+                                }
+                                    break;
+                                case NWDAccountSignType.Discord:
+                                {
+                                    tDiscord = true;
+                                    <span><span class="fab fa-discord me-2"></span> Discord</span>
+                                }
+                                    break;
+                                case NWDAccountSignType.Apple:
+                                {
+                                    tApple = true;
+                                    <span><span class="fab fa-apple me-2"></span> Apple </span>
+                                }
+                                    break;
+                                case NWDAccountSignType.Microsoft:
+                                {
+                                    tMicrosoft = true;
+                                    <span><span class="fab fa-microsoft me-2"></span> Microsoft</span>
+                                }
+                                    break;
+                                case NWDAccountSignType.Twitter:
+                                {
+                                    tTwitter = true;
+                                    <span><span class="fab fa-twitter me-2"></span> Twitter</span>
+                                }
+                                    break;
+                                case NWDAccountSignType.LinkedIn:
+                                {
+                                    tLinkedIn = true;
+                                    <span><span class="fab fa-linkedin me-2"></span> LinkedIn</span>
+                                }
+                                    break;
+                            }
+                        </td>
+                        <td class="text-end">
+                            <div class="btn-group">
+                                @if (tSignCount > 1)
+                                {
+                                    <a class="btn btn-sm btn-danger" asp-area="" asp-controller="@NWDAccountController.ASP_Controller()" asp-action="@nameof(NWDAccountController.RevokeSign)" asp-route-id="@tSign.Reference">
+                                        <span data-bs-toggle="tooltip" data-bs-placement="top" title="Delete sign" data-bs-original-title="Delete sign" aria-label="Delete sign">
+                                            <span class="fas fa-trash"></span>
+                                        </span>
+                                    </a>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+                    break;
+            }
+        }
+        </tbody>
+        </table>
+        </div>
+        </div>
+        <div class="card-footer">
+            <div class=" flex-grow">
+                <div class="row mt-2">
+                    @if (NWDWebStandardConfiguration.KConfig.AddAccountSignEmailPassword == true && tEmailPassword == false)
+                    {
+                        <div class="col-sm-4 col-md-4 col-gl-3 mb-2">
+                            <a class="btn btn-outline-secondary btn-sm d-block w-100" asp-controller="@NWDAccountController.ASP_Controller()" asp-action="@nameof(NWDAccountController.AddEmailPasswordSign)"><span class="fas fa-file-signature"></span> Email/Password sign</a>
+                        </div>
+                    }
+                    @if (NWDWebStandardConfiguration.KConfig.AddAccountSignLoginPassword == true && tLoginPassword == false)
+                    {
+                        <div class="col-sm-4 col-md-4 col-gl-3 mb-2">
+                            <a class="btn btn-outline-secondary btn-sm d-block w-100" asp-controller="@NWDAccountController.ASP_Controller()" asp-action="@nameof(NWDAccountController.AddLoginPasswordSign)"><span class="fas fa-file-signature"></span> Login/Password sign</a>
+                        </div>
+                    }
+                    @if (NWDWebStandardConfiguration.KConfig.AddAccountSignLoginPasswordEmail == true && tLoginPasswordEmail == false)
+                    {
+                        <div class="col-sm-4 col-md-4 col-gl-3 mb-2">
+                            <a class="btn btn-outline-secondary btn-sm d-block w-100" asp-controller="@NWDAccountController.ASP_Controller()" asp-action="@nameof(NWDAccountController.AddLoginPasswordEmailSign)"><span class="fas fa-file-signature"></span> Login/Password/Email sign</a>
+                        </div>
+                    }
+                    @if (NWDWebStandardConfiguration.KConfig.AddGoogleSign == true && tGoogle == false)
+                    {
+                        <div class="col-sm-4 col-md-4 col-gl-3 mb-2">
+                            <a class="btn btn-outline-google-plus btn-sm d-block w-100" href="@Html.Raw(NWDAccountController.GoogleOAuth_URL())"><span class="fab fa-google-plus-g me-2" data-fa-transform="grow-8"></span> Google</a>
+                        </div>
+                    }
+                    @if (NWDWebStandardConfiguration.KConfig.AddFacebookSign == true && tFacebook == false)
+                    {
+                        <div class="col-sm-4 col-md-4 col-gl-3 mb-2">
+                            <a class="btn btn-outline-facebook btn-sm d-block w-100" href="@Html.Raw(NWDAccountController.FacebookOAuth_URL())"><span class="fab fa-facebook-square me-2" data-fa-transform="grow-8"></span> Facebook</a>
+                        </div>
+                    }
+                    @if (NWDWebStandardConfiguration.KConfig.AddDiscordSign == true && tDiscord == false)
+                    {
+                        <div class="col-sm-4 col-md-4 col-gl-3 mb-2">
+                            <a class="btn btn-outline-secondary btn-sm d-block w-100" href="@Html.Raw(NWDAccountController.DiscordOAuth_URL())"><span class="fab fa-discord me-2" data-fa-transform="grow-8"></span> Discord</a>
+                        </div>
+                    }
+                    @if (NWDWebStandardConfiguration.KConfig.AddAppleSign == true && tApple == false)
+                    {
+                        <div class="col-sm-4 col-md-4 col-gl-3 mb-2">
+                            <a class="btn btn-outline-secondary btn-sm d-block w-100" href="@Html.Raw(NWDAccountController.AppleOAuth_URL())"><span class="fab fa-apple me-2" data-fa-transform="grow-8"></span> Apple</a>
+                        </div>
+                    }
+                    @if (NWDWebStandardConfiguration.KConfig.AddMicrosoftSign == true && tMicrosoft == false)
+                    {
+                        <div class="col-sm-4 col-md-4 col-gl-3 mb-2">
+                            <a class="btn btn-outline-secondary btn-sm d-block w-100" href="@Html.Raw(NWDAccountController.MicrosoftOAuth_URL())"><span class="fab fa-microsoft me-2" data-fa-transform="grow-8"></span> Microsoft</a>
+                        </div>
+                    }
+                    @if (NWDWebStandardConfiguration.KConfig.AddTwitterSign == true && tTwitter == false)
+                    {
+                        <div class="col-sm-4 col-md-4 col-gl-3 mb-2">
+                            <a class="btn btn-outline-twitter btn-sm d-block w-100" href="@Html.Raw(NWDAccountController.TwitterOAuth_URL())"><span class="fab fa-twitter me-2" data-fa-transform="grow-8"></span> Twitter</a>
+                        </div>
+                    }
+                    @if (NWDWebStandardConfiguration.KConfig.AddLinkedInSign == true && tLinkedIn == false)
+                    {
+                        <div class="col-sm-4 col-md-4 col-gl-3 mb-2">
+                            <a class="btn btn-outline-secondary btn-sm d-block w-100" href="@Html.Raw(NWDAccountController.LinkedInOAuth_URL())"><span class="fab fa-linkedin me-2" data-fa-transform="grow-8"></span> LinkedIn</a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        </div>
+        </div>
+        </div>
+        </div>
+        </div>
+    }
+    else
+    {
+        <div class="container p-0 m-0 mb-3">
+            <div class="row g-3">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+                    <div class="card">
+                        <div class="card-header bg-light border-bottom">
+                            <h5>Your signs to authentificate</h5>
+                        </div>
+                        <div class="card-body">
+                            No sign!
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+else
+{
+    await Html.RenderPartialAsync(NWDAccountController.K_AccountSignInForm, @ViewData[typeof(NWDAccountSignIn).Name]);
+}

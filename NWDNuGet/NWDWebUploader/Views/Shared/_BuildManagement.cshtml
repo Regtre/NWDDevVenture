@@ -1,0 +1,39 @@
+﻿@using System.ComponentModel
+@using System.Globalization
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using NWDWebDownloader.Models
+@model NWDWebDownloader.Models.NWDBuild
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{ViewData["GeneratedId"] ="ModelConfirmDelete"+ Random.Shared.Next();}
+<tr class="@ViewBag.classToAdd">
+    <td class="align-middle">
+        <span class="bi bi-file-earmark-text"></span>
+    </td>
+    <td class="align-middle overflow-hidden">@Model.Name</td>
+    <td class="align-middle">@Model.Date.ToString(CultureInfo.CurrentUICulture.DateTimeFormat.ShortDatePattern)</td>
+    <td class="align-middle">@Model.Size</td>
+    <td class="text-end">
+        <form asp-action="Download" asp-controller="NWDWebDownloader" method="post">
+            @Html.HiddenFor(Model => Model.Name)
+            @Html.HiddenFor(Model => Model.Path)
+            <button type="submit" class="btn btn-sm btn-primary">
+                <span class="bi bi-download"></span>
+            </button>
+        </form>
+    </td>
+    <td class="text-end">
+        @{
+            double formId = Random.Shared.Next();
+            <form id="@formId">
+                @Html.Hidden("Path", Model.Path)
+                @Html.Hidden("sDownloadPageName", ViewData["sDownloadPageName"]?.ToString())
+            </form>
+            <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#@ViewData["GeneratedId"]">
+                <span class="bi bi-trash"></span>
+            </button>
+        }
+    </td>
+</tr>
+
+<partial name="_PopUpConfirmDelete"/>

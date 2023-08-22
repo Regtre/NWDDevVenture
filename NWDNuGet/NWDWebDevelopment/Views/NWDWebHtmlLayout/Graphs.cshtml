@@ -1,0 +1,95 @@
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using NWDFoundation.Configuration
+@using NWDFoundation.Tools
+@using NWDWebRuntime.Configuration
+@using NWDWebStandard.Models
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    NWDStatisticsGrid? tGraphs = (NWDStatisticsGrid?)ViewData[nameof(NWDStatisticsGrid)];
+}
+
+@if (NWDWebRuntimeConfiguration.KConfig.IsDevelopment == true)
+{
+    <div class="text-end mb-3">
+        <span class="ms-2 badge rounded-pill badge-subtle-success bi-check-circle"> Kortex</span>
+        @* <span class="ms-2 badge rounded-pill badge-subtle-danger bi-x-circle"> Kortex</span> *@
+    </div>
+}
+
+<!-- TITLE With background -->
+
+<div class="container p-0 m-0">
+
+    @if (tGraphs != null)
+    {
+        @if (string.IsNullOrEmpty(tGraphs.Title) == false)
+        {
+            <div class="row g-3">
+                <div class="col-sx-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+                    <div class="card" ondblclick="AddShowAndCopySourceCodeToElement(this, false, false);">
+                        <div class="card-header background-corner-2 border-bottom">
+                            <div class="row">
+                                <div class="col-8">
+                                    <h2>
+                                        <span class="fs-2 bi-graph-up me-1"></span>@tGraphs.Title
+                                    </h2>
+                                </div>
+                            </div>
+                        </div>
+                        @if (string.IsNullOrEmpty(tGraphs.Description) == false)
+                        {
+                            <div class="card-body position-relative">
+                                >@tGraphs.Description
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+        <div class="row g-3">
+            @foreach (NWDStatisticRow tRow in tGraphs.StatisticsList)
+            {
+                string tId = NWDRandom.RandomStringToken(12);
+                <div class="col-sx-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 col-xxl-6">
+                    <div class="card" ondblclick="AddShowAndCopySourceCodeToElement(this, false, false);">
+                        <div class="card-header border-bottom background-corner-1">
+                            @if (string.IsNullOrEmpty(tRow.Title) == false)
+                            {
+                                <div class="card-title">
+                                    @tRow.Title
+                                </div>
+                            }
+                            @if (string.IsNullOrEmpty(tRow.Description) == false)
+                            {
+                                <p class="mb-0">@tRow.Description</p>
+                            }
+                        </div>
+                        <div class="card-body">
+                            <canvas id="@tId"></canvas>
+                            <script type="text/javascript">
+                        @if (tRow.Graph != null)
+                        {
+                            @Html.Raw(tRow.Graph.CreateChartCode(tId))
+                        }
+                    </script>
+                        </div>
+                        @if (string.IsNullOrEmpty(tRow.Footer) == false)
+                        {
+                            <div class="card-footer">@tRow.Description</div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+        @if (string.IsNullOrEmpty(tGraphs.Footer) == false)
+        {
+            <div class="card mb-3">
+                <div class="card-body">
+                    @tGraphs.Footer
+                </div>
+            </div>
+        }
+    }
+</div>

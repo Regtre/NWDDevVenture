@@ -1,0 +1,147 @@
+@using System.Reflection
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using NWDFoundation.Models
+@using NWDFoundation.Tools
+@using NWDFoundation.WebEdition.Attributes
+@using NWDFoundation.WebEdition.Enums
+@using NWDFoundation.WebEdition.Models
+@using NWDWebRuntime.Configuration
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "";
+    string? tModelToUse = ViewData["ModelToUse"] as string;
+    Type? tModel = null;
+    if (tModelToUse != null)
+    {
+        tModel = Type.GetType(tModelToUse);
+    }
+    Type tGenericType = typeof(NWDWebEditionRequest<>);
+    Type? tFinalType = null;
+    if (tModel != null)
+    {
+        tFinalType = tGenericType.MakeGenericType(tModel);
+    }
+    object? tRequest = ViewData["ResultToUse"];
+
+    string? tControllerName = null;
+    NWDWebEditionPagination? tPagination = null;
+    object? tItem = null;
+    string? tReference = null;
+
+    if (tFinalType != null)
+    {
+        PropertyInfo? tControllerNameProp = tFinalType.GetProperty("ControllerName");
+        if (tControllerNameProp != null)
+        {
+            tControllerName = tControllerNameProp.GetValue(tRequest, null) as string;
+        }
+
+        PropertyInfo? tPaginationProp = tFinalType.GetProperty("Pagination");
+        if (tPaginationProp != null)
+        {
+            tPagination = tPaginationProp.GetValue(tRequest, null) as NWDWebEditionPagination;
+        }
+
+        PropertyInfo? tItemProp = tFinalType.GetProperty("Item");
+        if (tItemProp != null)
+        {
+            tItem = tItemProp.GetValue(tRequest, null);
+        }
+    }
+
+    if (tModel != null)
+    {
+        PropertyInfo? tReferenceProp = tModel.GetProperty("Reference");
+        if (tItem != null && tReferenceProp != null)
+        {
+            tReference = (tReferenceProp.GetValue(tItem) ?? 0).ToString();
+        }
+    }
+    PropertyInfo[]? tProperties;
+
+    if (tModel != null)
+    {
+        tProperties = tModel.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+    }
+    else
+    {
+        tProperties = Array.Empty<PropertyInfo>();
+    }
+    string tFormId = NWDSecurityTools.GenerateSha(tGenericType.Name + tControllerName) + NWDRandom.RandomStringToken(16);
+}
+<form method="post" id="@tFormId">
+    <div class="card-body border-bottom">
+        <script>
+            tinymce.remove();
+        </script>
+        @Html.AntiForgeryToken()
+        @* <div> Edition for @Model.Item.Reference</div> *@
+        @Html.Hidden("Pagination.ActivePage", tPagination?.ActivePage)
+        @Html.Hidden("Pagination.ItemPerPage", tPagination?.ItemPerPage)
+        @Html.Hidden("Pagination.SortBy", tPagination?.SortBy)
+        @Html.Hidden("Pagination.SortDirection", tPagination?.SortDirection)
+        @Html.Hidden("Pagination.Reference", tPagination?.Reference)
+        @Html.Hidden("Pagination.DefaultValues", tPagination?.DefaultValues)
+        @Html.Hidden("Item.Reference", tReference)
+
+        @foreach (PropertyInfo tProp in tModel?.GetProperties(BindingFlags.Public | BindingFlags.Instance)!)
+        {
+            NWDWebPropertyDescriptionAttribute? tAttribute = tProp.GetCustomAttribute<NWDWebPropertyDescriptionAttribute>();
+            ViewData["Attribute"] = tAttribute;
+            ViewData["Item"] = tItem;
+            ViewData["InputName"] = "Item." + tProp.Name;
+            <partial name="_NWDWebEditionStyleSwitch" model="tProp"/>
+        }
+    </div>
+    <div class="card-footer p-0 m-0">
+        <div class="p-3 m-0">
+        <div class="d-flex justify-content-between">
+            <a class="btn btn-sm btn-outline-secondary align-self-center" onclick="getRequestAndReplaceContent('@tControllerName', '@Url.Action("ListPage", tControllerName, tPagination)')">
+                <i class="bi bi-arrow-left"></i>@* Return to list*@
+            </a>
+            <submit type="submit" class="btn btn-sm btn-outline-primary align-self-center mr-1" onclick="tinyMCE.triggerSave();if ($('#@tFormId').valid()){postRequestAndReplaceContent( '@tControllerName', '@Url.Action("Update", tControllerName)','@tFormId');}">
+                <i class="bi bi-save"></i>@* Save*@
+            </submit>
+        </div>
+        </div>
+    </div>
+</form>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+<script src="~/vendors/jquery/jquery.min.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+<script src="~/js/site.js"></script>
+<script src="~/js/NWDWebRuntime.js"></script>
+<script src="~/js/NWDWebStandard.js"></script>
+<script src="~/js/jquery.unobtrusive-ajax.js"></script>
+<script src="~/vendors/overlayscrollbars/OverlayScrollbars.min.js"></script>
+<script src="~/vendors/tinymce/tinymce.min.js"></script>
+<script src="~/vendors/simplebar/simplebar.min.js"></script>
+
+@*<script src="~/assets/js/theme.js"></script> @*error theme.js.map *@
+<script src="@NWDWebRuntimeConfiguration.KConfig.GetDnsHttps()/assets/js/theme.js"></script> @*error theme.js.map *@
+@*<script src="https://localhost:2051/assets/js/theme.js"></script> @*error theme.js.map *@
+@*<script src="@NWDWebRuntimeConfiguration.KConfig.GetDnsHttps()/assets/js/theme.min.js"></script> @*error theme.js.map *@
+@*<script src="~/vendors/popper/popper.min.js"></script> @*error popper.min.js.map *@
+
+<link href="~/vendors/select2-bootstrap-5-theme/select2-bootstrap-5-theme.min.css" rel="stylesheet"/>
+
+<script src="~/vendors/choices/choices.min.js"></script>
+<link href="~/vendors/choices/choices.min.css" rel="stylesheet"/>
+
+<script src="~/vendors/simplebar/simplebar.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+<script>
+$("#@tFormId").submit(function (e) {
+    e.preventDefault();
+    tinyMCE.triggerSave();
+    if ($('#@tFormId').valid())
+    {
+        postRequestAndReplaceContent( '@tControllerName', '@Url.Action("Update", tControllerName)','@tFormId');
+    }
+})
+
+</script>
+@Html.Raw("<script>" + (ViewData["Javascript"] as string ?? string.Empty) + "</script>")

@@ -1,0 +1,444 @@
+@using System.Collections
+@using System.Reflection
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Newtonsoft.Json
+@using NWDFoundation.Tools
+@using NWDFoundation.WebEdition.Attributes
+@using NWDFoundation.WebEdition.Enums
+@using NWDFoundation.WebEdition.Models
+@using NWDWebRuntime.Models
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "";
+    string? tModelToUse = ViewData["ModelToUse"] as string;
+    Type? tModel = null;
+    Type? tFinalType = null;
+    Type tGenericType = typeof(NWDWebSqlEditionRequest<>);
+    if (tModelToUse != null)
+    {
+        tModel = Type.GetType(tModelToUse);
+    }
+    if (tModel != null)
+    {
+        tFinalType = tGenericType.MakeGenericType(tModel);
+    }
+    object? tRequest = ViewData["ResultToUse"];
+    NWDWebClassDescriptionAttribute? tWebClassDescription = null;
+    object? tItemsList = null;
+    NWDWebSqlEditionPagination? tPagination = null;
+    string? tControllerName = null;
+    if (tRequest != null)
+    {
+        if (!string.IsNullOrEmpty((string?)ViewData["ControllerName"]))
+        {
+            tControllerName = ViewData["ControllerName"] as string;
+        }
+        else
+        {
+            if (tFinalType != null)
+            {
+                PropertyInfo? tControllerNameProp = tFinalType.GetProperty("ControllerName");
+                if (tControllerNameProp != null)
+                {
+                    tControllerName = tControllerNameProp.GetValue(tRequest, null) as string;
+                }
+            }
+        }
+
+        PropertyInfo? tPaginationProp = tFinalType?.GetProperty("Pagination");
+        tPagination = tPaginationProp?.GetValue(tRequest, null) as NWDWebSqlEditionPagination;
+        PropertyInfo? tItemsListProp = tFinalType?.GetProperty("ItemsList");
+        tItemsList = tItemsListProp?.GetValue(tRequest, null);
+        tWebClassDescription = tModel?.GetCustomAttributes(typeof(NWDWebClassDescriptionAttribute), true).FirstOrDefault() as NWDWebClassDescriptionAttribute;
+    }
+    string tBootstrapIcon = "bi-box";
+
+    if (tWebClassDescription != null)
+    {
+        NWDWebEditionClassDescription tInfos = tWebClassDescription.Infos;
+        tBootstrapIcon = tInfos.BootstrapIcon;
+    }
+    string tTableId = NWDRandom.RandomStringToken(16);
+
+}
+@*
+<div class="container border-bottom">
+    <div class="row">
+        <div class="col-sm col">
+            @if (tPagination is {PageCount: > 1})
+            {
+                <div class="d-flex justify-content-center mb-3 mt-3">
+                    <div class="btn-group">
+                        @if (tPagination.PageFirst == tPagination.ActivePage)
+                        {
+                            <a class="btn btn-sm btn-outline-secondary align-self-center disabled" onclick="">
+                                <span class="bi-caret-left-fill"></span>
+                            </a>
+                        }
+                        else
+                        {
+                            <a class="btn btn-sm btn-outline-secondary align-self-center" onclick="getRequestAndReplaceContent('@tControllerName', '@Url.Action("ListPage", tControllerName, tPagination.NewActivePage(tPagination.PagePreview))')">
+                                <span class="bi-caret-left-fill"></span>
+                            </a>
+                            if (tPagination.PageFirst != tPagination.PageMin)
+                            {
+                                <a class="btn btn-sm btn-outline-secondary align-self-center" onclick="getRequestAndReplaceContent('@tControllerName', '@Url.Action("ListPage", tControllerName, tPagination.NewActivePage(tPagination.PageFirst))')">
+                                    @tPagination.PageFirst
+                                </a>
+                                if (tPagination.PageFirst < tPagination.PageMin - 1)
+                                {
+                                    <a class="btn btn-sm btn-outline-secondary align-self-center disabled" onclick="">…</a>
+                                }
+                            }
+                        }
+                        @for (int tI = tPagination.PageMin; tI <= tPagination.PageMax; tI++)
+                        {
+                            @if (tPagination.ActivePage == tI)
+                            {
+                                <a class="btn btn-sm btn-secondary align-self-center" aria-disabled="true">@tI</a>
+                            }
+                            else
+                            {
+                                <a class="btn btn-sm btn-outline-secondary align-self-center" onclick="getRequestAndReplaceContent('@tControllerName', '@Url.Action("ListPage", tControllerName, tPagination.NewActivePage(tI))')">
+                                    @tI
+                                </a>
+                            }
+                        }
+
+                        @if (tPagination.PageLast == tPagination.ActivePage)
+                        {
+                            <a class="btn btn-sm btn-outline-secondary align-self-center disabled" onclick="">
+                                <span class="bi-caret-right-fill"></span>
+                            </a>
+                        }
+                        else
+                        {
+                            @if (tPagination.PageLast != tPagination.PageMax)
+                            {
+                                @if (tPagination.PageLast > tPagination.PageMax + 1)
+                                {
+                                    <a class="btn btn-sm btn-outline-secondary align-self-center disabled" onclick="">…</a>
+                                }
+                                <a class="btn btn-sm btn-outline-secondary align-self-center" onclick="getRequestAndReplaceContent('@tControllerName', '@Url.Action("ListPage", tControllerName, tPagination.NewActivePage(tPagination.PageLast))')">
+                                    @tPagination.PageLast
+                                </a>
+                            }
+                            <a class="btn btn-sm btn-outline-secondary align-self-center" onclick="getRequestAndReplaceContent('@tControllerName', '@Url.Action("ListPage", tControllerName, tPagination.NewActivePage(tPagination.PageNext))')">
+                                <span class="bi-caret-right-fill"></span>
+                            </a>
+                        }
+                    </div>
+                </div>
+            }
+            else
+            {
+                if (tPagination != null)
+                {
+                    tPagination.ActivePage = tPagination.PageMin;
+                }
+            }
+        </div>
+    </div>
+</div>
+*@
+@if (tPagination is {PageCount: > 0})
+{
+    <div class="table-responsive scrollbar" id="@tTableId">
+        <table class="table table-sm mb-0 fs--1">
+            <thead class="text-800 bg-light">
+            <tr class="">
+                <th class="align-middle"></th>
+                @if (tPagination.ShowReference)
+                {
+                    <th class="align-middle">Reference</th>
+                }
+                @foreach (string tOptions in  tPagination.Columns)
+                {
+                    string tColumnTitle = tOptions;
+                    PropertyInfo? tProp = tModel?.GetProperty(tOptions, BindingFlags.Instance | BindingFlags.Public);
+                    if (tProp != null)
+                    {
+                        NWDWebPropertyDescriptionAttribute? tAttribute = tProp.GetCustomAttribute<NWDWebPropertyDescriptionAttribute>();
+                        if (tAttribute != null)
+                        {
+                            if (string.IsNullOrEmpty(tAttribute.Infos.Label) == false)
+                            {
+                                tColumnTitle = tAttribute.Infos.Label;
+                            }
+                        }
+                    }
+                    @if (tPagination.SortByOptions.Contains(tOptions))
+                    {
+                        if (tPagination.SortBy != tOptions)
+                        {
+                            <th class="align-middle">
+                                <a class="text-primary" href="#@tTableId" onclick="getRequestAndReplaceContent('@tControllerName', '@Url.Action("ListPage", tControllerName, tPagination.NewSortBy(tOptions))');">@tColumnTitle</a>
+                            </th>
+                        }
+                        else
+                        {
+                            if (tPagination.SortDirection == NWDWebEditionSortDirection.Descending)
+                            {
+                                <th class="align-middle">
+                                    <a class="text-secondary" href="#@tTableId" onclick="getRequestAndReplaceContent('@tControllerName', '@Url.Action("ListPage", tControllerName, tPagination.NewSortDirection(NWDWebEditionSortDirection.Ascending))');">
+                                        @tColumnTitle <span class="sm bi-caret-up-fill"></span>
+                                    </a>
+                                </th>
+                            }
+                            else
+                            {
+                                <th class="align-middle">
+                                    <a class="text-secondary" href="#@tTableId" onclick="getRequestAndReplaceContent('@tControllerName', '@Url.Action("ListPage", tControllerName, tPagination.NewSortDirection(NWDWebEditionSortDirection.Descending))');">
+                                        @tColumnTitle <span class="sm bi-caret-down-fill"></span>
+                                    </a>
+                                </th>
+                            }
+                        }
+                    }
+                    else
+                    {
+                        <th class="align-middle">@tOptions</th>
+                    }
+                }
+                <th class="text-end">Action</th>
+            </tr>
+            </thead>
+            <tbody class="list">
+            @foreach (Object tItem in (tItemsList as IList)!)
+            {
+                PropertyInfo? tReferenceProp = tModel?.GetProperty("Reference");
+                string tReference = ((ulong)(tReferenceProp?.GetValue(tItem, null) ?? 0)).ToString();
+                <tr>
+                    <td class="align-middle">
+                        <span class="@tBootstrapIcon"></span>
+                    </td>
+                    @if (tPagination.ShowReference)
+                    {
+                        <td class="align-middle">
+                            @tReference
+                        </td>
+                    }
+                    @foreach (string tOptions in tPagination.Columns)
+                    {
+                        PropertyInfo? tProp = tModel?.GetProperty(tOptions, BindingFlags.Instance | BindingFlags.Public);
+                        if (tProp != null)
+                        {
+                            NWDWebPropertyDescriptionAttribute? tAttribute = tProp.GetCustomAttribute<NWDWebPropertyDescriptionAttribute>();
+                            ViewData["Attribute"] = tAttribute;
+                            ViewData["Item"] = tProp.GetValue(tItem, null);
+                            <partial name="_NWDWebEditionStyleSwitchShowTab"/>
+                        }
+                    }
+                    <td class="align-top text-end">
+                        <div class="btn-group">
+                            <a onclick="getRequestAndReplaceContent('@tControllerName', '@Url.Action("Edit", tControllerName, tPagination.NewReference(tReference))')" class="btn btn-sm btn-outline-secondary align-self-center">
+                                <i class="bi-pencil"></i>
+                            </a>
+                            @if (tPagination.ShowButton)
+                            {
+                                <a onclick="getRequestAndReplaceContent('@tControllerName', '@Url.Action("Preview", tControllerName, tPagination.NewReference(tReference))')" class="btn btn-sm btn-outline-secondary align-self-center">
+                                    <i class="bi-eye"></i>
+                                </a>
+                            }
+                            @if (tPagination.JsonClipboard)
+                            {
+                                <button class="btn btn-sm btn-outline-secondary" type="button" onclick="navigator.clipboard.writeText('tModelToUse => @JsonConvert.SerializeObject(tItem)');">
+                                    <i class="bi-clipboard"></i>
+                                </button>
+                            }
+                            <button class="btn btn-sm btn-outline-primary align-self-center" type="button" data-bs-toggle="modal" data-bs-target="#error-modal-@tReference">
+                                <i class="bi-trash"></i>
+                            </button>
+                        </div>
+                        <div class="modal fade" id="error-modal-@tReference" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="text-start modal-dialog modal-dialog-centered" role="document" style="max-width: 500px">
+                                <div class="modal-content position-relative">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLongTitle"><i class="bi-trash"></i> Delete</h5>
+                                        <div class="d-flex flex-center transition-base">
+                                            <button class="btn p-0 m-0" type="button" data-bs-dismiss="modal" aria-label="Close">
+                                                <i class="bi-x fs-3"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="position-absolute top-0 end-0 mt-2 me-2 z-index-1">
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="p-0 mb-3">
+                                            You will delete this item!
+                                        </div>
+                                        <div class="p-0 d-flex">
+                                            <table class="table table-bordered">
+                                                <tr>
+                                                    <td>Reference</td><td>@tReference</td>
+                                                </tr>
+                                                @* <tr> *@
+                                                @*     @{ *@
+                                                @*         PropertyInfo tPropTitle = tModel.GetProperty(tPagination.ColumnPrimary, BindingFlags.Instance | BindingFlags.Public); *@
+                                                @*         string tVaLueTitle = tPropTitle.GetValue(tItem, null).ToString(); *@
+                                                @*     } *@
+                                                @*     <td>@tPagination.ColumnPrimary</td><td>@tVaLueTitle</td> *@
+                                                @* </tr> *@
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-dismiss="modal">
+                                            <i class="bi-arrow-left"></i>@*Cancel*@
+                                        </button>
+                                        <button class="btn btn-sm btn-danger" type="button" data-bs-dismiss="modal" onclick="getRequestAndReplaceContent('@tControllerName', '@Url.Action("Delete", tControllerName, tPagination.NewReference(tReference))')">
+                                            <i class="bi-trash"></i>@* Delete *@
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="card-body border-bottom text-center">
+        ... no data ...
+    </div>
+}
+<div class="card-footer p-0 m-0">
+    @if (tPagination?.PageCount > 1)
+    {
+        <div class="border-bottom p-3 m-0">
+            <div class="d-flex justify-content-center">
+                <div class="btn-group">
+                    @if (tPagination.PageFirst == tPagination.ActivePage)
+                    {
+                        <a class="btn btn-sm btn-outline-secondary align-self-center disabled" onclick="">
+                            <span class="bi-caret-left-fill"></span>
+                        </a>
+                    }
+                    else
+                    {
+                        <a class="btn btn-sm btn-outline-secondary align-self-center" onclick="getRequestAndReplaceContent('@tControllerName', '@Url.Action("ListPage", tControllerName, tPagination.NewActivePage(tPagination.PagePreview))')">
+                            <span class="bi-caret-left-fill"></span>
+                        </a>
+                        @if (tPagination.PageFirst != tPagination.PageMin)
+                        {
+                            <a class="btn btn-sm btn-outline-secondary align-self-center" onclick="getRequestAndReplaceContent('@tControllerName', '@Url.Action("ListPage", tControllerName, tPagination.NewActivePage(tPagination.PageFirst))')">
+                                @tPagination.PageFirst
+                            </a>
+                            @if (tPagination.PageFirst < tPagination.PageMin - 1)
+                            {
+                                <a class="btn btn-sm btn-outline-secondary align-self-center disabled" onclick="">…</a>
+                            }
+                        }
+                    }
+                    @for (int tI = tPagination.PageMin; tI <= tPagination.PageMax; tI++)
+                    {
+                        @if (tPagination.ActivePage == tI)
+                        {
+                            <a class="btn btn-sm btn-secondary align-self-center" aria-disabled="true">@tI</a>
+                        }
+                        else
+                        {
+                            <a class="btn btn-sm btn-outline-secondary align-self-center" onclick="getRequestAndReplaceContent('@tControllerName', '@Url.Action("ListPage", tControllerName, tPagination.NewActivePage(tI))')">
+                                @tI
+                            </a>
+                        }
+                    }
+
+                    @if (tPagination.PageLast == tPagination.ActivePage)
+                    {
+                        <a class="btn btn-sm btn-outline-secondary align-self-center disabled" onclick="">
+                            <span class="bi-caret-right-fill"></span>
+                        </a>
+                    }
+                    else
+                    {
+                        @if (tPagination.PageLast != tPagination.PageMax)
+                        {
+                            @if (tPagination.PageLast > tPagination.PageMax + 1)
+                            {
+                                <a class="btn btn-sm btn-outline-secondary align-self-center disabled" onclick="">…</a>
+                            }
+                            <a class="btn btn-sm btn-outline-secondary align-self-center" onclick="getRequestAndReplaceContent('@tControllerName', '@Url.Action("ListPage", tControllerName, tPagination.NewActivePage(tPagination.PageLast))')">
+                                @tPagination.PageLast
+                            </a>
+                        }
+                        <a class="btn btn-sm btn-outline-secondary align-self-center" onclick="getRequestAndReplaceContent('@tControllerName', '@Url.Action("ListPage", tControllerName, tPagination.NewActivePage(tPagination.PageNext))')">
+                            <span class="bi-caret-right-fill"></span>
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        if (tPagination != null)
+        {
+            tPagination.ActivePage = tPagination.PageMin;
+        }
+    }
+    <div class="border-bottom p-3 m-0">
+        <div class="d-flex justify-content-between">
+            <a class="btn btn-sm btn-outline-secondary align-self-center" onclick='getRequestAndReplaceContent("@tControllerName", "@Url.Action("ListPage", tControllerName, tPagination)")'>
+                <i class="bi-arrow-repeat"></i>
+            </a>
+            @if (tPagination?.ItemsPerPageOptions.Length > 1 && (tPagination.PageMax*tPagination.ItemPerPage > tPagination?.ItemsPerPageOptions[0]))
+            {
+                <select class="form-select form-select-sm w-50" onchange="getRequestAndReplaceContent('@tControllerName', this.value);">
+                    @foreach (int tOptions in  tPagination.ItemsPerPageOptions)
+                    {
+                        if (tPagination.ItemPerPage == tOptions)
+                        {
+                            <option selected="selected">@tOptions items per page</option>
+                        }
+                        else
+                        {
+                            <option value="@Url.Action("ListPage", tControllerName, tPagination.NewItemPerPage(tOptions))">@tOptions items per page</option>
+                        }
+                    }
+                </select>
+            }
+            @* @if (tPagination?.SortByOptions.Length > 1) *@
+            @* { *@
+            @*     <select class="form-select form-select-sm m-1 w-25" onchange="getRequestAndReplaceContent('@tControllerName', this.value);"> *@
+            @*         @foreach (string tOptions in tPagination.SortByOptions) *@
+            @*         { *@
+            @*             if (tPagination.SortBy == tOptions) *@
+            @*             { *@
+            @*                 <option selected="selected">sort by @tOptions</option> *@
+            @*             } *@
+            @*             else *@
+            @*             { *@
+            @*                 <option value="@Url.Action("ListPage", tControllerName, tPagination.NewSortBy(tOptions))">Sort by @tOptions</option> *@
+            @*             } *@
+            @*         } *@
+            @*     </select> *@
+            @* } *@
+            @* @if (tPagination?.SortByOptions.Length > 1) *@
+            @* { *@
+            @*     <select class="form-select form-select-sm m-1 w-25" onchange="getRequestAndReplaceContent('@tControllerName', this.value);"> *@
+            @*         @foreach (NWDWebEditionSortDirection tOptions in Enum.GetValues<NWDWebEditionSortDirection>()) *@
+            @*         { *@
+            @*             if (tPagination.SortDirection == tOptions) *@
+            @*             { *@
+            @*                 <option selected="selected">@tOptions</option> *@
+            @*             } *@
+            @*             else *@
+            @*             { *@
+            @*                 <option value="@Url.Action("ListPage", tControllerName, tPagination.NewSortDirection(tOptions))">@tOptions</option> *@
+            @*             } *@
+            @*         } *@
+            @*     </select> *@
+            @* } *@
+            <a class="btn btn-sm btn-outline-primary align-self-center" onclick='getRequestAndReplaceContent("@tControllerName", "@Url.Action("NewEdit", tControllerName, tPagination)")'>
+                <i class="bi-plus-square"></i>
+            </a>
+        </div>
+    </div>
+</div>
+@Html.Raw("<script>" + (ViewData["Javascript"] as string ?? string.Empty) + "</script>")

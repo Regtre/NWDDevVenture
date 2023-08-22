@@ -1,0 +1,165 @@
+/* @override 
+	http://localhost:4040/css/site.css */
+
+
+.form-badge {
+	margin-right: 0;
+	text-align: right;
+	position: relative;
+	float: right;
+	right: 10px;
+	bottom: -20px;
+	top: 20px;
+}
+
+.form-label-fix {
+    margin-bottom:0;
+}
+
+.hide-if-empty {	
+}
+
+.hide-if-empty:empty {
+	display: none;
+}
+
+.menu-size-constraint
+{
+	min-width: 180px;
+	max-width: 380px;
+}
+.menu-scroll-constraint
+{
+	max-height: 280px;
+	overflow-y: scroll !important;
+}
+/*.menu-scroll-constraint {*/
+/*	scrollbar-width: none; !* Firefox *!*/
+/*	-ms-overflow-style: none;*/
+/*}*/
+.menu-scroll-constraint::-webkit-scrollbar-track {
+	webkit-box-shadow: none !important;
+	background-color: transparent;
+}
+
+/*.menu-scroll-constraint::-webkit-scrollbar {*/
+/*	width: 6px !important;*/
+/*	!*background-color: transparent;*!*/
+/*}*/
+
+/*.menu-scroll-constraint::-webkit-scrollbar-thumb {*/
+/*	!*background-color: transparent;*!*/
+/*}*/
+
+
+.menu-scroll-constraint a
+ {
+	 padding-right: 10px;
+ }
+
+.footer-extended:after {
+	content: " ";
+        display: none;
+	height: 100%;
+        width: 300%;
+        position: absolute;
+	text-align: center;
+	z-index: -2;
+	margin-left: -100%;
+	margin-right: -100%;
+	bottom: 0;
+	background-color: #0b1727;
+	overflow: visible;
+	visibility: visible;
+}
+
+.background-half-circle {
+	background: url(./decorations/half-circle.png) right no-repeat;
+	overflow: hidden;
+}
+
+.background-corner-1 {
+	background: url(./decorations/corner-1.png) right no-repeat;
+	overflow: hidden;
+}
+.background-corner-2 {
+	background: url(./decorations/corner-2.png) right no-repeat;
+	overflow: hidden;
+}
+.background-corner-3 {
+	background: url(./decorations/corner-3.png) right no-repeat;
+	overflow: hidden;
+}
+.background-corner-4 {
+	background: url(./decorations/corner-4.png) right no-repeat;
+	overflow: hidden;
+}
+.background-corner-5 {
+	background: url(./decorations/corner-5.png) right no-repeat;
+	overflow: hidden;
+}
+
+.background-animated {
+	animation: 4s ease-in-out infinite backgroundanim;
+	animation-direction: alternate-reverse;
+}
+
+@keyframes backgroundanim {
+from {
+	background-position-x: 0px;
+}
+to {
+	background-position-x: -100px;
+}
+}
+
+.handleForDragAndDrop {
+	cursor: grabbing;
+}
+.handleForClick {
+	cursor: pointer;
+}
+
+div.nwd-image-anim  {
+	border-style: solid;
+	border-width: 1px;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	aspect-ratio: 3 / 2;
+	overflow: hidden;
+	-webkit-mask-image: -webkit-radial-gradient(black, black);
+}
+
+img.nwd-image-anim  {
+	position: absolute;
+	border-width: 0px;
+	transition: 3s;
+	filter:	sepia(100%);
+	width: 100%;
+}
+img.nwd-image-anim:hover  {
+	filter:	sepia(0%);
+	width: 105%;
+}
+
+
+.no-selectable {
+	-webkit-touch-callout: none; /* iOS Safari */
+	-webkit-user-select: none; /* Safari */
+	-khtml-user-select: none; /* Konqueror HTML */
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* Internet Explorer/Edge */
+	user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+}
+
+.selectable {
+	-webkit-touch-callout: default; /* iOS Safari */
+	-webkit-user-select: all; /* Safari */
+	-khtml-user-select: all; /* Konqueror HTML */
+	-moz-user-select: all; /* Firefox */
+	-ms-user-select: all; /* Internet Explorer/Edge */
+	user-select: all; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+}

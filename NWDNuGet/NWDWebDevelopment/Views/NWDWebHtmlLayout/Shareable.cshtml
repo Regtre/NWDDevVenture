@@ -1,0 +1,74 @@
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using NWDFoundation.Configuration
+@using NWDFoundation.Tools
+@using NWDWebDevelopment.Controllers
+@using NWDWebRuntime.Configuration
+@using NWDWebRuntime.Models
+@using NWDWebStandard.Models
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    string tLoremIpsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
+    //string tLoremIpsumShort = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
+}
+
+@if (NWDWebRuntimeConfiguration.KConfig.IsDevelopment == true)
+{
+    <div class="text-end mb-3">
+        <span class="ms-2 badge rounded-pill badge-subtle-success bi-check-circle"> Kortex</span>
+        @* <span class="ms-2 badge rounded-pill badge-subtle-danger bi-x-circle"> Kortex</span> *@
+    </div>
+}
+
+<!-- TITLE With background -->
+<div class="container p-0 m-0">
+    <div class="row g-3">
+        <div class="col-sx-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+            <div class="card" ondblclick="AddShowAndCopySourceCodeToElement(this, false, false);">
+                <div class="card-header bg-light border-bottom">
+                    <div class="card-title">
+                        <h1><span class="fas fa-share-alt"></span> Card H1</h1>
+                    </div>
+                </div>
+                <div class="card-body position-relative border-bottom">
+                    @tLoremIpsum
+                </div>
+                    <div class="card-footer">
+                        <div class="d-flex justify-content-between">
+                            
+                            @foreach (NWDSocialShareableStyle tStyle in Enum.GetValues<NWDSocialShareableStyle>())
+                            {
+                                <a class="btn btn-sm btn-outline-primary" asp-controller="@NWDWebHtmlLayoutController.ASP_Controller()" asp-action="@nameof(NWDWebHtmlLayoutController.Shareable)" asp-route-sStyle="@Html.Raw((int)tStyle)">@tStyle.ToString()</a>
+                            }
+                        </div>
+                    </div>
+            </div>
+        </div>
+        <div class="col-sx-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 col-xxl-6">
+            <div class="card" ondblclick="AddShowAndCopySourceCodeToElement(this, false, false);">
+                <div class="card-header bg-light border-bottom">
+                    <div class="card-title">
+                        <h1><span class="fas fa-share-alt"></span> Card H1</h1>
+                    </div>
+                </div>
+                <div class="card-body position-relative border-bottom">
+                    @tLoremIpsum
+                </div>
+            </div>
+        </div>
+        <div class="col-sx-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 col-xxl-6">
+            <div class="card" ondblclick="AddShowAndCopySourceCodeToElement(this, false, false);">
+                <div class="card-header bg-light border-bottom">
+                    <div class="card-title">
+                        <h1><span class="fas fa-share-alt"></span> Card H1</h1>
+                    </div>
+                </div>
+                <div class="card-body position-relative border-bottom">
+                    @tLoremIpsum
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

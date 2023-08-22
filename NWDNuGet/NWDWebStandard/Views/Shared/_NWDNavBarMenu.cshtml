@@ -1,0 +1,236 @@
+﻿@using NWDWebStandard.Configuration
+@using NWDWebRuntime.Models
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@model NWDWebRuntime.Models.NWDNavBarMenu
+
+@{
+    // NWDPageStandard? tPageStandard = ViewData[nameof(NWDPageStandard)] as NWDPageStandard;
+    // string tActionActivate = "";
+    int tLinesCounter = 0;
+    int tColumns = 1;
+    foreach (NWDNavBarCategory tCategory in Model.Categories)
+    {
+        tLinesCounter = tLinesCounter + tCategory.Elements.Count;
+        if (tLinesCounter > Model.MaxLines)
+        {
+            tColumns++;
+            tLinesCounter = 0;
+        }
+    }
+    tLinesCounter = 0;
+    int tColumnSize = (int)MathF.Ceiling((float)12 / tColumns);
+
+    int tColsxm = 12;
+    int tColsm = 12;
+    int tColmd = 12;
+    string tColWidth = "200px";
+    if (Model.Categories.Count <= 3)
+    {
+        tColsxm = 12;
+        tColsm= 12;
+        tColmd = 12;
+        tColWidth = "200px";
+    }
+    else if (Model.Categories.Count <= 6)
+    {
+        tColsxm = 6;
+        tColsm= 6;
+        tColmd = 6;
+        tColWidth = "400px";
+    }
+    else
+    {
+        tColsxm = 6;
+        tColsm= 6;
+        tColmd = 4;
+        tColWidth = "600px";
+    }
+    string tDropmenu = "dropdown-menu-card";
+    if (Model.NavBar == false)
+    {
+        tDropmenu = "dropdown-menu-end";
+    }
+    string tNotificationMenu = "";
+    if (Model.Annotation>0)
+    {
+        tNotificationMenu = "notification-indicator notification-indicator-warning notification-indicator-fill";
+    }
+    string tNotificationId = Model.Annotation.ToString();
+    if (Model.Annotation > 99)
+    {
+        tNotificationId = "!";
+    }
+}
+@if (string.IsNullOrEmpty(Model.Url()) == false)
+{
+    <li class="nav-item dropdown no-selectable">
+        <!-- @Model.Name direct URL -->
+        <a class="nav-link" href="@Html.Raw(Model.Url())">
+            <span class="fs-0">@Model.Name</span>
+            @if (string.IsNullOrEmpty(Model.BadgeText) == false)
+            {
+                <span class="ms-2 badge rounded-pill badge-subtle-@Model.BadgeStyle.ToString().ToLower()">@Model.BadgeText</span>
+            }
+        </a>
+    </li>
+}
+else if (Model.Categories.Count>0)
+{
+    <li class="nav-item dropdown no-selectable">
+        @if (string.IsNullOrEmpty(Model.IconStyle) == true)
+        {
+            <a class="nav-link me-3 dropdown-toggle @tNotificationMenu" id="@Model.TokenId" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="fs-0">@Model.Name</span>
+                @if (Model.Annotation>0)
+                {
+                    <span class="notification-indicator-number">@tNotificationId</span>
+                }
+                @if (string.IsNullOrEmpty(Model.BadgeText) == false)
+                {
+                    <div class="" data-bs-toggle="tooltip" data-bs-placement="top" title="Debug">
+                        <span class="ms-2 badge rounded-pill badge-subtle-@Model.BadgeStyle.ToString().ToLower()">@Model.BadgeText</span>
+                    </div>
+                }
+            </a>
+        }
+        else
+        {
+            <a class="nav-link px-0 ms-2 @tNotificationMenu" id="@Model.TokenId" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <div class="" data-bs-toggle="tooltip" data-bs-placement="top" title="@Model.Name">
+                    <span class="@Model.IconStyle fs-4" data-fa-transform="shrink-7"></span>
+                @if (Model.Annotation>0)
+                {
+                    <span class="notification-indicator-number">@tNotificationId</span>
+                }
+                </div>
+            </a>
+        }
+        <div class="dropdown-menu dropdown-caret p-0 m-0 @tDropmenu">
+            <div class="card navbar-card shadow-none dark__bg-1000 " style="min-width: @tColWidth;">
+                <div class="max-h-dropdown mt-3 scrollbar">
+                    <div class="" style="overflow-x:hidden;">
+                @if (string.IsNullOrEmpty(Model.IconStyle) == false)
+                {
+                    <div class="dropdown-item text-primary disabled text-end border-bottom">@Model.Name</div>
+                }
+                    @if (string.IsNullOrEmpty(Model.Description) == false)
+                    {
+                        <div class="pe-3 ps-3 text-500 ">@Model.Description</div>
+                    }
+                <div class="row mb-3">
+                    @foreach (NWDNavBarCategory tCategory in Model.Categories)
+                    {
+                        <div class="col-sxm-@tColsxm col-sm-@tColsm col-md-@tColmd col-lg-@tColmd col-xl-@tColmd col-xxl-@tColmd" style="min-width: 180px;">
+                            <div class="nav flex-column">
+                                @if (string.IsNullOrEmpty(tCategory.Name) == false)
+                                {
+                                    <p class="nav-link text-700 mb-0 fw-bold">
+                                        <span class=""><span class="me-2 @tCategory.IconStyle"></span>@tCategory.Name</span>
+                                        @if (string.IsNullOrEmpty(tCategory.BadgeText) == false)
+                                        {
+                                            <span class="ms-2 badge rounded-pill badge-subtle-@tCategory.BadgeStyle.ToString().ToLower()">@tCategory.BadgeText</span>
+                                        }
+                                    </p>
+                                }
+                                @if (string.IsNullOrEmpty(tCategory.Description) == false)
+                                {
+                                    <div class="pe-3 ps-3 text-500 ">@tCategory.Description</div>
+                                }
+                                @foreach (NWDNavBarElement tElement in tCategory.Elements)
+                                {
+                                    <a class="dropdown-item py-1 link-600 fw-medium" href="@Html.Raw(tElement.Url())">
+                                        @tElement.Name
+                                        @if (string.IsNullOrEmpty(tElement.BadgeText) == false)
+                                        {
+                                            <span class="ms-2 badge rounded-pill badge-subtle-@tElement.BadgeStyle.ToString().ToLower()">@tElement.BadgeText</span>
+                                        }
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+                </div>
+                </div>
+
+                @if (NWDWebStandardConfiguration.KConfig.ShowIdemobiEngine)
+                {
+                    <div class="dropdown-item border-top disabled text-end text-300">Engine by idéMobi©</div>
+                }
+            </div>
+
+
+        </div>
+    </li>
+    
+    
+    
+    
+    @*
+    
+    <li class="nav-item dropdown no-selectable">
+        <!-- @Model.Name max lines @Model.MaxLines => columns : @tColumns -->
+        <a class="nav-link dropdown-toggle" id="@Model.TokenId" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            @Model.Name
+            @if (string.IsNullOrEmpty(Model.BadgeText) == false)
+            {
+                <div class="" data-bs-toggle="tooltip" data-bs-placement="top" title="Debug">
+                <span class="ms-2 badge rounded-pill badge-subtle-@Model.BadgeStyle.ToString().ToLower()">@Model.BadgeText</span>
+                </div>
+            }
+        </a>
+        <div class="dropdown-menu dropdown-caret dropdown-menu-start py-0 " aria-labelledby="@Model.Name">
+            <div class="bg-white dark__bg-1000 rounded-2 py-2">
+                @if (string.IsNullOrEmpty(Model.Description) == false)
+                {
+                    <div class="p-3">@Model.Description</div>
+                }
+                @if (tColumns > 1)
+                {
+                    @Html.Raw("<div class=\"card navbar-card-app shadow-none dark__bg-1000\"><div class=\"card-body scrollbar max-h-dropdown\"><div class=\"row\"> <div class=\"col-" + tColumnSize + "\"><div class=\"nav flex-column\">")
+                }
+                @foreach (NWDNavBarCategory tCategory in Model.Categories)
+                {
+                    tLinesCounter = tLinesCounter + tCategory.Elements.Count;
+                    if (tLinesCounter > Model.MaxLines)
+                    {
+                        tLinesCounter = 0;
+                        @Html.Raw(" </div></div><div class=\"col-" + tColumnSize + "\"><div class=\"nav flex-column\">")
+                    }
+                    if (string.IsNullOrEmpty(tCategory.Name) == false)
+                    {
+                        <p class="nav-link text-700 mb-0 fw-bold">
+                            <span class="me-2 @tCategory.IconStyle"></span> @tCategory.Name
+                            @if (string.IsNullOrEmpty(tCategory.BadgeText) == false)
+                            {
+                                <span class="ms-2 badge rounded-pill badge-subtle-@tCategory.BadgeStyle.ToString().ToLower()">@tCategory.BadgeText</span>
+                            }
+                        </p>
+                    }
+                    @foreach (NWDNavBarElement tElement in tCategory.Elements)
+                    {
+                        <a class="dropdown-item link-600 fw-medium" href="@Html.Raw(tElement.Url())">
+                            @tElement.Name
+                            @if (string.IsNullOrEmpty(tElement.BadgeText) == false)
+                            {
+                                <span class="ms-2 badge rounded-pill badge-subtle-@tElement.BadgeStyle.ToString().ToLower()">@tElement.BadgeText</span>
+                            }
+                        </a>
+                    }
+                }
+                @if (tColumns > 1)
+                {
+                    @Html.Raw("</div></div></div></div></div>")
+                }
+            </div>
+        </div>
+    </li>
+    
+    *@
+}
+else
+{
+    <!-- hidden menu -->
+}

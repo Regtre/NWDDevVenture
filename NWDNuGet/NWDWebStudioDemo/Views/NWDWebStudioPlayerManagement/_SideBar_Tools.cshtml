@@ -1,0 +1,105 @@
+﻿@using NWDWebRuntime.Models
+@{
+    NWDPageStandard? tPageStandard = ViewData[nameof(NWDPageStandard)] as NWDPageStandard;
+    string tCategoryName;
+    string tCollapseArea;
+    string tAreaVisibility;
+    string tAriaExpanded ;
+    string tActionActivate;
+}
+<!-- Sidebar Tools -->
+@{
+    tCategoryName = "player_information";
+    if (tPageStandard!=null && (tPageStandard.ActionName == "Index" || tPageStandard.ActionName == "OfferServices"))
+    {
+        tCollapseArea = "";
+        tAreaVisibility = "show";
+        tAriaExpanded = "true";
+    }
+    else
+    {
+        tCollapseArea = "collapsed";
+        tAreaVisibility = "";
+        tAriaExpanded = "false";
+    }
+}
+<!-- Sidebar Tools @tCategoryName -->
+<li class="nav-item">
+    <a class="nav-link dropdown-indicator @tCollapseArea" href="#@tCategoryName" role="button" data-bs-toggle="collapse" aria-expanded="@tAriaExpanded" aria-controls="@tCategoryName">
+        <div class="d-flex align-items-center">
+            <span class="far fa-comment-alt"></span><span class="nav-link-text ps-1">Dashboard</span>
+        </div>
+    </a>
+    <ul class="nav collapse @tAreaVisibility" id="@tCategoryName">
+        <li class="nav-item">
+            @if (tPageStandard!=null && tPageStandard.ActionName == "Index")
+            {
+                tActionActivate = "active";
+            }
+            else
+            {
+                tActionActivate = "";
+            }
+            <a class="nav-link @tActionActivate" href="@Url.Action("Index", "NWDWebStudioPlayerManagement")?sReference=unknown">
+                <div class="d-flex align-items-center">
+                    <span class="nav-link-text ps-1">Help player</span>
+                </div>
+            </a>
+        </li>
+        <li class="nav-item">
+            @if (tPageStandard!=null && tPageStandard.ActionName == "OfferServices")
+            {
+                tActionActivate = "active";
+            }
+            else
+            {
+                tActionActivate = "";
+            }
+            <a class="nav-link @tActionActivate" href="@Url.Action("OfferServices", "NWDWebStudioPlayerManagement")?sReference=unknown">    <div class="d-flex align-items-center">
+                    <span class="nav-link-text ps-1">Offer services</span>
+                </div>
+            </a>
+        </li>
+    </ul>
+</li>
+<!-- Sidebar Tools @tCategoryName end -->
+@{
+    tCategoryName = "player_other";
+    if (tPageStandard!=null && tPageStandard.ActionName == "Statistics")
+    {
+        tCollapseArea = "";
+        tAreaVisibility = "show";
+        tAriaExpanded = "true";
+    }
+    else
+    {
+        tCollapseArea = "collapsed";
+        tAreaVisibility = "";
+        tAriaExpanded = "false";
+    }
+}
+<!-- Sidebar Tools @tCategoryName -->
+<li class="nav-item">
+    <a class="nav-link dropdown-indicator @tCollapseArea" href="#@tCategoryName" role="button" data-bs-toggle="collapse" aria-expanded="@tAriaExpanded" aria-controls="@tCategoryName">
+        <div class="d-flex align-items-center">
+            <span class="far fa-comment-alt"></span><span class="nav-link-text ps-1">Other</span>
+        </div>
+    </a>
+    <ul class="nav collapse @tAreaVisibility" id="@tCategoryName">
+        <li class="nav-item">
+            @if (tPageStandard!=null && tPageStandard.ActionName == "Statistics")
+            {
+                tActionActivate = "active";
+            }
+            else
+            {
+                tActionActivate = "";
+            }
+            <a class="nav-link @tActionActivate" href="@Url.Action("Statistics", "NWDWebStudioPlayerManagement")?sReference=unknown">     <div class="d-flex align-items-center">
+                    <span class="nav-link-text ps-1">Statictics</span>
+                </div>
+            </a>
+        </li>
+    </ul>
+</li>
+<!-- Sidebar Tools @tCategoryName end -->

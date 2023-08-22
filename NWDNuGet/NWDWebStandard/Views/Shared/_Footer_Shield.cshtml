@@ -1,0 +1,80 @@
+﻿@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Http.Extensions
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using NWDFoundation.Configuration
+@using NWDWebRuntime
+@using NWDWebRuntime.Configuration
+@using NWDWebStandard.Configuration
+@using NWDWebStandard.Controllers
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@inject IHttpContextAccessor HttpContextAccessor
+
+<div class="mb-5 mt-3">
+    <div class="d-flex justify-content-center">
+        <ul class="list-inline">
+            <li class="list-inline-item">
+                <a href="https://www.debian.org">
+                    <img src="https://img.shields.io/badge/OS-Debian-lightgrey.svg" alt=""/>
+                </a>
+            </li>
+            <li class="list-inline-item">
+                <a href="https://www.nginx.com">
+                    <img src="https://img.shields.io/badge/Server-Nginx-lightgrey.svg" alt=""/>
+                </a>
+            </li>
+            <li class="list-inline-item">
+                <a href="https://certbot.eff.org">
+                    <img src="https://img.shields.io/badge/Ssl-Certbot-lightgrey.svg" alt=""/>
+                </a>
+            </li>
+            <li class="list-inline-item">
+                <a href="https://www.w3.org">
+                    <img src="https://img.shields.io/badge/Format-HTML-lightgrey.svg" alt=""/>
+                </a>
+            </li>
+            @if (NWDWebRuntimeStartupService.CookieDebugInformation.GetValue(HttpContextAccessor.HttpContext))
+            {
+                if (HttpContextAccessor.HttpContext != null)
+                {
+                    <li class="list-inline-item">
+                        <a href="https://validator.w3.org/nu/?doc=@Uri.EscapeDataString(HttpContextAccessor.HttpContext.Request.GetDisplayUrl())">
+                            <img src="https://img.shields.io/badge/Validator-W3C-lightgrey.svg" alt=""/>
+                        </a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a href="https://jigsaw.w3.org/css-validator/?uri=@Uri.EscapeDataString(HttpContextAccessor.HttpContext.Request.GetDisplayUrl())">
+                            <img src="https://img.shields.io/badge/Validator-CSS-lightgrey.svg" alt=""/>
+                        </a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a href="https://validator.w3.org/unicorn/check?ucn_uri=@Uri.EscapeDataString(HttpContextAccessor.HttpContext.Request.GetDisplayUrl())&ucn_task=conformance#">
+                            <img src="https://img.shields.io/badge/Validator-Unicorn-lightgrey.svg" alt=""/>
+                        </a>
+                    </li>
+                }
+            }
+            <li class="list-inline-item">
+                <a href="https://dotnet.microsoft.com">
+                    <img src="https://img.shields.io/badge/WebApp-.NET-lightgrey.svg">
+                </a>
+            </li>
+            <li class="list-inline-item">
+                @* <a href="https://www.net-worked-data.com"> *@
+                <a href="/NWDWebRuntime/Index">
+                    @{
+                        NWDLibraryInfos? tLibraryInfos =  NWDLibrariesInstalled.GetFileVersionInfo(typeof(NWDVersionDll));
+                        if (tLibraryInfos != null)
+                        {
+                            if (tLibraryInfos.Information != null)
+                            {
+                                string? tVersion = tLibraryInfos.Information.FileVersion;
+                                <img src="https://img.shields.io/badge/NetWorkeData-@tVersion-lightgrey.svg" alt=""/>
+                            }
+                        }
+                    }
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>

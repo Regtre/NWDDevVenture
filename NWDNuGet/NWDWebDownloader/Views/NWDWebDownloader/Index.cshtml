@@ -1,0 +1,175 @@
+﻿@*@using BabaooWebSite.Controllers
+<div class="row g-3 mb-3 ms-3 m-1">
+    <div class="col-md-6 col-xxl-6">
+        <div class="card">
+            <div class="card-header border-bottom">
+                <h1 class="card-title">Android</h1>
+            </div>
+            <div class="card-body">
+                @if(!User.HasAtLeastOneService(User.Claims,new List<Roles>(){Roles.Admin, Roles.DOWNLOAD_ALL, Roles.DOWNLOAD_WIP, Roles.DOWNLOAD_DEBUG,Roles.DOWNLOAD_RELEASE,Roles.DOWNLOAD_PLAYTEST}))
+                {
+                    <div class="text-body text-justify">You have no download services</div>
+                }
+                @if (BuildManager.GetInstance().Wip.TryGetValue(DownloadOS.ANDROID, out List<DownloadBuild> buildsWIP)
+                     && User.HasAtLeastOneService(User.Claims, new List<Roles>() { Roles.Admin, Roles.DOWNLOAD_ALL, Roles.DOWNLOAD_WIP }))
+                {
+                    <div class="card-title"> Work In Progress</div>
+
+                    <form asp-action="Download" asp-controller="Download" method="post">
+                        <div class="d-flex mb-3">
+
+                            @Html.DropDownList("buildPath",
+                                buildsWIP.Select(x => new SelectListItem() { Text = x.FileName, Value = x.FullPath }),
+                                new { @class = "form-select" })
+                            <button type="submit" class="ms-3 btn btn-falcon-primary bi-download"></button>
+
+                        </div>
+                    </form>
+                }
+                @if (BuildManager.GetInstance().Debug.TryGetValue(DownloadOS.ANDROID, out List<DownloadBuild> buildsDebug)
+                     && User.HasAtLeastOneService(User.Claims, new List<Roles>() { Roles.Admin, Roles.DOWNLOAD_ALL, Roles.DOWNLOAD_DEBUG }))
+                {
+                    <div class="card-title">Debug</div>
+
+                    <form asp-action="Download" asp-controller="Download" method="post">
+                        <div class="d-flex  mb-3">
+
+                            @Html.DropDownList("buildPath",
+                                buildsDebug.Select(x => new SelectListItem() { Text = x.FileName, Value = x.FullPath }),
+                                new { @class = "form-select" })
+                            <button type="submit" class="ms-3 btn btn-falcon-primary bi-download"></button>
+
+                        </div>
+                    </form>
+                }
+                @if (BuildManager.GetInstance().PlayTest.TryGetValue(DownloadOS.ANDROID, out List<DownloadBuild> buildsPlayTest)
+                     && User.HasAtLeastOneService(User.Claims, new List<Roles>() { Roles.Admin, Roles.DOWNLOAD_ALL, Roles.DOWNLOAD_PLAYTEST }))
+                {
+                    <div class="card-title"> Play Test</div>
+
+                    <form asp-action="Download" asp-controller="Download" method="post">
+                        <div class="d-flex  mb-3">
+
+                            @Html.DropDownList("buildPath",
+                                buildsPlayTest.Select(x => new SelectListItem() { Text = x.FileName, Value = x.FullPath }),
+                                new { @class = "form-select" })
+                            <button type="submit" class="ms-3 btn btn-falcon-primary bi-download"></button>
+
+                        </div>
+                    </form>
+                }
+
+                @if (BuildManager.GetInstance().Release.TryGetValue(DownloadOS.ANDROID, out List<DownloadBuild> buildsRelease)
+                     && User.HasAtLeastOneService(User.Claims, new List<Roles>() { Roles.Admin, Roles.DOWNLOAD_ALL, Roles.DOWNLOAD_RELEASE }))
+                {
+                    <div class="card-title"> Release</div>
+
+                    <form asp-action="Download" asp-controller="Download" method="post">
+                        <div class="d-flex  mb-3">
+
+                            @Html.DropDownList("buildPath",
+                                buildsRelease.Select(x => new SelectListItem() { Text = x.FileName, Value = x.FullPath }),
+                                new { @class = "form-select" })
+                            <button type="submit" class="ms-3 btn btn-falcon-primary bi-download"></button>
+
+                        </div>
+                    </form>
+                }
+                <div class="card-title text-justify">Installation</div>
+                <p class="text-justify">In order to install the game on android, just click the link of the wanted version on the site. An ?.app? file will be downloaded. Once downloaded, just click on the file to start the install.</p>
+                <div class="text-muted text-justify">It is necessary to turn on developer mode on your device to install the app.</div>
+                <div class="text-muted">If the app is already installed, it may prevent you from installing it, so please, uninstall any previous Babaoo app on your device before installing</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-xxl-6">
+        <div class="card">
+            <div class="card-header border-bottom">
+                <h1 class="card-title">IOS</h1>
+            </div>
+            <div class="card-body">
+                @if (BuildManager.GetInstance().Wip.TryGetValue(DownloadOS.IOS, out List<DownloadBuild> buildsWIP_IOS)
+                     && User.HasAtLeastOneService(User.Claims,new List<Roles>()
+                     {Roles.Admin ,Roles.DOWNLOAD_ALL,Roles.DOWNLOAD_WIP }))
+                {
+                    <div class="card-title"> Work In Progress</div>
+
+                    <form asp-action="Download" asp-controller="Download" method="post">
+                        <div class="d-flex  mb-3">
+
+                            @Html.DropDownList("buildPath",
+                                buildsWIP_IOS.Select(x => new SelectListItem() { Text = x.FileName, Value = x.FullPath }),
+                                new { @class = "form-select" })
+                            <button type="submit" class="ms-3 btn btn-falcon-primary bi-download"></button>
+
+                        </div>
+                    </form>
+                }
+                @if (BuildManager.GetInstance().Debug.TryGetValue(DownloadOS.IOS, out List<DownloadBuild> buildsDebug_IOS )
+                     && User.HasAtLeastOneService(User.Claims,new List<Roles>(){Roles.Admin ,Roles.DOWNLOAD_ALL,Roles.DOWNLOAD_DEBUG }))
+                {
+                    <div class="card-title">Debug</div>
+
+                    <form asp-action="Download" asp-controller="Download" method="post">
+                        <div class="d-flex  mb-3">
+
+                            @Html.DropDownList("buildPath",
+                                buildsDebug_IOS.Select(x => new SelectListItem() { Text = x.FileName, Value = x.FullPath }),
+                                new { @class = "form-select" })
+                            <button type="submit" class="ms-3 btn btn-falcon-primary bi-download"></button>
+
+                        </div>
+                    </form>
+                }
+                @if (BuildManager.GetInstance().PlayTest.TryGetValue(DownloadOS.IOS, out List<DownloadBuild> buildsPlayTest_IOS)
+                     && User.HasAtLeastOneService(User.Claims,new List<Roles>(){Roles.Admin ,Roles.DOWNLOAD_ALL,Roles.DOWNLOAD_PLAYTEST }))
+                {
+                    <div class="card-title"> Play Test</div>
+
+                    <form asp-action="Download" asp-controller="Download" method="post">
+                        <div class="d-flex mb-3">
+
+                            @Html.DropDownList("buildPath",
+                                buildsPlayTest_IOS.Select(x => new SelectListItem() { Text = x.FileName, Value = x.FullPath }),
+                                new { @class = "form-select" })
+                            <button type="submit" class="ms-3 btn btn-falcon-primary bi-download"></button>
+
+                        </div>
+                    </form>
+                }
+
+                @if (BuildManager.GetInstance().Release.TryGetValue(DownloadOS.IOS, out List<DownloadBuild> buildsRelease_IOS)
+                     && User.HasAtLeastOneService(User.Claims,new List<Roles>(){Roles.Admin ,Roles.DOWNLOAD_ALL,Roles.DOWNLOAD_RELEASE }))
+                {
+                    <div class="card-title"> Release</div>
+
+                    <form asp-action="Download" asp-controller="Download" method="post">
+                        <div class="d-flex">
+
+                            @Html.DropDownList("buildPath",
+                                buildsRelease_IOS.Select(x => new SelectListItem() { Text = x.FileName, Value = x.FullPath }),
+                                new { @class = "form-select" })
+                            <button type="submit" class="ms-3 btn btn-falcon-primary bi-download"></button>
+
+                        </div>
+                    </form>
+                }
+                <div class="card-title">Installation</div>
+                <p class="text-body text-justify">In order to install the game on iOS, just click the link of the wanted version on the site. The game will automatically download and install from that point.</p>
+                <div class="text-muted text-justify">Your device may ask you to authorize the developer on your first install. Do it in order to finish the install.</div>
+                <div class="card-title text-justify">Installation with BlueStacks</div>
+                <p class="text-justify">
+                    In order to install the game on BlueStacks, just click the link of the wanted version on the site. An ?.app? file will be downloaded. Once downloaded, just click on the file to start the install.<br/>
+                    It will automatically launch BlueStacks if not already and install the app.
+                </p>
+                <div class="text-muted text-justify">
+                    Be sure to have configured your BlueStack to meet the required settings for the game:<br/>
+                    Go to: Settings > Graphics > Graphics renderer and select OpenGL
+                </div>
+                <div class="text-muted text-justify">BlueStack emulator isn?t fully Babaoo ready. Please report any graphical bugs encountered during gameplay.</div>
+
+                <br/>
+            </div>
+        </div>
+    </div>
+</div>*@

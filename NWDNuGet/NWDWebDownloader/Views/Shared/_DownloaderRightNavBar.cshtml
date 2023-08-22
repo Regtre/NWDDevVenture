@@ -1,0 +1,21 @@
+﻿@using Microsoft.AspNetCore.Http
+@using NWDWebDownloader.Configuration
+@using NWDWebRuntime.Managers
+//TODO TO DELETE
+@inject IHttpContextAccessor HttpContextAccessor
+
+@if (HttpContextAccessor.HttpContext != null && NWDWebDownloaderConfiguration.KConfig.Downloads.Count > 0 &&
+     (NWDAuthorizeByAuthentication.ValidFor(HttpContextAccessor.HttpContext, true) ||  NWDWebDownloaderConfiguration.KConfig.Downloads.Any(tConfig => tConfig.AllowAnonymous)))
+{
+    <div class="dropdown-divider"></div>
+    <a class="dropdown-item text-secondary disabled" href="/"><span class="fas fa-file-download me-1"></span>Download Page</a>
+    @foreach (NWDDownloadConfig tConfig in NWDWebDownloaderConfiguration.KConfig.Downloads)
+    {
+        if (tConfig.AllowAnonymous || (tConfig.AllowConnected && NWDAuthorizeByAuthentication.ValidFor(HttpContextAccessor.HttpContext, true) || (NWDAuthorizeByAllOfServices.ValidFor(HttpContextAccessor.HttpContext, tConfig.Service ))))
+        {
+            <a class="dropdown-item" href="@Url.Action("Download", "NWDWebDownloader", new { sName = tConfig.PageName })">
+                @tConfig.PageName
+            </a>
+        }
+    }
+}

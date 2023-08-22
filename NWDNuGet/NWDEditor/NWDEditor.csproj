@@ -1,0 +1,62 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Title>NWDEditor</Title>
+    <Authors>idéMobi</Authors>
+    <Copyright>idéMobi</Copyright>
+    <LangVersion>latest</LangVersion>
+    <PackageVersion>1.1.181</PackageVersion>
+	  <LangVersion>9.0</LangVersion>
+    <PackageProjectUrl>https://gitlab.hephaiscode.com/NetWorkedData/NWDEditor</PackageProjectUrl>
+    <PackageLicense>https://gitlab.hephaiscode.com/NetWorkedData/NWDEditor/-/blob/main/LICENSE.md</PackageLicense>
+    <RepositoryUrl>https://gitlab.hephaiscode.com/NetWorkedData/NWDEditor</RepositoryUrl>
+    <RepositoryType>GitLab CE</RepositoryType>
+    <PackageTags>Net-Worked-Data editor</PackageTags>
+    <Nullable>enable</Nullable>
+    <AssemblyVersion>1.1.181</AssemblyVersion>
+    <FileVersion>1.1.181</FileVersion>
+    <NeutralLanguage>en</NeutralLanguage>
+    <PackageIcon>NWDEditor.png</PackageIcon>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
+    <RunAnalyzersDuringLiveAnalysis>true</RunAnalyzersDuringLiveAnalysis>
+    <RunAnalyzers>true</RunAnalyzers>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- <PackageReference Include="NWDRuntime" Version="1.1.181" /> -->
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NWDFoundation\NWDFoundation.csproj" />
+    <ProjectReference Include="..\NWDRuntime\NWDRuntime.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="NWDEditor.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Remove="**/*.meta" />
+  </ItemGroup>
+	
+  <ItemGroup>
+    <Compile Include="..\..\NWDUnity\Assets\NWDNuGet\NWDEditor\Exchanges\*.cs">
+      <Link>Exchanges-from-Unity/%(FileName)%(Extension)</Link>
+    </Compile>
+    <Compile Include="..\..\NWDUnity\Assets\NWDNuGet\NWDEditor\Exchanges\Payloads\*.cs">
+      <Link>Exchanges-from-Unity/Payloads-from-Unity/%(FileName)%(Extension)</Link>
+    </Compile>
+    <Compile Include="..\..\NWDUnity\Assets\NWDNuGet\NWDEditor\Facades\*.cs">
+      <Link>Facades-from-Unity/%(FileName)%(Extension)</Link>
+    </Compile>
+	  <Compile Include="..\..\NWDUnity\Assets\NWDNuGet\NWDEditor\Models\*.cs">
+		  <Link>Models-from-Unity/%(FileName)%(Extension)</Link>
+	  </Compile>
+    <Compile Include="..\..\NWDUnity\Assets\NWDNuGet\NWDEditor\NWDVersionDll.cs">
+      <Link>NWDVersionDll.cs</Link>
+    </Compile>
+  </ItemGroup>
+  
+</Project>

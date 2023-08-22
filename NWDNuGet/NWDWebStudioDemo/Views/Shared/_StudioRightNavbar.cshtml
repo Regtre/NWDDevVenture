@@ -1,0 +1,29 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Builder
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Options
+@using NWDFoundation.Facades
+@using NWDWebEditor.Managers
+@using NWDWebRuntime.Configuration
+@using NWDWebRuntime.Facades
+@using NWDWebRuntime.Managers
+
+@* @inject IViewLocalizer Localizer *@
+@inject IOptions<RequestLocalizationOptions> LocOptions
+
+@{
+    string? tController = ViewContext.RouteData.Values["controller"]?.ToString();
+    string? tAction = ViewContext.RouteData.Values["action"]?.ToString();
+}
+
+@inject IHttpContextAccessor HttpContextAccessor
+
+    @if (HttpContextAccessor.HttpContext != null && NWDAuthorizeAdminOnly.ValidFor(HttpContextAccessor.HttpContext))
+    {
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item text-secondary disabled" href="/"><span class="fas fa-chart-pie"></span> Studio</a>
+        <a class="dropdown-item" href="/"> Example</a>
+        <a class="dropdown-item" asp-area="" asp-controller="NWDWebStudioPlayerManagement" asp-action="Index" > Player management</a>
+    }

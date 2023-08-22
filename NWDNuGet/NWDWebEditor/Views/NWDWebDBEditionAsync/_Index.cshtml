@@ -1,0 +1,70 @@
+@using System.Reflection
+@using Microsoft.AspNetCore.Mvc
+@using NWDFoundation.WebEdition.Attributes
+@using NWDFoundation.WebEdition.Models
+@using NWDWebRuntime.Models
+@using NWDWebStandard.Models
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    // Layout = "~/Views/Shared/_Layout.cshtml";
+    
+    string? tModelToUse = ViewData["ModelToUse"] as string;
+    Type? tModel = null;
+    Type? tFinalType = null;
+    Type tGenericType = typeof(NWDWebSqlEditionRequest<>);
+    if (tModelToUse != null)
+    {
+        tModel = Type.GetType(tModelToUse);
+    }
+    if (tModel != null)
+    {
+        tFinalType = tGenericType.MakeGenericType(tModel);
+    }
+    object? tRequest = ViewData["ResultToUse"];
+
+    PropertyInfo? tControllerNameProp = tFinalType?.GetProperty("ControllerName");
+    string? tControllerName = tControllerNameProp?.GetValue(tRequest, null) as string;
+    <!-- TITLE With background -->
+    NWDWebClassDescriptionAttribute? tWebClassDescription = tModel?.GetCustomAttributes(typeof(NWDWebClassDescriptionAttribute), true).FirstOrDefault() as NWDWebClassDescriptionAttribute;
+}
+@if (tWebClassDescription != null)
+    {
+        NWDWebEditionClassDescription tInfos = tWebClassDescription.Infos;
+
+        if (string.IsNullOrEmpty(tInfos.Title) == false)
+        {
+            <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+            <div class="card">
+                <div class="bg-holder d-none d-lg-block bg-card background-corner-2">
+                </div>
+                <div class="card-header bg-light border-bottom">
+                    <h3>
+                        <span class="@tInfos.BootstrapIcon"></span> @tInfos.Title
+                    </h3>
+                </div>
+                @if (string.IsNullOrEmpty(tInfos.Description) == false)
+                {
+                    <div class="card-body position-relative">
+                        <p class="mb-0">@tInfos.Description</p>
+                    </div>
+                }
+            </div>
+            </div>
+        }
+    }
+<div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+<div class="card" id="@tControllerName" data-url='@Url.Action("ListAll", tControllerName)' data-refresh='@Url.Action("ListAll", tControllerName)'>
+    <div class="card-header bg-light border-bottom background-corner-2">
+        <h5>Manage instances of @tModel?.Name</h5>
+    </div>
+    <div id="spinner" class="card-body border-bottom text-center">
+        <div class="spinner-border text-primary" role="status"></div>
+    </div>
+    <div id="content_to_replace" class="justify-content-center">
+        <script>$(document).ready(function () {
+                startRequestAndReplaceContent('@tControllerName');});
+        </script>
+    </div>
+</div>
+@Html.Raw("<script>"+(ViewData["Javascript"]as string ?? string.Empty)+"</script>")
+</div>

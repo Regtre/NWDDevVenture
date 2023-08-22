@@ -1,0 +1,325 @@
+﻿@using Microsoft.AspNetCore.Http
+@using System.Text.RegularExpressions
+@using Microsoft.AspNetCore.Localization
+@using NWDWebRuntime.CallBacks
+@using NWDWebRuntime.Configuration
+@using NWDWebRuntime.Managers
+@using NWDWebRuntime.Models
+@using NWDWebStandard.Configuration
+
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    var tRequestCulture = Context.Features.Get<IRequestCultureFeature>()?.RequestCulture;
+    string? tController = ViewContext.RouteData.Values["controller"]?.ToString();
+    string? tAction = ViewContext.RouteData.Values["action"]?.ToString();
+    NWDPageStandard? tPageStandard = ViewData[nameof(NWDPageStandard)] as NWDPageStandard;
+    string tObjectsStringViewData = "null";
+    List<string> tObjectsName = new List<string>();
+    foreach (string tK in ViewData.Keys)
+    {
+        tObjectsName.Add(tK);
+    }
+    if (tObjectsName.Count > 0)
+    {
+        tObjectsStringViewData = "<span class=\"badge text-bg-secondary\">" + string.Join("</span> <span class=\"badge text-bg-secondary\">", tObjectsName) + "</span>";
+    }
+
+    string tObjectsStringViewBag = "null";
+    List<string> tObjectsNameViewBag = new List<string>();
+
+    if (ViewBag != null && ViewBag?.Keys != null)
+    {
+        if (ViewBag != null)
+        {
+            foreach (string tK in ViewBag.Keys)
+            {
+                tObjectsNameViewBag.Add(tK);
+            }
+        }
+        if (tObjectsNameViewBag.Count > 0)
+        {
+            tObjectsStringViewBag = "<span class=\"badge text-bg-secondary\">" + string.Join("</span> <span class=\"badge text-bg-secondary\">", tObjectsNameViewBag) + "</span>";
+        }
+    }
+    string tObjectsStringTempData = "null";
+    List<string> tObjectsNameTempData = new List<string>();
+    foreach (string tK in TempData.Keys)
+    {
+        tObjectsNameTempData.Add(tK);
+    }
+    if (tObjectsNameTempData.Count > 0)
+    {
+        tObjectsStringTempData = "<span class=\"badge text-bg-secondary\">" + string.Join("</span> <span class=\"badge text-bg-secondary\">", tObjectsNameTempData) + "</span>";
+    }
+}
+<!-- ===============================================-->
+<!--    PaginationInformation Debug Start   -->
+<!-- ===============================================-->
+
+@if (tPageStandard != null)
+{
+    <div class="d-flex w-100">
+    <div class="dropdown font-sans-serif d-inline-block mb-2 d-flex w-100">
+    <button class="btn w-100 btn-@Html.Raw(tPageStandard.EditorValidationStatus.ToString().ToLower()) dropdown-toggle" id="dropdownMenuButton" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pagination Information Debug</button>
+    <div class="dropdown-menu dropdown-menu-end py-0" aria-labelledby="dropdownMenuButton">
+    <div class="container">
+    <div class="row border-bottom">
+        <div class="col-6 mb-3">
+            <h5 class="mt-3">Pagination Standard</h5>
+
+            @{
+                string tActualImageName = tPageStandard.PageStyle.ToString() + "_" + tPageStandard.NavBarStyle.ToString() + "@2x";
+                string tActualExtension = ".png";
+            }
+            <img src="~/customize/@tActualImageName@tActualExtension" alt="Actual Style" width="120" height="90"/>
+            <a href="~/NWDLayoutTest/index/">Layout explications</a>
+        </div>
+        <div class="col-6 mb-3">
+            <div class="table-responsive scrollbar">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">Title</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Keywords</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>
+                            @tPageStandard.Title
+                        </td>
+                        <td>
+                            @tPageStandard.Description
+                        </td>
+                        <td>
+                            @string.Join(",", tPageStandard.Keywords)
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="row border-bottom">
+        <div class="col-6 mb-3">
+            <h5 class="mt-3">ASP</h5>
+            <div class="table-responsive scrollbar">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">Controller</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>
+                            @tController
+                        </td>
+                        <td>
+                            @tAction
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">requestCulture CurrentUICulture</th>
+                        <th scope="col">requestCulture CurrentCulture</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>
+                            @tRequestCulture?.UICulture.Name
+                        </td>
+                        <td>
+                            @tRequestCulture?.Culture.Name
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h5 class="mt-3">Objects in ViewData</h5>
+            <div>
+                @Html.Raw(tObjectsStringViewData)
+            </div>
+            @if (ViewBag != null && ViewBag?.Keys != null)
+            {
+                <h5 class="mt-3">Objects in ViewBag</h5>
+                <div>
+                    @Html.Raw(tObjectsStringViewBag)
+                </div>
+            }
+            <h5 class="mt-3">Objects in TempData</h5>
+            <div>
+                @Html.Raw(tObjectsStringTempData)
+            </div>
+        </div>
+        <div class="col-6 mb-3">
+            <h5 class="mt-3">HTML</h5>
+            <div class="table-responsive scrollbar">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">Meta</th>
+                        <th scope="col">Value</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>
+                            GitCommit
+                        </td>
+                        <td>
+                            @NWDWebRuntimeConfiguration.KConfig.GitCommit
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Title
+                        </td>
+                        <td>
+                                <div>@tPageStandard.Title - @NWDWebStandardConfiguration.KConfig.WebSiteName</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            keywords
+                        </td>
+                        <td>
+                                <span>@tPageStandard.GetKeywordsMeta()</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            description
+                        </td>
+                        <td>
+                                @tPageStandard.Description
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="row border-bottom">
+        <div class="col-12 mb-3">
+            <h5 class="mt-3">Debug</h5>
+            <div>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">Date</th>
+                        <th scope="col">Key</th>
+                        <th scope="col">Value</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                            @foreach (KeyValuePair<string, string> tKeyValue in tPageStandard.Debug())
+                                {
+                                    string[] tKeys = tKeyValue.Key.Split(':');
+                                    <tr>
+                                        <td>
+                                            @tKeys[0]
+                                        </td>
+                                        <td>
+                                            @tKeys[1]
+                                        </td>
+                                        <td>
+                                            @tKeyValue.Value
+                                        </td>
+                                    </tr>
+                                }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="row border-bottom">
+        <div class="col-12 mb-3">
+            <h5 class="mt-3">Account</h5>
+            <div>
+                <b>@NWDAccountWebManager.GetAccountInContext(HttpContextAccessor.HttpContext).Reference.ToString() is connected = @NWDAccountWebManager.AccountIsConnected(HttpContextAccessor.HttpContext).ToString()</b>
+            </div>
+            <div>
+                <b>@Json.Serialize(NWDWebRuntimeCallbackServers.GetRequestPlayerToken(HttpContextAccessor.HttpContext)).ToString()?.Replace(",", ", ")</b>
+            </div>
+        </div>
+    </div>
+    <div class="row border-bottom">
+        <div class="col-12 mb-3">
+            <h5 class="mt-3">Session</h5>
+            <div>
+                <table class="table table-hover mb-0">
+                    <thead>
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col">Variable</th>
+                        <th scope="col">Value</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @if (HttpContextAccessor.HttpContext != null)
+                    {
+                        @foreach (string tKey in HttpContextAccessor.HttpContext.Session.Keys)
+                        {
+                            <tr>
+                                <td>
+                                    <span class="fas fa-microchip"></span>
+                                </td>
+                                <td>@tKey</td>
+                                <td>@Regex.Replace(HttpContextAccessor.HttpContext.Session.GetString(tKey) ?? string.Empty, ".{16}", "$0 ")</td>
+                            </tr>
+                        }
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="row border-bottom">
+        <div class="col-12 mb-3">
+            <h5 class="mt-3">Cookies</h5>
+            <div>
+
+                <table class="table table-hover mb-0">
+                    <thead>
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col">Cookie</th>
+                        <th scope="col">Value</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @if (HttpContextAccessor.HttpContext?.Request.Cookies != null)
+                    {
+                        foreach (var tCookie in HttpContextAccessor.HttpContext.Request.Cookies)
+                        {
+                            <tr>
+                                <td>
+                                    <span class="fas fa-cookie-bite"></span>
+                                </td>
+                                <td>@tCookie.Key</td>
+                                <td>@Regex.Replace(tCookie.Value, ".{16}", "$0 ")</td>
+                            </tr>
+                        }
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+}
+<!-- ===============================================-->
+<!--    PaginationInformation Debug End   -->
+<!-- ===============================================-->

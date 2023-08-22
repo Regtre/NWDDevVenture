@@ -1,0 +1,3 @@
+﻿You receive a free trial for $WebSiteName,
+You've been invited to join $WebSiteName just click the link to redeem your free trial of  $DurationInDays  days! \n \n
+${HttpsDns}/NWDVoucher/ConsumeVoucher?Reference=${VoucherReference}

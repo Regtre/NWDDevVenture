@@ -1,0 +1,84 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@using NWDFoundation.Models.Enums
+
+@model NWDFoundation.Models.NWDAccountSign
+
+@switch (Model.SignType)
+{
+    case NWDAccountSignType.Apple:
+        {
+            <div class="card-header bg-light">Liaison par AppleID©</div>
+        }
+        break;
+    case NWDAccountSignType.Google:
+        {
+            <div class="card-header bg-light">Liaison avec mon compte Google©</div>
+        }
+        break;
+    case NWDAccountSignType.Facebook:
+        {
+            <div class="card-header bg-light">Liaison avec mon compte facebook©</div>
+        }
+        break;
+    case NWDAccountSignType.EmailPassword:
+        {
+            <div class="card-header bg-light">Authentification par email et mot-de-passe </div>
+        }
+        break;
+    case NWDAccountSignType.LoginEmailPassword:
+        {
+            <div class="card-header bg-light">Authentification par login, email et mot-de-passe </div>
+        }
+        break;
+    case NWDAccountSignType.LoginPassword:
+        {
+            <div class="card-header bg-light">Vous êtes connecté avec un compte issu d'une carte de jeu</div>
+        }
+        break;
+}
+
+<div class="card-body">
+    @*@switch (Model.SignType)
+    {
+        
+        case NWDAccountSignType.Apple:
+            {
+                <a class="btn btn-danger" asp-area="" asp-controller="Account" asp-action="RevokeSign" asp-route-id="@Model.Reference">Supprimer le lien</a>
+            }
+            break;
+        case NWDAccountSignType.Google:
+            {
+                <a class="btn btn-danger" asp-area="" asp-controller="Account" asp-action="RevokeSign" asp-route-id="@Model.Reference">Supprimer le lien</a>
+            }
+            break;
+        case NWDAccountSignType.Facebook:
+            {
+                <a class="btn btn-danger" asp-area="" asp-controller="Account" asp-action="RevokeSign" asp-route-id="@Model.Reference">Supprimer le lien</a>
+            }
+            break;
+        case NWDAccountSignType.EmailPassword:
+            {
+                <a class="btn btn-outline-primary" asp-area="" asp-controller="Account" asp-action="ModifyEmail" asp-route-id="@Model.Reference">Modifier l'email</a>
+                <a class="btn btn-outline-primary" asp-area="" asp-controller="Account" asp-action="ModifyPassword" asp-route-id="@Model.Reference">Modifier le mot-de-passe</a>
+                <a class="btn btn-danger" asp-area="" asp-controller="Account" asp-action="RevokeSign" asp-route-id="@Model.Reference">Supprimer l'authentification</a>
+            }
+            break;
+        case NWDAccountSignType.LoginEmailPassword:
+            {
+
+                <a class="btn btn-outline-primary" asp-area="" asp-controller="Account" asp-action="ModifyEmail" asp-route-id="@Model.Reference">Modifier l'email</a>
+                <a class="btn btn-outline-primary" asp-area="" asp-controller="Account" asp-action="ModifyPassword" asp-route-id="@Model.Reference">Modifier le mot-de-passe</a>
+                <a class="btn btn-outline-primary" asp-area="" asp-controller="Account" asp-action="ModifyLogin" asp-route-id="@Model.Reference">Modifier le login</a>
+                <a class="btn btn-danger" asp-area="" asp-controller="Account" asp-action="RevokeSign" asp-route-id="@Model.Reference">Supprimer l'authentification</a>
+            }
+            break;
+        case NWDAccountSignType.LoginPassword:
+            {
+                <div>Vous êtes connecté avec un compte issu d'une carte de jeu.</div>
+            }
+            break;
+            *@
+    }
+
+</div>

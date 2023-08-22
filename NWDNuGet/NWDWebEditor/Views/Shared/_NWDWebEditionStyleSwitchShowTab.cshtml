@@ -1,0 +1,50 @@
+﻿@using NWDFoundation.WebEdition.Attributes
+@using NWDFoundation.WebEdition.Enums
+
+@{
+    NWDWebPropertyDescriptionAttribute? tAttribute = ViewData["Attribute"] as NWDWebPropertyDescriptionAttribute;
+    object? tItem = ViewData["Item"];
+}
+@if (tAttribute != null)
+{
+    switch (tAttribute.Infos.Style)
+    {
+        case NWDWebEditionStyle.Text:
+            <td class="align-middle">@tItem</td>
+            break;
+        case NWDWebEditionStyle.RichText:
+            <td class="align-middle">@Html.Raw(tItem)</td>
+            break;
+        case NWDWebEditionStyle.Color:
+            <td class="align-middle">
+                <svg class="circle-progress-svg" width="26" height="26" viewBox="0 0 120 120">
+                    <circle class="progress-bar-rail" cx="60" cy="60" r="54" fill="none" stroke-linecap="round" stroke-width="12"></circle>
+                    <circle class="progress-bar-top" cx="60" cy="60" r="54" fill="none" stroke-linecap="round" stroke="@tItem" stroke-width="12"></circle>
+                </svg>
+            </td>
+            break;
+        case NWDWebEditionStyle.ShowPartStatus:
+            <td class="align-middle">@tItem?.ToString()</td>
+            break;
+        case NWDWebEditionStyle.Date:
+        {
+            DateTime? tValue = Model.GetValue(tItem, null) is DateTime ? (DateTime)Model.GetValue(tItem, null) : default;
+            <td class="align-middle">@tValue.Value.Date</td>
+            break;
+        }
+        case NWDWebEditionStyle.Dropdown:
+        {
+            string? tValue = Model.GetValue(tItem, null) as string;
+            <td class="align-middle">@tValue</td>
+            break;
+        }
+        
+        default:
+            <td class="align-middle">@tItem</td>
+            break;
+    }
+}
+else
+{
+    <th class="align-middle">@tItem</th>
+}

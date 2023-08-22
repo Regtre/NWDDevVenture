@@ -1,0 +1,32 @@
+﻿@using NWDWebRuntime.Models
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@model NWDSideBarAnnexe
+
+@if (Model != null)
+{
+    <div class="card alert  bg-@Model.Style.ToString().ToLower() p-0 shadow-none" role="alert">
+        <div class="btn-close-falcon-container">
+            <div class="btn-close-falcon" aria-label="Close" data-bs-dismiss="alert"></div>
+        </div>
+        <div class="card-title text-center">
+            @if (string.IsNullOrEmpty(Model.Name) == false)
+            {
+                <div>
+                    @Html.Raw(Model.Name)
+                    @if (string.IsNullOrEmpty(Model.BadgeText) == false)
+                    {
+                        <span class="ms-2 badge rounded-pill badge-subtle-@Model.BadgeStyle.ToString().ToLower()">@Model.BadgeText</span>
+                    }
+                </div>
+            }
+        </div>
+        <div class="card-body text-center">
+            @if (string.IsNullOrEmpty(Model.Description) == false)
+            {
+                <div> @Html.Raw(Model.Description) </div>
+            }
+        </div>
+    </div>
+}

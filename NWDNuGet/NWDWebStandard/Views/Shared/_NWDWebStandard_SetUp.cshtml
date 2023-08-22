@@ -1,0 +1,826 @@
+@using NWDFoundation.Configuration.Environments
+@using NWDFoundation.Models.Enums
+@using NWDFoundation.Tools
+@using NWDWebRuntime.Configuration
+@using NWDWebStandard.Configuration
+@using NWDWebStandard.Controllers
+
+<!-- introduction -->
+<div class="row border-bottom mb-3">
+    <div class="col-lg-6 mb-3">
+        <div class="card-title">
+            Parameter Net-Worked-Data with your project!
+        </div>
+        <div class="card-body m-0">
+            In <b>appsetting.json</b> file add a section <b>@nameof(NWDWebRuntimeConfiguration)</b>.
+            <br/>
+            Inside this section add :
+            <ul>
+                <li> <span class="text-primary">@nameof(NWDWebRuntimeConfiguration.MyProjectId)</span> (example : @NWDRandom.UnsignedIntNumeric(8) )</li>
+                <li>
+                    <span class="text-primary">@nameof(NWDWebRuntimeConfiguration.MyEnvironment)</span>
+                    <ul>
+                        @foreach (NWDEnvironmentKind tEnum in Enum.GetValues<NWDEnvironmentKind>())
+                        {
+                            <li> @tEnum.ToString() : @((int)tEnum)</li>
+                        }
+                    </ul>
+                </li>
+                <li> <span class="text-primary">@nameof(NWDWebRuntimeConfiguration.MyProjectKey)</span> (example : @NWDRandom.RandomStringToken(32) )</li>
+                @* <li> <span class="text-primary">@nameof(NWDWebRuntimeConfiguration.AdminEmail)</span> (example : me@professionnel.com )</li> *@
+                @* <li> <span class="text-primary">@nameof(NWDWebRuntimeConfiguration.AdminService)</span> (example : 123456 )</li> *@
+            </ul>
+        </div>
+    </div>
+    <div class="col-lg-6 mb-3">
+        <div class="card bg-dark border-primary">
+            <div class="card-header border-bottom">
+                appsettings.json
+            </div>
+            <div class="card-body m-0">
+                <pre><code>
+{
+    "Logging": {
+        "LogLevel": {
+          "Default": "Information",
+          "Microsoft": "Warning",
+          "Microsoft.Hosting.Lifetime": "Information"
+        }
+      },
+      "AllowedHosts": "*",
+      "Kestrel": {
+        "EndPoints": {
+          "Http": {
+            "Url": "http://localhost:4050"
+          },
+          "Https": {
+            "Url": "https://localhost:4051"
+          }
+        }
+      },
+    ...
+    <span class="text-primary">"@nameof(NWDWebRuntimeConfiguration)": {</span>
+        <span class="text-primary"> "@nameof(NWDWebRuntimeConfiguration.MyProjectId)": "<span class="text-warning">your-project-@nameof(NWDWebRuntimeConfiguration.MyProjectId)</span>",</span>
+        <span class="text-primary"> "@nameof(NWDWebRuntimeConfiguration.MyEnvironment)": "<span class="text-warning">5</span>",</span>
+        <span class="text-primary"> "@nameof(NWDWebRuntimeConfiguration.MyProjectKey)": "<span class="text-warning">your-project-@nameof(NWDWebRuntimeConfiguration.MyProjectKey)</span>",</span>
+        @* <span class="text-primary"> "@nameof(NWDWebRuntimeConfiguration.AdminEmail)": "<span class="text-warning">me@professionnel.com</span>",</span> *@
+        @* <span class="text-primary"> "@nameof(NWDWebRuntimeConfiguration.AdminService)": "<span class="text-warning">123456</span>",</span> *@
+        ...
+    <span class="text-primary">},</span>
+    ...
+}
+                        </code></pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- website's information -->
+<div class="row border-bottom mb-3">
+    <div class="col-lg-6 mb-3">
+        <div class="card-title">Add your website's information</div>
+        <div class="card-body m-0">
+            In <b>appsetting.json</b> file add a section <b>@nameof(NWDWebRuntimeConfiguration)</b>.
+            <br/>
+            Inside this section add :
+            <ul>
+                <li> <span class="text-primary">@nameof(NWDWebRuntimeConfiguration.Dns)</span> (example : @NWDWebRuntimeConfiguration.KConfig.Dns )</li>
+                <li> <span class="text-primary">@nameof(NWDWebStandardConfiguration.WebSiteName)</span> (example : @NWDWebStandardConfiguration.KConfig.WebSiteName )</li>
+                <li> <span class="text-primary">@nameof(NWDWebStandardConfiguration.WebSiteShortName)</span> (example : @NWDWebStandardConfiguration.KConfig.WebSiteShortName )</li>
+                <li> <span class="text-primary">@nameof(NWDWebStandardConfiguration.WebSiteInitials)</span> (example : @NWDWebStandardConfiguration.KConfig.WebSiteInitials )</li>
+                <li> <span class="text-primary">@nameof(NWDWebRuntimeConfiguration.SupportLanguages)</span> in standard country-language codes separated by commat , see ISO-639 and ISO-3166 code to generate the approprieted country-language code to use. (example : @NWDWebRuntimeConfiguration.KConfig.SupportLanguages )</li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-lg-6 mb-3">
+        <div class="card bg-dark border-primary">
+            <div class="card-header border-bottom">
+                appsettings.json
+            </div>
+            <div class="card-body m-0">
+                <pre><code>
+{
+    "Logging": {...},
+    "AllowedHosts": "*",
+    "Kestrel": {...},
+    ...
+    <span class="text-primary">"@nameof(NWDWebRuntimeConfiguration)": {</span>
+    ...
+        <span class="text-primary"> "@nameof(NWDWebRuntimeConfiguration.Dns)": "<span class="text-warning">www.your-website.com</span>",</span>
+        <span class="text-primary"> "@nameof(NWDWebStandardConfiguration.WebSiteName)": "<span class="text-warning">your-website-@nameof(NWDWebStandardConfiguration.WebSiteName)</span>",</span>
+        <span class="text-primary"> "@nameof(NWDWebStandardConfiguration.WebSiteShortName)": "<span class="text-warning">your-website-@nameof(NWDWebStandardConfiguration.WebSiteShortName)</span>",</span>
+        <span class="text-primary"> "@nameof(NWDWebStandardConfiguration.WebSiteInitials)": "<span class="text-warning">your-website-@nameof(NWDWebStandardConfiguration.WebSiteInitials)</span>",</span>
+        <span class="text-primary"> "@nameof(NWDWebRuntimeConfiguration.SupportLanguages)": "<span class="text-warning">your-website-@nameof(NWDWebRuntimeConfiguration.SupportLanguages)</span>",</span>
+        ...
+    <span class="text-primary">},</span>
+    ...
+}
+                        </code></pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Git information -->
+<div class="row border-bottom mb-3">
+    <div class="col-lg-6 mb-3">
+        <div class="card-title">Add your gitlab information</div>
+        <div class="card-body m-0">
+            In <b>appsetting.json</b> file add a section <b>@nameof(NWDWebRuntimeConfiguration)</b>.
+            <br/>
+            Inside this section add :
+            <ul>
+                <li> <span class="text-primary">@nameof(NWDWebRuntimeConfiguration.GitCommit)</span> (example : @NWDWebRuntimeConfiguration.KConfig.GitCommit )</li>
+                <li> <span class="text-primary">@nameof(NWDWebRuntimeConfiguration.GitCommitShort)</span> (example : @NWDWebRuntimeConfiguration.KConfig.GitCommitShort )</li>
+                <li> <span class="text-primary">@nameof(NWDWebRuntimeConfiguration.PipelineDate)</span> (example : @NWDWebRuntimeConfiguration.KConfig.PipelineDate )</li>
+                <li> <span class="text-primary">@nameof(NWDWebRuntimeConfiguration.PipelineJob)</span> (example : @NWDWebRuntimeConfiguration.KConfig.PipelineJob )</li>
+            </ul>
+
+            Or add these keys to replace them by YAML script from CICD workflow:
+            <ul>
+                <li> <span class="text-primary">@nameof(NWDWebRuntimeConfiguration.GitCommit)</span> = GIT_COMMIT</li>
+                <li> <span class="text-primary">@nameof(NWDWebRuntimeConfiguration.GitCommitShort)</span> = GIT_COMMIT_SHORT</li>
+                <li> <span class="text-primary">@nameof(NWDWebRuntimeConfiguration.PipelineDate)</span> = PIPELINE_DATE</li>
+                <li> <span class="text-primary">@nameof(NWDWebRuntimeConfiguration.PipelineJob)</span> = PIPELINE_JOB</li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-lg-6 mb-3">
+        <div class="card bg-dark border-primary">
+            <div class="card-header border-bottom">
+                appsettings.json
+            </div>
+            <div class="card-body m-0">
+                <pre><code>
+{
+    "Logging": {...},
+    "AllowedHosts": "*",
+    "Kestrel": {...},
+    ...
+    <span class="text-primary">"@nameof(NWDWebRuntimeConfiguration)": {</span>
+    ...
+        <span class="text-primary"> "@nameof(NWDWebRuntimeConfiguration.GitCommit)": "<span class="text-warning">GIT_COMMIT</span>",</span>
+        <span class="text-primary"> "@nameof(NWDWebRuntimeConfiguration.GitCommitShort)": "<span class="text-warning">GIT_COMMIT_SHORT</span>",</span>
+        <span class="text-primary"> "@nameof(NWDWebRuntimeConfiguration.PipelineDate)": "<span class="text-warning">PIPELINE_DATE</span>",</span>
+        <span class="text-primary"> "@nameof(NWDWebRuntimeConfiguration.PipelineJob)": "<span class="text-warning">PIPELINE_JOB</span>",</span>
+        ...
+    <span class="text-primary">},</span>
+    ...
+}
+                        </code></pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Email/Password -->
+<div class="row border-bottom mb-3">
+    <div class="col-lg-6 mb-3">
+        <div class="card-title">Add @NWDAccountSignType.EmailPassword.ToString() authentification process</div>
+        <div class="card-body m-0">
+            <div class="col-sm-6 mb-3">
+                <a class="btn btn-outline-secondary btn-sm d-block w-100" asp-controller="@NWDAccountController.ASP_Controller()" asp-action="@nameof(NWDAccountController.AddEmailPasswordSign)"><span class="fas fa-file-signature"></span> Email/Password sign</a>
+            </div>
+            In <b>appsetting.json</b> file in section <b>@nameof(NWDWebStandardConfiguration)</b> add :
+            <ul>
+                <li> <span class="text-primary">@nameof(NWDWebStandardConfiguration.AddAccountSignEmailPassword)</span> with value to true</li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-lg-6 mb-3">
+        <div class="card bg-dark border-primary">
+            <div class="card-header border-bottom">appsettings.json</div>
+            <div class="card-body m-0">
+                <pre><code>
+{
+    "Logging": {...},
+    "AllowedHosts": "*",
+    "Kestrel": {...},
+    ...
+    <span class="text-primary">"@nameof(NWDWebStandardConfiguration)": {</span>
+        ...
+        <span class="text-primary"> "@nameof(NWDWebStandardConfiguration.AddAccountSignEmailPassword)": "<span class="text-warning">true</span>",</span>
+        ...
+    <span class="text-primary">},</span>
+    ...
+}
+                        </code></pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Login/Password -->
+<div class="row border-bottom mb-3">
+    <div class="col-lg-6 mb-3">
+        <div class="card-title">Add @NWDAccountSignType.LoginPassword.ToString() authentification process</div>
+        <div class="card-body m-0">
+            <div class="col-sm-6 mb-3">
+                <a class="btn btn-outline-secondary btn-sm d-block w-100" asp-controller="@NWDAccountController.ASP_Controller()" asp-action="@nameof(NWDAccountController.AddLoginPasswordSign)"><span class="fas fa-file-signature"></span> Login/Password sign</a>
+            </div>
+            In <b>appsetting.json</b> file in section <b>@nameof(NWDWebStandardConfiguration)</b> add :
+            <ul>
+                <li> <span class="text-primary">@nameof(NWDWebStandardConfiguration.AddAccountSignLoginPassword)</span> with value to true</li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-lg-6 mb-3">
+        <div class="card bg-dark border-primary">
+            <div class="card-header border-bottom">appsettings.json</div>
+            <div class="card-body m-0">
+                <pre><code>
+{
+    "Logging": {...},
+    "AllowedHosts": "*",
+    "Kestrel": {...},
+    ...
+    <span class="text-primary">"@nameof(NWDWebStandardConfiguration)": {</span>
+        ...
+        <span class="text-primary"> "@nameof(NWDWebStandardConfiguration.AddAccountSignLoginPassword)": "<span class="text-warning">true</span>",</span>
+        ...
+    <span class="text-primary">},</span>
+    ...
+}
+                        </code></pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Email/Login/Password -->
+<div class="row border-bottom mb-3">
+    <div class="col-lg-6 mb-3">
+        <div class="card-title">Add @NWDAccountSignType.LoginEmailPassword.ToString() authentification process</div>
+        <div class="card-body m-0">
+            <div class="col-sm-6 mb-3">
+                <a class="btn btn-outline-secondary btn-sm d-block w-100" asp-controller="@NWDAccountController.ASP_Controller()" asp-action="@nameof(NWDAccountController.AddLoginPasswordEmailSign)"><span class="fas fa-file-signature"></span> Login/Password/Email sign</a>
+            </div>
+            In <b>appsetting.json</b> file in section <b>@nameof(NWDWebStandardConfiguration)</b> add :
+            <ul>
+                <li> <span class="text-primary">@nameof(NWDWebStandardConfiguration.AddAccountSignLoginPasswordEmail)</span> with value to true</li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-lg-6 mb-3">
+        <div class="card bg-dark border-primary">
+            <div class="card-header border-bottom">appsettings.json</div>
+            <div class="card-body m-0">
+                <pre><code>
+{
+    "Logging": {...},
+    "AllowedHosts": "*",
+    "Kestrel": {...},
+    ...
+    <span class="text-primary">"@nameof(NWDWebStandardConfiguration)": {</span>
+        ...
+        <span class="text-primary"> "@nameof(NWDWebStandardConfiguration.AddAccountSignLoginPasswordEmail)": "<span class="text-warning">true</span>",</span>
+        ...
+    <span class="text-primary">},</span>
+    ...
+}
+                        </code></pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- facebook OAuth -->
+<div class="row border-bottom mb-3">
+    <div class="col-lg-6 mb-3">
+        <div class="card-title">Add authentification by <a href="https://oauth.net/2/">OAuth2.0</a> from <a href="https://www.facebook.com">@NWDAccountSignType.Facebook.ToString()</a> application</div>
+        <div class="card-body m-0">
+            <div class="col-sm-6 mb-3">
+                <a class="btn btn-outline-facebook btn-sm d-block w-100" href="@Html.Raw(NWDAccountController.FacebookOAuth_URL())"><span class="fab fa-facebook-square me-2" data-fa-transform="grow-8"></span> Facebook</a>
+            </div>
+            <div class="mb-3">
+                Go to <a href="https://developer.facebook.com/apps/">https://developer.facebook.com/apps/</a> and create a new application for this website.
+                <br/>
+                Redirect URL is <span class="text-bg-primary ps-3 pe-3">~/@NWDAccountController.ASP_Controller()/@nameof(NWDAccountController.FacebookRedirect)/</span>
+            </div>
+            <div class="alert alert-warning border-2 d-flex align-items-center">
+                <div class="bg-warning me-3 icon-item">
+                    <span class="fas fa-exclamation-circle text-white fs-3"></span>
+                </div>
+                <p class="mb-0 flex-1">Change can take long time!</p>
+            </div>
+        </div>
+        <div class="card-body m-0">
+            In <b>appsetting.json</b> file in section <b>@nameof(NWDWebStandardConfiguration)</b> add :
+            <ul>
+                <li> <span class="text-primary">@nameof(NWDWebStandardConfiguration.AddFacebookSign)</span> with value to true</li>
+                <li> <span class="text-primary">@nameof(NWDWebStandardConfiguration.FacebookClientId)</span> and insert <b>@NWDAccountSignType.Facebook.ToString() client ID</b></li>
+                <li> <span class="text-primary">@nameof(NWDWebStandardConfiguration.FacebookClientSecret)</span> and insert <b>@NWDAccountSignType.Facebook.ToString() client secret</b></li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-lg-6 mb-3">
+        <div class="card bg-dark border-primary">
+            <div class="card-header border-bottom">appsettings.json</div>
+            <div class="card-body m-0">
+                <pre><code>
+{
+    "Logging": {...},
+    "AllowedHosts": "*",
+    "Kestrel": {...},
+    ...
+    <span class="text-primary">"@nameof(NWDWebStandardConfiguration)": {</span>
+        ...
+        <span class="text-primary"> "@nameof(NWDWebStandardConfiguration.AddFacebookSign)": "<span class="text-warning">true</span>",</span>
+        <span class="text-primary"> "@nameof(NWDWebStandardConfiguration.FacebookClientId)": "<span class="text-warning">@NWDRandom.UnsignedLongNumeric(16)</span>",</span>
+        <span class="text-primary"> "@nameof(NWDWebStandardConfiguration.FacebookClientSecret)": "<span class="text-warning">@NWDRandom.RandomStringCypher(32)</span>",</span>
+        ...
+    <span class="text-primary">},</span>
+    ...
+}
+                        </code></pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- discord OAuth -->
+<div class="row border-bottom mb-3">
+    <div class="col-lg-6 mb-3">
+        <div class="card-title">Add authentification by <a href="https://oauth.net/2/">OAuth2.0</a> from <a href="https://www.discord.com">@NWDAccountSignType.Discord.ToString()</a> application</div>
+        <div class="card-body m-0">
+            <div class="col-sm-6 mb-3">
+                <a class="btn btn-outline-secondary btn-sm d-block w-100" href="@Html.Raw(NWDAccountController.DiscordOAuth_URL())"><span class="fab fa-discord me-2" data-fa-transform="grow-8"></span> Discord</a>
+            </div>
+            <div class="mb-3">
+                Go to <a href="https://developer.facebook.com/apps/">https://discord.com/developers/applications/</a> and create a new application for this website.
+                <br/>
+                Redirect URL is <span class="text-bg-primary ps-3 pe-3">~/@NWDAccountController.ASP_Controller()/@nameof(NWDAccountController.FacebookRedirect)/</span>
+            </div>
+            <div class="alert alert-warning border-2 d-flex align-items-center">
+                <div class="bg-warning me-3 icon-item">
+                    <span class="fas fa-exclamation-circle text-white fs-3"></span>
+                </div>
+                <p class="mb-0 flex-1">Change can take long time!</p>
+            </div>
+        </div>
+        <div class="card-body m-0">
+            In <b>appsetting.json</b> file in section <b>@nameof(NWDWebStandardConfiguration)</b> add :
+            <ul>
+                <li> <span class="text-primary">@nameof(NWDWebStandardConfiguration.AddDiscordSign)</span> with value to true</li>
+                <li> <span class="text-primary">@nameof(NWDWebStandardConfiguration.DiscordClientId)</span> and insert <b>@NWDAccountSignType.Discord.ToString() client ID</b></li>
+                <li> <span class="text-primary">@nameof(NWDWebStandardConfiguration.DiscordClientSecret)</span> and insert <b>@NWDAccountSignType.Discord.ToString() client secret</b></li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-lg-6 mb-3">
+        <div class="card bg-dark border-primary">
+            <div class="card-header border-bottom">appsettings.json</div>
+            <div class="card-body m-0">
+                <pre><code>
+{
+    "Logging": {...},
+    "AllowedHosts": "*",
+    "Kestrel": {...},
+    ...
+    <span class="text-primary">"@nameof(NWDWebStandardConfiguration)": {</span>
+        ...
+        <span class="text-primary"> "@nameof(NWDWebStandardConfiguration.AddDiscordSign)": "<span class="text-warning">true</span>",</span>
+        <span class="text-primary"> "@nameof(NWDWebStandardConfiguration.DiscordClientId)": "<span class="text-warning">@NWDRandom.UnsignedLongNumeric(16)</span>",</span>
+        <span class="text-primary"> "@nameof(NWDWebStandardConfiguration.DiscordClientSecret)": "<span class="text-warning">@NWDRandom.RandomStringCypher(32)</span>",</span>
+        ...
+    <span class="text-primary">},</span>
+    ...
+}
+                        </code></pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- google OAuth -->
+<div class="row border-bottom mb-3">
+    <div class="col-lg-6 mb-3">
+        <div class="card-title">Add authentification by <a href="https://oauth.net/2/">OAuth2.0</a> from <a href="https://www.google.com">@NWDAccountSignType.Google.ToString()</a> application</div>
+        <div class="card-body m-0">
+            <div class="col-sm-6 mb-3">
+                <a class="btn btn-outline-google-plus btn-sm d-block w-100" href="@Html.Raw(NWDAccountController.GoogleOAuth_URL())"><span class="fab fa-google-plus-g me-2" data-fa-transform="grow-8"></span> Google</a>
+            </div>
+            <div class="mb-3">
+                Go to <a href="https://console.cloud.google.com/apis/credentials/">https://console.cloud.google.com/apis/credentials/</a> and create a new OAuth 2.0 Client IDs credential for this website.
+                <br/>
+                Redirect URL is <span class="text-bg-primary ps-3 pe-3">~/@NWDAccountController.ASP_Controller()/@nameof(NWDAccountController.GoogleRedirect)/</span>
+            </div>
+            <ul>
+                <li>
+                    Add in Authorized JavaScript origins :
+                    <ul>
+                        <li>https://www.your-website.com</li>
+                        <li>https://localhost:4051</li>
+                        <li>http://localhost:4050</li>
+                    </ul>
+                </li>
+                <li>
+                    Add in Authorized redirect URIs :
+                    <ul>
+                        <li>https://www.your-website.com/@NWDAccountController.ASP_Controller()/@nameof(NWDAccountController.GoogleRedirect)/</li>
+                        <li>https://localhost:4051/@NWDAccountController.ASP_Controller()/@nameof(NWDAccountController.GoogleRedirect)/</li>
+                        <li>http://localhost:4050/@NWDAccountController.ASP_Controller()/@nameof(NWDAccountController.GoogleRedirect)/</li>
+                    </ul>
+                </li>
+            </ul>
+            <div class="alert alert-warning border-2 d-flex align-items-center">
+                <div class="bg-warning me-3 icon-item">
+                    <span class="fas fa-exclamation-circle text-white fs-3"></span>
+                </div>
+                <p class="mb-0 flex-1">Change can take long time!</p>
+            </div>
+        </div>
+        <div class="card-body m-0">
+            In <b>appsetting.json</b> file in section <b>@nameof(NWDWebStandardConfiguration)</b> add :
+            <ul>
+                <li> <span class="text-primary">@nameof(NWDWebStandardConfiguration.AddGoogleSign)</span> with value to true</li>
+                <li> <span class="text-primary">@nameof(NWDWebStandardConfiguration.GoogleClientId)</span> and insert <b>@NWDAccountSignType.Google.ToString() client ID</b></li>
+                <li> <span class="text-primary">@nameof(NWDWebStandardConfiguration.GoogleClientSecret)</span> and insert <b>@NWDAccountSignType.Google.ToString() client secret</b></li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-lg-6 mb-3">
+        <div class="card bg-dark border-primary">
+            <div class="card-header border-bottom">appsettings.json</div>
+            <div class="card-body m-0">
+                <pre><code>
+{
+    "Logging": {...},
+    "AllowedHosts": "*",
+    "Kestrel": {...},
+    ...
+    <span class="text-primary">"@nameof(NWDWebStandardConfiguration)": {</span>
+        ...
+        <span class="text-primary"> "@nameof(NWDWebStandardConfiguration.AddGoogleSign)": "<span class="text-warning">true</span>",</span>
+        <span class="text-primary"> "@nameof(NWDWebStandardConfiguration.GoogleClientId)": "<span class="text-warning">@NWDRandom.UnsignedLongNumeric(16)</span>",</span>
+        <span class="text-primary"> "@nameof(NWDWebStandardConfiguration.GoogleClientSecret)": "<span class="text-warning">@NWDRandom.RandomStringCypher(32)</span>",</span>
+        ...
+    <span class="text-primary">},</span>
+    ...
+}
+                        </code></pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- linkedin OAuth -->
+<div class="row border-bottom mb-3">
+    <div class="col-lg-6 mb-3">
+        <div class="card-title">Add authentification by <a href="https://oauth.net/2/">OAuth2.0</a> from <a href="https://www.google.com">@NWDAccountSignType.LinkedIn.ToString()</a> application</div>
+        <div class="card-body m-0">
+            <div class="col-sm-6 mb-3">
+                <a class="btn btn-outline-secondary btn-sm d-block w-100" href="@Html.Raw(NWDAccountController.LinkedInOAuth_URL())"><span class="fab fa-linkedin me-2" data-fa-transform="grow-8"></span> LinkedIn</a>
+            </div>
+            <div class="mb-3">
+                Go to <a href="https://www.linkedin.com/developers/apps">https://www.linkedin.com/developers/apps</a> and create a new App for this website.
+                <br/>
+                Redirect URL is <span class="text-bg-primary ps-3 pe-3">~/@NWDAccountController.ASP_Controller()/@nameof(NWDAccountController.LinkedInRedirect)/</span>
+            </div>
+            <ul>
+                <li>
+                    Add in Authorized redirect URIs :
+                    <ul>
+                        <li>https://www.your-website.com/@NWDAccountController.ASP_Controller()/@nameof(NWDAccountController.LinkedInRedirect)/</li>
+                        <li>https://localhost:4051/@NWDAccountController.ASP_Controller()/@nameof(NWDAccountController.LinkedInRedirect)/</li>
+                        <li>http://localhost:4050/@NWDAccountController.ASP_Controller()/@nameof(NWDAccountController.LinkedInRedirect)/</li>
+                    </ul>
+                </li>
+            </ul>
+            <div class="alert alert-warning border-2 d-flex align-items-center">
+                <div class="bg-warning me-3 icon-item">
+                    <span class="fas fa-exclamation-circle text-white fs-3"></span>
+                </div>
+                <p class="mb-0 flex-1">Change can take long time!</p>
+            </div>
+        </div>
+        <div class="card-body m-0">
+            In <b>appsetting.json</b> file in section <b>@nameof(NWDWebStandardConfiguration)</b> add :
+            <ul>
+                <li> <span class="text-primary">@nameof(NWDWebStandardConfiguration.AddLinkedInSign)</span> with value to true</li>
+                <li> <span class="text-primary">@nameof(NWDWebStandardConfiguration.LinkedInClientId)</span> and insert <b>@NWDAccountSignType.LinkedIn.ToString() client ID</b></li>
+                <li> <span class="text-primary">@nameof(NWDWebStandardConfiguration.LinkedInClientSecret)</span> and insert <b>@NWDAccountSignType.LinkedIn.ToString() client secret</b></li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-lg-6 mb-3">
+        <div class="card bg-dark border-primary">
+            <div class="card-header border-bottom">appsettings.json</div>
+            <div class="card-body m-0">
+                <pre><code>
+{
+    "Logging": {...},
+    "AllowedHosts": "*",
+    "Kestrel": {...},
+    ...
+    <span class="text-primary">"@nameof(NWDWebStandardConfiguration)": {</span>
+        ...
+        <span class="text-primary"> "@nameof(NWDWebStandardConfiguration.AddLinkedInSign)": "<span class="text-warning">true</span>",</span>
+        <span class="text-primary"> "@nameof(NWDWebStandardConfiguration.LinkedInClientId)": "<span class="text-warning">@NWDRandom.UnsignedLongNumeric(16)</span>",</span>
+        <span class="text-primary"> "@nameof(NWDWebStandardConfiguration.LinkedInClientSecret)": "<span class="text-warning">@NWDRandom.RandomStringCypher(32)</span>",</span>
+        ...
+    <span class="text-primary">},</span>
+    ...
+}
+                        </code></pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- twitter OAuth -->
+<div class="row border-bottom mb-3">
+    <div class="col-lg-6 mb-3">
+        <div class="card-title">Add authentification by <a href="https://oauth.net/2/">OAuth2.0</a> from <a href="https://www.twitter.com">@NWDAccountSignType.Twitter.ToString()</a> application</div>
+        <div class="card-body m-0">
+            <div class="col-sm-6 mb-3">
+                <a class="btn btn-outline-twitter btn-sm d-block w-100" href="@Html.Raw(NWDAccountController.TwitterOAuth_URL())"><span class="fab fa-twitter me-2" data-fa-transform="grow-8"></span> Twitter</a>
+            </div>
+            <div class="mb-3">
+                Go to <a href="https://developer.twitter.com">https://developer.twitter.com</a> and create a new project for this website.
+                <br/>
+                Redirect URL is <span class="text-bg-primary ps-3 pe-3">~/@NWDAccountController.ASP_Controller()/@nameof(NWDAccountController.TwitterRedirect)/</span>
+            </div>
+            <ul>
+                <li>
+                    Add in Authorized redirect URIs :
+                    <ul>
+                        <li>https://www.your-website.com/@NWDAccountController.ASP_Controller()/@nameof(NWDAccountController.TwitterRedirect)/</li>
+                        <li>https://localhost:4051/@NWDAccountController.ASP_Controller()/@nameof(NWDAccountController.TwitterRedirect)/</li>
+                        <li>http://localhost:4050/@NWDAccountController.ASP_Controller()/@nameof(NWDAccountController.TwitterRedirect)/</li>
+                    </ul>
+                </li>
+            </ul>
+            <div class="alert alert-warning border-2 d-flex align-items-center">
+                <div class="bg-warning me-3 icon-item">
+                    <span class="fas fa-exclamation-circle text-white fs-3"></span>
+                </div>
+                <p class="mb-0 flex-1">Change can take long time!</p>
+            </div>
+        </div>
+        <div class="card-body m-0">
+            In <b>appsetting.json</b> file in section <b>@nameof(NWDWebStandardConfiguration)</b> add :
+            <ul>
+                <li> <span class="text-primary">@nameof(NWDWebStandardConfiguration.AddTwitterSign)</span> with value to true</li>
+                <li> <span class="text-primary">@nameof(NWDWebStandardConfiguration.TwitterClientId)</span> and insert <b>@NWDAccountSignType.Twitter.ToString() client ID</b></li>
+                <li> <span class="text-primary">@nameof(NWDWebStandardConfiguration.TwitterClientSecret)</span> and insert <b>@NWDAccountSignType.Twitter.ToString() client secret</b></li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-lg-6 mb-3">
+        <div class="card bg-dark border-primary">
+            <div class="card-header border-bottom">appsettings.json</div>
+            <div class="card-body m-0">
+                <pre><code>
+{
+    "Logging": {...},
+    "AllowedHosts": "*",
+    "Kestrel": {...},
+    ...
+    <span class="text-primary">"@nameof(NWDWebRuntimeConfiguration)": {</span>
+        ...
+        <span class="text-primary"> "@nameof(NWDWebStandardConfiguration.AddTwitterSign)": "<span class="text-warning">true</span>",</span>
+        <span class="text-primary"> "@nameof(NWDWebStandardConfiguration.TwitterClientId)": "<span class="text-warning">@NWDRandom.UnsignedLongNumeric(16)</span>",</span>
+        <span class="text-primary"> "@nameof(NWDWebStandardConfiguration.TwitterClientSecret)": "<span class="text-warning">@NWDRandom.RandomStringCypher(32)</span>",</span>
+        ...
+    <span class="text-primary">},</span>
+    ...
+}
+                        </code></pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Apple OAuth -->
+<div class="row border-bottom mb-3">
+    <div class="col-lg-6 mb-3">
+        <div class="card-title">Add authentification by <a href="https://oauth.net/2/">OAuth2.0</a> from <a href="https://www.Apple.com">@NWDAccountSignType.Apple.ToString()</a> application</div>
+        <div class="card-body m-0">
+            @{
+                string tAppleKey = @NWDRandom.RandomStringAlpha(10);
+                string tAppleKeyA = @NWDRandom.RandomStringCypher(64);
+                string tAppleKeyB = @NWDRandom.RandomStringCypher(64);
+                string tAppleKeyC = @NWDRandom.RandomStringCypher(64);
+                string tAppleKeyD = @NWDRandom.RandomStringCypher(8);
+            }
+            <div class="col-sm-6 mb-3">
+                <a class="btn btn-outline-secondary btn-sm d-block w-100" href="@Html.Raw(NWDAccountController.AppleOAuth_URL())"><span class="fab fa-apple me-2" data-fa-transform="grow-8"></span> Apple</a>
+            </div>
+            <div class="mb-3">
+                Go to <a href="https://www.Apple.com/developers/apps">https://www.Apple.com/developers/apps</a> and create a new App for this website.
+                
+                <ul>
+                    <li>Go to Certificates, Identifiers & Profiles > Identifiers and click on the + sign in the upper left next to “Identifiers”</li>
+                    <li>Select App IDs and hit continue.</li>
+                    <li>Here enter any Description and a Bundle ID (Apple recommends using a reverse-domain name style string ex: com.domainname.appname). Scroll down the Capabilities and make sure to tick on Sign In with Apple. And finally, click continue and in the next page verify the details and click Register.</li>
+                    <li>Now we need to obtain a Services Id. This will also serve as the <span class="text-primary">@nameof(NWDWebStandardConfiguration.AppleServiceId)</span> </li>
+                    <li>Again go to Certificates, Identifiers & Profiles > Identifiers and click on the + sign in the upper left next to “Identifiers”.</li>
+                    <li>This time select Services IDs and hit continue.</li>
+                    <li>Here enter any Description and an Identifier (Apple recommends using a reverse-domain name style string ex: com.domainname.appname). Make sure to tick on Sign In with Apple. Here you will have to click on the Configure button next to “Sign In with Apple”.</li>
+                    <li>Clicking the Configure button from the previous step will display a screen with Web Authentication Configuration. Make sure the App ID we obtained previously is selected as the Primary App ID. Next, you will have to add the Web Domain you will be using this service in (however I did not have to verify the domain to try out Sign In with Apple, but its best if you can get this done). I used example-app.com. Finally, add the Return URLs (you can add multiple) which will be the valid URLs to redirect the user after the user authenticates with Sign In with Apple (https://www.your-website.com/@NWDAccountController.ASP_Controller()/@nameof(NWDAccountController.AppleRedirect)/). Click Save.</li>
+                    <li>Click on Continue and in the next page verify the details and click Register.</li>
+                    <li>Go to Certificates, Identifiers & Profiles > Keys and click on the + sign in the upper left next to “Keys”.</li>
+                    <li>Give a Key Name and make sure to tick Sign In with Apple. Here also we will have to click on Configure. And in the screen that appears next(Configure Key) select the same App Id we used previously under Choose a Primary App ID and click Save.</li>
+                    <li>Click on Continue and in the next page verify the details and click Register.</li>
+                    <li>Download the key and keep it in a safe place as you will never be able to download it again. Click on Done after downloading the key.</li>
+                    <li><span class="text-primary">@nameof(NWDWebStandardConfiguration.AppleKeyId)</span> is in the name of <b>AuthKey_<span class="text-warning">@tAppleKey</span>.p8</b> file</li>
+                    <li> <span class="text-primary">@nameof(NWDWebStandardConfiguration.AppleKeyValue)</span> and insert the value of the file, removing the <code>`-----BEGIN PRIVATE KEY-----`</code> and <code>`-----END PRIVATE KEY-----`</code> prefix and suffix, and insert line by line in a string array. </li>
+                    <li>Now you need generate secret key by JWT</li>
+                    <li></li>
+                    <li></li>
+                </ul>
+                <br/>
+                Redirect URL is <span class="text-bg-primary ps-3 pe-3">~/@NWDAccountController.ASP_Controller()/@nameof(NWDAccountController.AppleRedirect)/</span>
+            </div>
+            <div>
+                Example of Key value :
+                <div>
+                    <b>AuthKey_<span class="text-warning">@tAppleKey</span>.p8</b>
+                </div>
+                <pre><code>
+-----BEGIN PRIVATE KEY-----
+@tAppleKeyA
+@tAppleKeyB
+@tAppleKeyC
+@tAppleKeyD
+-----END PRIVATE KEY-----
+                            </code></pre>
+            </div>
+            @*                         <div> *@
+            @*                             Example of SecretKey generated *@
+            @*                             <pre><code> *@
+            @* @NWDAccountController.CreateSecretKey() *@
+            @*                             </code></pre> *@
+            @*                         </div> *@
+            <ul>
+                <li>
+                    Add in Authorized redirect URIs :
+                    <ul>
+                        <li>https://www.your-website.com/@NWDAccountController.ASP_Controller()/@nameof(NWDAccountController.AppleRedirect)/</li>
+                    </ul>
+                </li>
+            </ul>
+            <div class="alert alert-warning border-2 d-flex align-items-center">
+                <div class="bg-warning me-3 icon-item">
+                    <span class="fas fa-exclamation-circle text-white fs-3"></span>
+                </div>
+                <p class="mb-0 flex-1">Change can take long time!</p>
+            </div>
+        </div>
+        <div class="card-body m-0">
+            In <b>appsetting.json</b> file in section <b>@nameof(NWDWebStandardConfiguration)</b> add :
+            <ul>
+                <li> <span class="text-primary">@nameof(NWDWebStandardConfiguration.AddAppleSign)</span> with value to true</li>
+                <li> <span class="text-primary">@nameof(NWDWebStandardConfiguration.AppleServiceId)</span> and insert <b>App client ID</b></li>
+                <li> <span class="text-primary">@nameof(NWDWebStandardConfiguration.AppleTeamId)</span> and insert <b>@NWDAccountSignType.Apple.ToString() Team ID</b></li>
+                <li> <span class="text-primary">@nameof(NWDWebStandardConfiguration.AppleKeyId)</span> and insert the <b>Key ID</b> (in the name of <b>AuthKey_<span class="text-warning">@tAppleKey</span>.p8</b> file)</li>
+                <li> <span class="text-primary">@nameof(NWDWebStandardConfiguration.AppleKeyValue)</span> and insert the value of the file, removing the <code>`-----BEGIN PRIVATE KEY-----`</code> and <code>`-----END PRIVATE KEY-----`</code> prefix and suffix, and insert line by line in a string array. </li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-lg-6 mb-3">
+        <div class="card bg-dark border-primary">
+            <div class="card-header border-bottom">appsettings.json</div>
+            <div class="card-body m-0">
+                <pre><code>
+{
+    "Logging": {...},
+    "AllowedHosts": "*",
+    "Kestrel": {...},
+    ...
+    <span class="text-primary">"@nameof(NWDWebStandardConfiguration)": {</span>
+        ...
+        <span class="text-primary"> "@nameof(NWDWebStandardConfiguration.AddAppleSign)": "<span class="text-warning">true</span>",</span>
+        <span class="text-primary"> "@nameof(NWDWebStandardConfiguration.AppleServiceId)": "<span class="text-warning">com.my-website.app</span>",</span>
+        <span class="text-primary"> "@nameof(NWDWebStandardConfiguration.AppleTeamId)": "<span class="text-warning">@NWDRandom.UnsignedLongNumeric(10)</span>",</span>
+        <span class="text-primary"> "@nameof(NWDWebStandardConfiguration.AppleKeyId)": "<span class="text-warning">@tAppleKey</span>",</span>
+        <span class="text-primary"> "@nameof(NWDWebStandardConfiguration.AppleKeyValue)": [
+            "<span class="text-warning">@tAppleKeyA</span>",
+            "<span class="text-warning">@tAppleKeyB</span>",
+            "<span class="text-warning">@tAppleKeyC</span>",
+            "<span class="text-warning">@tAppleKeyD</span>",
+        ],</span>
+        ...
+    <span class="text-primary">},</span>
+    ...
+}
+                        </code></pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- microsoft OAuth -->
+<div class="row border-bottom mb-3">
+    <div class="col-lg-6 mb-3">
+        <div class="card-title">Add authentification by <a href="https://oauth.net/2/">OAuth2.0</a> from <a href="https://www.Microsoft.com">@NWDAccountSignType.Microsoft.ToString()</a> application</div>
+        <div class="card-body m-0">
+            <div class="col-sm-6 mb-3">
+                <a class="btn btn-outline-secondary btn-sm d-block w-100" href="@Html.Raw(NWDAccountController.MicrosoftOAuth_URL())"><span class="fab fa-microsoft me-2" data-fa-transform="grow-8"></span> Microsoft</a>
+            </div>
+            <div class="mb-3">
+                Go to <a href="https://www.Microsoft.com/developers/apps">https://www.Microsoft.com/developers/apps</a> and create a new App for this website.
+                <br/>
+                Redirect URL is <span class="text-bg-primary ps-3 pe-3">~/@NWDAccountController.ASP_Controller()/@nameof(NWDAccountController.MicrosoftRedirect)/</span>
+            </div>
+            <ul>
+                <li>
+                    Add in Authorized redirect URIs :
+                    <ul>
+                        <li>https://www.your-website.com/@NWDAccountController.ASP_Controller()/@nameof(NWDAccountController.MicrosoftRedirect)/</li>
+                        <li>https://localhost:4051/@NWDAccountController.ASP_Controller()/@nameof(NWDAccountController.MicrosoftRedirect)/</li>
+                        <li>http://localhost:4050/@NWDAccountController.ASP_Controller()/@nameof(NWDAccountController.MicrosoftRedirect)/</li>
+                    </ul>
+                </li>
+            </ul>
+            <div class="alert alert-warning border-2 d-flex align-items-center">
+                <div class="bg-warning me-3 icon-item">
+                    <span class="fas fa-exclamation-circle text-white fs-3"></span>
+                </div>
+                <p class="mb-0 flex-1">Change can take long time!</p>
+            </div>
+        </div>
+        <div class="card-body m-0">
+            In <b>appsetting.json</b> file in section <b>@nameof(NWDWebStandardConfiguration)</b> add :
+            <ul>
+                <li> <span class="text-primary">@nameof(NWDWebStandardConfiguration.AddMicrosoftSign)</span> with value to true</li>
+                <li> <span class="text-primary">@nameof(NWDWebStandardConfiguration.MicrosoftClientId)</span> and insert <b>@NWDAccountSignType.Microsoft.ToString() client ID</b></li>
+                <li> <span class="text-primary">@nameof(NWDWebStandardConfiguration.MicrosoftClientSecret)</span> and insert <b>@NWDAccountSignType.Microsoft.ToString() client secret</b></li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-lg-6 mb-3">
+        <div class="card bg-dark border-primary">
+            <div class="card-header border-bottom">appsettings.json</div>
+            <div class="card-body m-0">
+                <pre><code>
+{
+    "Logging": {...},
+    "AllowedHosts": "*",
+    "Kestrel": {...},
+    ...
+    <span class="text-primary">"@nameof(NWDWebStandardConfiguration)": {</span>
+        ...
+        <span class="text-primary"> "@nameof(NWDWebStandardConfiguration.AddMicrosoftSign)": "<span class="text-warning">true</span>",</span>
+        <span class="text-primary"> "@nameof(NWDWebStandardConfiguration.MicrosoftClientId)": "<span class="text-warning">@NWDRandom.UnsignedLongNumeric(16)</span>",</span>
+        <span class="text-primary"> "@nameof(NWDWebStandardConfiguration.MicrosoftClientSecret)": "<span class="text-warning">@NWDRandom.RandomStringCypher(32)</span>",</span>
+        ...
+    <span class="text-primary">},</span>
+    ...
+}
+                        </code></pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- society's information -->
+<div class="row border-bottom mb-3">
+    <div class="col-lg-6 mb-3">
+        <div class="card-title">Add your society's information!</div>
+        <div class="card-body m-0">
+            In <b>appsetting.json</b> file in section <b>@nameof(NWDWebRuntimeConfiguration)</b> add :
+            <ul>
+                <li> <span class="text-primary">@nameof(NWDWebStandardConfiguration.SocietyName)</span> and insert your society's name</li>
+                <li> <span class="text-primary">@nameof(NWDWebStandardConfiguration.SocietyAddress)</span> and insert your society's postal address</li>
+                <li> <span class="text-primary">@nameof(NWDWebStandardConfiguration.SocietyTown)</span> and insert your society's town</li>
+                <li> <span class="text-primary">@nameof(NWDWebStandardConfiguration.SocietyZipCode)</span> and insert your society's zip code</li>
+                <li> <span class="text-primary">@nameof(NWDWebStandardConfiguration.SocietyCountry)</span> and insert your society's country</li>
+                <li> <span class="text-primary">@nameof(NWDWebStandardConfiguration.SocietySiret)</span> and insert your society's offical number</li>
+                <li> <span class="text-primary">@nameof(NWDWebStandardConfiguration.SocietyApe)</span> and insert your society's offical code</li>
+                <li> <span class="text-primary">@nameof(NWDWebStandardConfiguration.SocietyRcs)</span> and insert your society's offical office dependence</li>
+                <li> <span class="text-primary">@nameof(NWDWebStandardConfiguration.SocietyTva)</span> and insert your society's international tax number</li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-lg-6 mb-3">
+        <div class="card bg-dark border-primary">
+            <div class="card-header border-bottom">appsettings.json</div>
+            <div class="card-body m-0">
+                <pre><code>
+{
+    "Logging": {...},
+    "AllowedHosts": "*",
+    "Kestrel": {...},
+    ...
+    <span class="text-primary">"@nameof(NWDWebRuntimeConfiguration)": {</span>
+        ...
+        <span class="text-primary"> "@nameof(NWDWebStandardConfiguration.SocietyName)": "<span class="text-warning">idéMobi</span>",</span>
+        <span class="text-primary"> "@nameof(NWDWebStandardConfiguration.SocietyAddress)": "<span class="text-warning">43, rue d'Atlanta</span>",</span>
+        <span class="text-primary"> "@nameof(NWDWebStandardConfiguration.SocietyTown)": "<span class="text-warning">Marcq-En-Barœul</span>",</span>
+        <span class="text-primary"> "@nameof(NWDWebStandardConfiguration.SocietyZipCode)": "<span class="text-warning">59700</span>",</span>
+        <span class="text-primary"> "@nameof(NWDWebStandardConfiguration.SocietyCountry)": "<span class="text-warning">FRANCE</span>",</span>
+        <span class="text-primary"> "@nameof(NWDWebStandardConfiguration.SocietySiret)": "<span class="text-warning">44424955100011</span>",</span>
+        <span class="text-primary"> "@nameof(NWDWebStandardConfiguration.SocietyApe)": "<span class="text-warning">7722C</span>",</span>
+        <span class="text-primary"> "@nameof(NWDWebStandardConfiguration.SocietyRcs)": "<span class="text-warning">LILLE</span>",</span>
+        <span class="text-primary"> "@nameof(NWDWebStandardConfiguration.SocietyTva)": "<span class="text-warning">FR93444249551</span>",</span>
+        ...
+    <span class="text-primary">},</span>
+    ...
+}
+                        </code></pre>
+            </div>
+        </div>
+    </div>
+</div>

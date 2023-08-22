@@ -1,0 +1,34 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@using Microsoft.AspNetCore.Http
+@using NWDWebRuntime.Managers
+@using NWDWebRuntime.Models
+@using NWDWebStandard.Controllers
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@inject IHttpContextAccessor HttpContextAccessor
+    <!-- TITLE With background -->
+<div class="card mb-3">
+    <div class="bg-holder d-none d-lg-block bg-card background-corner-4">
+    </div>
+    <div class="card-body position-relative">
+        <div class="row">
+            <div class="col-lg-8">
+                <h3>Manage your signs</h3>
+                <p class="mb-0">You can edit your authentication methods on this page..</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (NWDAccountWebManager.AccountIsConnected(HttpContextAccessor.HttpContext) == true)
+{
+    await Html.RenderPartialAsync("~/Views/Shared/_AccountSignsList.cshtml");
+}
+else
+{
+    await Html.RenderPartialAsync(NWDAccountController.K_AccountSignInForm, @ViewData[typeof(NWDAccountSignIn).Name]);
+}

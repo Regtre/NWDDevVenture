@@ -1,0 +1,21 @@
+@using System.Reflection
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string? tModelToUse = ViewData["ModelToUse"] as string;
+    Type? tModel = null;
+    if (tModelToUse != null)
+    {
+        tModel = Type.GetType(tModelToUse);
+    }
+   
+    object? tResultToUse = ViewData["ResultToUse"];
+
+    PropertyInfo? tReferenceProp = tModel?.GetProperty("Reference");
+    string tReference = ((ulong)(tReferenceProp?.GetValue(tResultToUse) ?? 0)).ToString();
+}
+
+<div class="card-body border-bottom">
+              ... @tReference trashed ... 
+</div>
+@Html.Raw("<script>"+(ViewData["Javascript"]as string ?? string.Empty)+"</script>")

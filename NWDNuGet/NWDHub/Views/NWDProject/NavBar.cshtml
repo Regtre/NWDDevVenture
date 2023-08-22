@@ -1,0 +1,102 @@
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using NWDFoundation.Models
+@using NWDHub.Models
+@using NWDWebRuntime.Models
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    NWDProject? tResultToUse = ViewData["ResultToUse"] as NWDProject;
+    if (tResultToUse != null)
+    {
+        NWDNavBarMenu tMenu = new NWDNavBarMenu()
+        {
+            Name="Project "+tResultToUse.Name, BadgeText = "test",
+            //ActionName = "Show",ControllerName = "NWDProject", UrlParameter = "sReference=" + tResultToUse.Reference,
+            Categories = new List<NWDNavBarCategory>()
+            {
+                new NWDNavBarCategory()
+                {
+                    Name = "Dashboard",
+                    IconStyle = "far fa-comment-alt",
+                    Elements = new List<NWDNavBarElement>()
+                    {
+                        new NWDNavBarElement()
+                        {
+                            Name = "Information", ActionName = "Show", ControllerName = "NWDProject", UrlParameter = "sReference=" + tResultToUse.Reference
+                        },
+                        new NWDNavBarElement()
+                        {
+                            Name = "Instructions", ActionName = "Instructions", ControllerName = "NWDProject", UrlParameter = "sReference=" + tResultToUse.Reference
+                        },
+                        new NWDNavBarElement()
+                        {
+                            Name = "Roles", ActionName = "Roles", ControllerName = "NWDProject", UrlParameter = "sReference=" + tResultToUse.Reference
+                        },
+                        new NWDNavBarElement()
+                        {
+                            Name = "Environments", ActionName = "Environments", ControllerName = "NWDProject", UrlParameter = "sReference=" + tResultToUse.Reference
+                        },
+                        new NWDNavBarElement()
+                        {
+                            Name = "Custom classes", ActionName = "CustomClasses", ControllerName = "NWDProject", UrlParameter = "sReference=" + tResultToUse.Reference
+                        }
+                    }
+                },
+                new NWDNavBarCategory()
+                {
+                    Name = "Billing",
+                    IconStyle = "far fa-file-alt", BadgeText = "test",
+                    Elements = new List<NWDNavBarElement>()
+                    {
+                        new NWDNavBarElement()
+                        {
+                            Name = "Estimates", ActionName = "Estimates", ControllerName = "NWDProject", UrlParameter = "sReference=" + tResultToUse.Reference
+                        },
+                        new NWDNavBarElement()
+                        {
+                            Name = "Billings", ActionName = "Billings", ControllerName = "NWDProject", UrlParameter = "sReference=" + tResultToUse.Reference
+                        },
+                    }
+                },
+                new NWDNavBarCategory()
+                {
+                    Name = "Other actions",
+                    IconStyle = "fas fa-tools",
+                    Elements = new List<NWDNavBarElement>()
+                    {
+                        new NWDNavBarElement()
+                        {
+                            Name = "Publish", ActionName = "Publish", ControllerName = "NWDProject", UrlParameter = "sReference=" + tResultToUse.Reference
+                        },
+                        new NWDNavBarElement()
+                        {
+                            Name = "DeleteInstructions", ActionName = "Delete", ControllerName = "NWDProject", UrlParameter = "sReference=" + tResultToUse.Reference, BadgeText = "test"
+                        },
+                    }
+                },
+                new NWDNavBarCategory()
+                {
+                    Name = "Your Website",
+                    IconStyle = "fas fa-tools",
+                    Elements = new List<NWDNavBarElement>()
+                    {
+                        new NWDNavBarElement()
+                        {
+                            Name = "Generate CSProj", ActionName = "Publish", ControllerName = "NWDProject", UrlParameter = "sReference=" + tResultToUse.Reference
+                        },
+                        new NWDNavBarElement()
+                        {
+                            Name = "Install your website", ActionName = "Delete", ControllerName = "NWDProject", UrlParameter = "sReference=" + tResultToUse.Reference
+                        },
+                        new NWDNavBarElement()
+                        {
+                            Name = "Use our Yaml (gitlab)", ActionName = "Delete", ControllerName = "NWDProject", UrlParameter = "sReference=" + tResultToUse.Reference
+                        },
+                    }
+                }
+            }
+        };
+    <partial name="_NWDNavBarMenu" model="@tMenu"/>
+    }
+}

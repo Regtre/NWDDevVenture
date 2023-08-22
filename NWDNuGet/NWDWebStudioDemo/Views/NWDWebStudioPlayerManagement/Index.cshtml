@@ -1,0 +1,204 @@
+@using System.Diagnostics
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using NWDFoundation.Configuration
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="row">
+    @* <div class="col-12"> *@
+    @*     <h1>My title</h1> *@
+    @* </div> *@
+    <!-- Title absolute background -->
+    <div class="col-12">
+    <div class="card mb-3">
+        <div class="bg-holder d-none d-lg-block bg-card background-corner-2">
+        </div>
+        <div class="card-body position-relative">
+            <div class="row">
+                <div class="col-lg-8">
+                    <h3>Avatar</h3>
+                    <p class="mb-0">Use avater of different shapes and sizes with a single component.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    
+    <!-- Title with white background -->
+    <div class="col-12">
+        <div class="card mb-3">
+            <div class="card-header background-corner-2 border-bottom">
+                <div class="card-title">
+                    <h3>
+                        <span class="bi bi-file-earmark-text me-2"></span>My title
+                    </h3>
+                </div>
+            </div>
+            <div class="card-body">
+                Description of this page ... 
+            </div>
+        </div>
+    </div>
+<!-- cards by col with bg-light background -->
+    <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                <div class="card mb-3">
+                    <div class="card-header bg-light border-bottom">
+                        <div class="card-title">
+                            <span class="bi bi-file-earmark-text me-2"></span> Sub title for this card
+                        </div>
+                    </div>
+                    <div class="card-body">
+                Description of this card ... 
+                    </div>
+                    <div class="card-body position-relative m-0 p-0">
+                        <div class="table-responsive scrollbar m-0 p-0">
+                            <table class="table table-sm mb-0 fs--1">
+                                <thead class="text-800 bg-light">
+                                <tr>
+                                    <th class="align-middle"></th>
+                                    <th class="align-middle">Filename</th>
+                                    <th class="align-middle">Date</th>
+                                    <th class="align-middle">Size</th>
+                                    <th class="text-end">Download</th>
+                                </tr>
+                                </thead>
+                                <tbody class="list">
+                                <tr>
+                                    <td class="align-middle"></td>
+                                    <td class="align-middle">ssd</td>
+                                    <td class="align-middle">01/001/2023</td>
+                                    <td class="align-middle">111 Mo</td>
+                                    <td class="text-end"><button class="btn btn-sm btn-outline-primary"><span class="bi bi-file me-2"></span>Download</button></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                    </div>
+                </div>
+            </div>
+    <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                <div class="card mb-3">
+                    <div class="card-header bg-light border-bottom background-corner-3">
+                        <div class="card-title">
+                            <span class="bi bi-file-earmark-text me-2"></span> Sub title for this card
+                        </div>
+                    </div>
+                    <div class="card-body">
+                Description of this card ... 
+                    </div>
+                    <div class="card-footer">
+                    </div>
+                </div>
+            </div>
+    <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                <div class="card mb-3">
+                    <div class="card-header bg-light border-bottom background-corner-3">
+                        <div class="card-title">
+                            <span class="bi bi-file-earmark-text me-2"></span> Sub title for this card
+                        </div>
+                    </div>
+                    <div class="card-body">
+                Description of this card ... 
+                    </div>
+                    <div class="card-footer">
+                    </div>
+                </div>
+            </div>
+    <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                <div class="card mb-3">
+                    <div class="card-header bg-light border-bottom background-corner-3">
+                        <div class="card-title">
+                            <span class="bi bi-file-earmark-text me-2"></span> Sub title for this card
+                        </div>
+                    </div>
+                    <div class="card-body">
+                Description of this card ... 
+                    </div>
+                    <div class="card-footer">
+                    </div>
+                </div>
+            </div>
+    <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                <div class="card mb-3">
+                    <div class="card-header bg-light border-bottom background-corner-3">
+                        <div class="card-title">
+                            <span class="bi bi-file-earmark-text me-2"></span> Sub title for this card
+                        </div>
+                    </div>
+                    <div class="card-body">
+                Description of this card ... 
+                    </div>
+                    <div class="card-footer">
+                    </div>
+                </div>
+            </div>
+    <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                <div class="card mb-3">
+                    <div class="card-header bg-light border-bottom background-corner-3">
+                        <div class="card-title">
+                            <span class="bi bi-file-earmark-text me-2"></span> Sub title for this card
+                        </div>
+                    </div>
+                    <div class="card-body">
+                Description of this card ... 
+                    </div>
+                    <div class="card-footer">
+                    </div>
+                </div>
+            </div>
+    <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                <div class="card mb-3">
+                    <div class="card-header bg-light border-bottom background-corner-3">
+                        <div class="card-title">
+                            <span class="bi bi-file-earmark-text me-2"></span> Sub title for this card
+                        </div>
+                    </div>
+                    <div class="card-body">
+                Description of this card ... 
+                    </div>
+                    <div class="card-footer">
+                    </div>
+                </div>
+            </div>
+    <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                <div class="card mb-3">
+                    <div class="card-header bg-light border-bottom background-corner-3">
+                        <div class="card-title">
+                            <span class="bi bi-file-earmark-text me-2"></span> Sub title for this card
+                        </div>
+                    </div>
+                    <div class="card-body">
+                Description of this card ... 
+                    </div>
+                    <div class="card-footer">
+                    </div>
+                </div>
+            </div>
+    <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                <div class="card mb-3">
+                    <div class="card-header bg-light border-bottom background-corner-3">
+                        <div class="card-title">
+                            <span class="bi bi-file-earmark-text me-2"></span> Sub title for this card
+                        </div>
+                    </div>
+                    <div class="card-body">
+                Description of this card ... 
+                    </div>
+                    <div class="card-footer">
+                    </div>
+                </div>
+            </div>
+<!-- footer card by col without background -->
+    <div class="col-12">
+        <div class="card mb-3">
+            <div class="card-body">
+                Footer of this page ...  
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,19 @@
+﻿@using System.Globalization
+@model NWDWebDownloader.Models.NWDBuild
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<tr>
+    <td class="align-middle"><span class="bi bi-file-earmark-text"></span></td>
+    <td class="align-middle overflow-hidden">@Model.Name</td>
+    <td class="align-middle">@Model.Date.ToString(CultureInfo.CurrentUICulture.DateTimeFormat.ShortDatePattern)</td>
+    <td class="align-middle">@Model.Size</td>
+    <td class="text-end">
+        <form asp-action="Download" asp-controller="NWDWebDownloader" method="post">
+            @Html.HiddenFor(Model => Model.FolderName)
+            @Html.HiddenFor(Model => Model.Name)
+            @Html.HiddenFor(Model => Model.Path)
+            <button type="submit" class="btn btn-sm btn-primary"> <span class="bi bi-download"></span></button>
+        </form>
+    </td>
+</tr>

@@ -1,0 +1,226 @@
+@using MailKit.Security
+@using Microsoft.AspNetCore.Http
+@using NWDFoundation.Localization
+@using NWDFoundation.Tools
+@using NWDWebDevelopment.Controllers
+@using NWDWebEmailSender.Models
+@using NWDWebRuntime.Configuration
+@using NWDWebRuntime.Extensions
+@using NWDWebRuntime.Managers
+@using NWDWebRuntime.Models.Enums
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model NWDEmailConfigurationModel
+
+<div class="container p-0 m-0">
+    <div class="row g-3">
+
+        <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 col-xxl-6">
+            <div class="card">
+                @using (Html.BeginForm(nameof(NWDEmailConfigurationController.Index), NWDEmailConfigurationController.ASP_Controller(), FormMethod.Post))
+                {
+                    <div class="card-header background-corner-2 border-bottom d-flex justify-content-between">
+                        <div>
+                            <div class="card-title">
+                                <h1><span class="fas fa-envelope-open-text"></span> Test to send email</h1>
+                            </div>
+                            <p class="mb-0">You are my only hope!</p>
+                        </div>
+                        <div class="align-text-top">
+                            <div class="">
+                                <button class="btn btn-sm btn-outline-secondary dropdown-toggle dropdown-caret-none btn-reveal" type="button" id="wRgNywVeIprCQOTn" data-bs-toggle="dropdown" data-boundary="viewport" aria-haspopup="true" aria-expanded="false">
+                                    <span class="fas fa-ellipsis-h fs--1"></span>
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-end border py-2" aria-labelledby="wRgNywVeIprCQOTn" style="">
+                                    @foreach (NWDEmailConfigurationPredefine tPredefine in Enum.GetValues<NWDEmailConfigurationPredefine>())
+                                    {
+                                        <a href="?sPredefine=@tPredefine" class="dropdown-item">
+                                            <span class="fs-1 bi-pencil me-2"></span>Template @tPredefine
+                                        </a>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body position-relative border-bottom">
+                        @Html.AntiForgeryToken()
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.Kind, new { @class = "form-label" })
+                            @Html.DropDownListFor(m => m.Kind, Html.GetEnumSelectList(typeof(NWDEmailConfigurationKind)), new { @class = "form-control", @placeholder = "Secure" })
+                            @Html.ValidationMessageFor(m => m.Kind, null, new { @class = "hide-if-empty alert alert-warning mt-1 p-3 pt-1 pb-1" }, "div")
+                        </div>
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.Server, new { @class = "form-label" })
+                            @Html.TextBoxFor(m => m.Server, new { @class = "form-control", @placeholder = "Server" })
+                            @Html.ValidationMessageFor(m => m.Server, null, new { @class = "hide-if-empty alert alert-warning mt-1 p-3 pt-1 pb-1" }, "div")
+                        </div>
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.Port, new { @class = "form-label" })
+                            @Html.TextBoxFor(m => m.Port, new { @class = "form-control", @placeholder = "Port" })
+                            @Html.ValidationMessageFor(m => m.Port, null, new { @class = "hide-if-empty alert alert-warning mt-1 p-3 pt-1 pb-1" }, "div")
+                        </div>
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.Secure, new { @class = "form-label" })
+                            @Html.DropDownListFor(m => m.Secure, Html.GetEnumSelectList(typeof(SecureSocketOptions)), new { @class = "form-control", @placeholder = "Secure" })
+                            @Html.ValidationMessageFor(m => m.Secure, null, new { @class = "hide-if-empty alert alert-warning mt-1 p-3 pt-1 pb-1" }, "div")
+                        </div>
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.User, new { @class = "form-label" })
+                            @Html.TextBoxFor(m => m.User, new { @class = "form-control", @placeholder = "Email" })
+                            @Html.ValidationMessageFor(m => m.User, null, new { @class = "hide-if-empty alert alert-warning mt-1 p-3 pt-1 pb-1" }, "div")
+                        </div>
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.Secret, new { @class = "form-label" })
+                            @Html.TextBoxFor(m => m.Secret, new { @class = "form-control", @placeholder = "Password" })
+                            @Html.ValidationMessageFor(m => m.Secret, null, new { @class = "hide-if-empty alert alert-warning mt-1 p-3 pt-1 pb-1" }, "div")
+                        </div>
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.EmailWebsite, new { @class = "form-label" })
+                            @Html.TextBoxFor(m => m.EmailWebsite, new { @class = "form-control", @placeholder = "Email" })
+                            @Html.ValidationMessageFor(m => m.EmailWebsite, null, new { @class = "hide-if-empty alert alert-warning mt-1 p-3 pt-1 pb-1" }, "div")
+                        </div>
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.EmailNoReply, new { @class = "form-label" })
+                            @Html.TextBoxFor(m => m.EmailNoReply, new { @class = "form-control", @placeholder = "Email" })
+                            @Html.ValidationMessageFor(m => m.EmailNoReply, null, new { @class = "hide-if-empty alert alert-warning mt-1 p-3 pt-1 pb-1" }, "div")
+                        </div>
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.CopyToWebmaster, new { @class = "form-label" })
+                            <div class="form-check">
+                                @Html.CheckBoxFor(m => m.CopyToWebmaster, new { @class = "form-check-input", @placeholder = "Email" }) <span class="form-check-label"> sent copy carbon to webmaster</span>
+                            </div>
+                            @Html.ValidationMessageFor(m => m.CopyToWebmaster, null, new { @class = "hide-if-empty alert alert-warning mt-1 p-3 pt-1 pb-1" }, "div")
+                        </div>
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.EmailWebmaster, new { @class = "form-label" })
+                            @Html.TextBoxFor(m => m.EmailWebmaster, new { @class = "form-control", @placeholder = "Email" })
+                            @Html.ValidationMessageFor(m => m.EmailWebmaster, null, new { @class = "hide-if-empty alert alert-warning mt-1 p-3 pt-1 pb-1" }, "div")
+                        </div>
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.EmailTester, new { @class = "form-label" })
+                            @Html.TextBoxFor(m => m.EmailTester, new { @class = "form-control", @placeholder = "Email" })
+                            @Html.ValidationMessageFor(m => m.EmailTester, null, new { @class = "hide-if-empty alert alert-warning mt-1 p-3 pt-1 pb-1" }, "div")
+                        </div>
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.Test, new { @class = "form-label" })
+                            @Html.DropDownListFor(m => m.Test, Html.GetEnumSelectList(typeof(NWDEmailConfigurationTest)), new { @class = "form-control", @placeholder = "Secure" })
+                            @Html.ValidationMessageFor(m => m.Test, null, new { @class = "hide-if-empty alert alert-warning mt-1 p-3 pt-1 pb-1" }, "div")
+                        </div>
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.Template, new { @class = "form-label" })
+                            @Html.DropDownListFor(m => m.Template, new SelectList(NWDEmailTemplateManager.GetAll(), "Key", "Key"), new { @class = "form-control", @placeholder = "Secure" })
+                            @Html.ValidationMessageFor(m => m.Template, null, new { @class = "hide-if-empty alert alert-warning mt-1 p-3 pt-1 pb-1" }, "div")
+                        </div>
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.Asynchronous, new { @class = "form-label" })
+                            <div class="form-check">
+                                @Html.CheckBoxFor(m => m.Asynchronous, new { @class = "form-check-input", @placeholder = "Email" }) <span class="form-check-label"> sent asynchrone</span>
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Asynchronous, null, new { @class = "hide-if-empty alert alert-warning mt-1 p-3 pt-1 pb-1" }, "div")
+                        </div>
+                    </div>
+
+                    <div class="card-footer d-flex justify-content-between">
+                        <button class="btn btn-sm btn-outline-primary" type="submit"><span class="fas fa-paper-plane me-2"></span>Test</button>
+                    </div>
+                }
+            </div>
+        </div>
+        @if (string.IsNullOrEmpty(Model.Exception) == false)
+        {
+            <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 col-xxl-6">
+                <div class="card">
+                    <div class="card-header bg-danger border-bottom">
+                        <div class="card-title">
+                            <h1><span class="far fa-sad-cry"></span> Exception</h1>
+                        </div>
+                    </div>
+                    <div class="card-body position-relative border-bottom">
+                        <p>
+                            <code>
+                                <pre>
+        @Model.Exception
+        </pre>
+                            </code>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        }
+        @if (string.IsNullOrEmpty(Model.Json) == false)
+        {
+            <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 col-xxl-6">
+                <div class="card">
+                    <div class="card-header background-corner-2 border-bottom">
+                        <div class="card-title">
+                            <h1><span class="far fa-thumbs-up"></span> Json configuration</h1>
+                        </div>
+                    </div>
+                    <div class="card-body position-relative border-bottom">
+                        <p>
+                            <code>
+                                <pre>
+"@nameof(NWDEmailConfiguration)" :
+@Model.Json
+</pre>
+                            </code>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        }
+        <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 col-xxl-6">
+            <div class="card">
+                <div class="card-header background-corner-2 border-bottom">
+                    <div class="card-title">
+                        <h1><span class="far fa-life-ring"></span> Help</h1>
+                    </div>
+                </div>
+                <div class="card-body position-relative border-bottom">
+                    <p>
+                        Email template use resource to translate. Some tag inserted are automatically replace by engine.
+                    </p>
+                    <h5 class="fs-0">@NWDEmailTemplate.K_SUBJECT_TAG</h5>
+                    <p class="fs--1">Replace by the subject as param in method.</p>
+                    <h5 class="fs-0">@NWDEmailTemplate.K_MESSAGE_TAG</h5>
+                    <p class="fs--1">Replace by the message as param in method.</p>
+                    <h5 class="fs-0">@NWDEmailTemplate.K_WEBSITE_DNS_TAG</h5>
+                    <p class="fs--1">Replace by the dns.</p>
+                    <h5 class="fs-0">@NWDEmailTemplate.K_WEBSITE_HTTPS_TAG</h5>
+                    <p class="fs--1">Replace by the https url.</p>
+                    <div class="d-flex justify-content-center">
+                        <img class="spinner-grow" src="https://lucid.app/publicSegments/view/c6db80c4-86db-400e-b8e0-9fc991757386/image.png" alt="schema Net-Worked-Data ©2023" onload="this.className='img-fluid';"/>
+                    </div>
+                    
+                    <p>Information for Microsoft</p>
+                    <p><a href="https://learn.microsoft.com/fr-fr/exchange/troubleshoot/email-delivery/fix-issues-with-printers-scanners-and-lob-applications-that-send-email-using-off?source=recommendations"> See Microsoft documentation</a></p>
+                </div>
+            </div>
+        </div>
+        @foreach (KeyValuePair<string, NWDEmailTemplate> tTemplateKey in NWDEmailTemplateManager.GetAll())
+        {
+            NWDEmailTemplate tTemplate = tTemplateKey.Value.PrepareFor(HttpContextAccessor.HttpContext, "Subject of email", "Message of email");
+            <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 col-xxl-6">
+                <div class="card">
+                    <div class="card-header background-corner-2 border-bottom">
+                        <div class="card-title">
+                            <h3>
+                                <span class="far fa-envelope"></span> @tTemplateKey.Key
+                            </h3>
+                        </div>
+                    </div>
+                    <div class="card-body position-relative border-bottom">
+                        <p class="border-bottom">@tTemplate.Subject</p>
+                        <p>@Html.Raw(tTemplate.Message)</p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

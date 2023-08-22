@@ -1,0 +1,154 @@
+﻿@using Microsoft.AspNetCore.Http;
+@using GitLabApiClient;
+@using ChartJSCore.Models;
+@using GitLabApiClient.Models.Commits.Responses;
+@using NWDWebGitLabReport.Models
+@{
+    @*MyChart tChart = null;*@
+    List<NWDGitLabMilestoneModel>? tGitLabMilestoneModelList = ViewData[nameof(NWDGitLabMilestoneModel)] as List<NWDGitLabMilestoneModel>;
+    NWDGitLabMilestonesListModel? tGitLabMilestoneList = ViewData[nameof(NWDGitLabMilestonesListModel)] as NWDGitLabMilestonesListModel;
+    @*if (tGitLabMilestone != null)
+        {
+            tChart = tGitLabMilestone.myChart;
+        }*@
+}
+<h1 class="display-4">GitLab</h1>
+
+
+@*<form action="/GitLab/Commit" method="post" id="CommitForm">
+        @Html.Hidden(nameof(NWDGitLabMilestoneModel.Name), tGitLabMilestone.Name)
+        <input type="submit" value="refresh" />
+    </form>
+    <script type="text/javascript">
+
+
+            window.onload = function () {
+                var counter = 5;
+                var interval = setInterval(function () {
+                    counter--;
+                    $("#seconds").text(counter);
+                    if (counter == 0) {
+                        redirect();
+                        clearInterval(interval);
+                    }
+                }, 1000);
+
+            };
+
+        function redirect() {
+            document.onreadystatechange = function () {
+                var tForm = document.getElementById("CommitForm");
+                tForm.submit();
+            }
+        }
+    </script>*@
+
+@if (tGitLabMilestoneList != null)
+{
+    @model NWDWebGitLabReport.Models.NWDGitLabMilestoneModel
+    @foreach (NWDGitLabMilestoneModel tM in tGitLabMilestoneList.MilestonesList)
+    {
+        @using (Html.BeginForm("Index", "NWDGitLabReport"))
+        {
+            @Html.Hidden(nameof(NWDGitLabMilestoneModel.Name), tM.Name)
+            <input type="submit" value="Milestone @tM.Name @tM.Start.ToString("yyyy/MM/dd") - @tM.Due.ToString("yyyy/MM/dd")"/>
+        }
+    }
+}
+
+@if (tGitLabMilestoneModelList != null)
+{
+    foreach (NWDGitLabMilestoneModel tGitLabMilestone in tGitLabMilestoneModelList)
+    {
+        <div>
+
+
+            @if (tGitLabMilestone != null)
+            {
+                <h4>Milestone @tGitLabMilestone.Name</h4>
+                <div>
+                    @if (tGitLabMilestone.MyMilestone != null)
+                    {
+                        <a href="@tGitLabMilestone.MyMilestone.WebUrl">View Milestone @tGitLabMilestone.Name on GitLab</a>
+                        <div>
+                            @tGitLabMilestone.MyMilestone.Description
+                        </div>
+
+                        <div>
+                            <div>
+                                Planning Poker total @tGitLabMilestone.TaskScoreTotal points!
+                                @if (tGitLabMilestone.Pokers != null)
+                                {
+                                    foreach (string tP in tGitLabMilestone.Pokers)
+                                    {
+                                        <span> @tP</span>
+                                    }
+                                }
+                            </div>
+                            @if (tGitLabMilestone.StopAtCommit == null)
+                            {
+                                @if (tGitLabMilestone.MyMilestone.StartDate != null)
+                                {
+                                    <div> Start date at @tGitLabMilestone.MyMilestone.StartDate</div>
+                                }
+                                @if (tGitLabMilestone.MyMilestone.DueDate != null)
+                                {
+                                    <div> Due date at @tGitLabMilestone.MyMilestone.DueDate</div>
+                                }
+                                <div> Days to release @tGitLabMilestone.AvailableDays days!</div>
+                            }
+                            else
+                            {
+                                <div> Commit @tGitLabMilestone.StopAtCommit.ShortId</div>
+                            }
+                            @if (tGitLabMilestone.IssuesList != null)
+                            {
+                                <div>
+                                    Task in milestone @tGitLabMilestone.IssuesList.Count
+                                    <ul>
+                                        @foreach (GitLabApiClient.Models.Issues.Responses.Issue tIssue in tGitLabMilestone.IssuesList)
+                                        {
+                                            <li class="closed">
+                                                <a href="@tIssue.WebUrl">
+                                                    <b>#@tIssue.Iid </b>
+                                                </a> @tIssue.Title
+                                                @foreach (string tIssueStr in tIssue.Labels)
+                                                {
+                                                    <span style="font-size: 12px; padding-right: 10px; padding-left: 10px; margin-left: 10px; border-radius: 12px; background-color: @tGitLabMilestone.LabelsDicoColor?[tIssueStr];"> @tIssueStr</span>
+                                                }
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+                            }
+                        </div>
+                        <div class="page-layout">
+                            <div class="div-float">
+                                <h2>Burndown Chart</h2>
+                                <canvas id="BurndownChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="page-layout">
+                            <div class="div-float">
+                                <h2>Task Chart</h2>
+                                <canvas id="TaskChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="page-layout">
+                            <div class="div-float">
+                                <h2>Task State Chart</h2>
+                                <canvas id="TaskStateChart"></canvas>
+                            </div>
+                        </div>
+                        <script src="~/js/Chart/chart.js"></script>
+                        <script type="text/javascript">
+        @Html.Raw(tGitLabMilestone.BurndownGraph?.CreateChartCode("BurndownChart"));
+        @Html.Raw(tGitLabMilestone.TasksGraph?.CreateChartCode("TaskChart"));
+        @Html.Raw(tGitLabMilestone.TasksStateGraph?.CreateChartCode("TaskStateChart"));
+                            </script>
+                    }
+                </div>
+            }
+        </div>
+    }
+}

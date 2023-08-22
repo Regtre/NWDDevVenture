@@ -1,0 +1,298 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using Microsoft.AspNetCore.Http.Features
+@using Microsoft.AspNetCore.Http;
+@using System.Text;
+@using System.Text.RegularExpressions;
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using NWDWebRuntime
+@using NWDWebRuntime.Configuration
+@using NWDWebRuntime.Tools.Cookies
+@using NWDWebStandard.Configuration
+
+@inject IHttpContextAccessor HttpContextAccessor
+@if (NWDWebRuntimeConfiguration.KConfig.IsDevelopment == true)
+{
+    <div class="text-end mb-3">
+        <span class="ms-2 badge rounded-pill badge-subtle-success bi-check-circle"> Kortex</span>
+        @* <span class="ms-2 badge rounded-pill badge-subtle-danger bi-x-circle"> Kortex</span> *@
+    </div>
+}
+<div class="container p-0 m-0">
+<div class="row g-3">
+<div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+    <div class="card">
+        <div class="card-body position-relative background-corner-2">
+            <div class="row">
+                <div class="col-8">
+                    <h3><span class="fas fa-cookie"></span> Cookies</h3>
+                    <p >In accordance with the recommendations of the European Union, we show you all the information we have about you. This information is not permanently stored but generated and kept alive during your use of the @NWDWebStandardConfiguration.KConfig.WebSiteName website.</p>
+                    <p> In accordance with our <a asp-area="" asp-controller="NWDPrivacy" asp-action="TermsAndConditions">Terms and Conditions</a> and our <a asp-area="" asp-controller="NWDPrivacy" asp-action="PrivacyPolicy">Privacy Policy</a>, we do not resell any of this data, we do not provide any of this data to a third party.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+    <div class="card">
+        <div class="card-header border-bottom background-corner-1">
+            <div class="card-title">
+                Mandatory cookies saved for this website
+            </div>
+            <p class="fs--1">
+                Cookies compliant with European rights. Complies with French, European and American legislation
+            </p>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive scrollbar">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col">Cookie</th>
+                        <th scope="col">Kind</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Value</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @{
+                        if (HttpContextAccessor.HttpContext != null)
+                        {
+                            foreach (var tCookie in HttpContextAccessor.HttpContext.Request.Cookies)
+                            {
+                                string tV = Regex.Replace(tCookie.Value, ".{8}", "$0 ");
+                                if (tCookie.Key.Contains(".AspNetCore.Antiforgery"))
+                                {
+                                    <tr>
+                                        <td>
+                                            <span class="fas fa-cookie-bite"></span>
+                                        </td>
+                                        <td>@tCookie.Key.Replace(".", ". ")</td>
+                                        <td>security</td>
+                                        <td>security</td>
+                                        <td>
+                                            <span>@Html.Raw(tV)</span>
+                                        </td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    if (tCookie.Key.Contains(".AspNet.Consent"))
+                                    {
+                                        <tr>
+                                            <td>
+                                                <span class="fas fa-cookie-bite"></span>
+                                            </td>
+                                            <td>@tCookie.Key.Replace(".", ". ")</td>
+                                            <td>consentement</td>
+                                            <td>consentement</td>
+                                            <td>
+                                                <span>@Html.Raw(tV)</span>
+                                            </td>
+                                        </tr>
+                                    }
+                                    else
+                                    {
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    @foreach (KeyValuePair<string, NWDCookieDefinition> tCookieKeyValue in NWDCookieGlobal.KDictionary)
+                    {
+                        NWDCookieDefinition tCookie = tCookieKeyValue.Value;
+                        if (tCookie.Group == NWDCookieDefinitionGroup.Functional)
+                        {
+                            if (HttpContextAccessor.HttpContext != null && tCookie.Exists(HttpContextAccessor.HttpContext))
+                            {
+                                <tr>
+                                    <td>
+                                        <span class="fas fa-cookie-bite"></span>
+                                    </td>
+                                    <td>@tCookie.Name.Replace(".", ". ")</td>
+                                    <td>@tCookie.Group.ToString()</td>
+                                    <td>
+                                        <p class="mb-0">@tCookie.Title</p>
+                                        <p class="fs--1 mb-0">@tCookie.Explication</p>
+                                    </td>
+                                    <td>@Html.Raw(tCookie.GetValueAsString(HttpContextAccessor.HttpContext, true))</td>
+                                    @*<td> type = @tCookie.Kind.ToString()</td>
+                                                    <td> group @tCookie.Group.ToString()</td>*@
+                                </tr>
+                            }
+                        }
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+    <div class="card">
+        <div class="card-header border-bottom background-corner-1">
+            <div class="card-title">
+                Optional cookies saved for this website
+            </div>
+            <p class="fs--1">
+                Cookies compliant with European rights. Complies with French, European and American legislation
+            </p>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive scrollbar">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>Cookie</th>
+                        <th>Kind</th>
+                        <th>Description</th>
+                        <th>Value</th>
+                        <th>Statut</th>
+                        <th>Action</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    <tr>
+                        <td>
+                            <span class="fas fa-file-contract"></span>
+                        </td>
+                        <td>@NWDWebRuntimeStartupService.CookieConsent.Name.Replace(".", ". ")</td>
+                        <td>@NWDWebRuntimeStartupService.CookieConsent.Group.ToString()</td>
+                        <td>
+                            <b>@NWDWebRuntimeStartupService.CookieConsent.Title</b><br/>@NWDWebRuntimeStartupService.CookieConsent.Explication
+                        </td>
+                        <td>@Html.Raw(NWDWebRuntimeStartupService.CookieConsent.GetValueAsString(HttpContextAccessor.HttpContext))</td>
+                        <td>
+                            @if (HttpContextAccessor.HttpContext != null && NWDWebRuntimeStartupService.CookieConsent.Exists(HttpContextAccessor.HttpContext))
+                            {
+                                <span>installed</span>
+                            }
+                            else
+                            {
+                                <span>not installed</span>
+                            }
+
+                        </td>
+                        <td>
+                            <div class="input-group">
+                                @if (HttpContextAccessor.HttpContext != null && NWDWebRuntimeStartupService.CookieConsent.Exists(HttpContextAccessor.HttpContext))
+                                {
+                                    <button class="btn btn-primary" type="button" onclick="@Html.Raw(NWDWebRuntimeStartupService.CookieConsent.DeleteOnClick()) window.location.reload();">
+                                        <span data-bs-toggle="tooltip" data-bs-placement="top" title="revoke consent" data-bs-original-title="revoke consent" aria-label="revoke consent">
+                                            <span class="fas fa-thumbs-down"></span>
+                                        </span>
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-primary" type="button" onclick="@Html.Raw(NWDWebRuntimeStartupService.CookieConsent.InstallOnClick("true")) window.location.reload();">
+                                        <span data-bs-toggle="tooltip" data-bs-placement="top" title="consent" data-bs-original-title="consent" aria-label="consent">
+                                            <span class="fas fa-thumbs-up"></span>
+                                        </span>
+                                    </button>
+                                }
+                            </div>
+                        </td>
+                        <td></td>
+                    </tr>
+
+                    @if (HttpContextAccessor.HttpContext != null && NWDWebRuntimeStartupService.CookieConsent.Exists(HttpContextAccessor.HttpContext))
+                    {
+                        @foreach (KeyValuePair<string, NWDCookieDefinition> tCookieKeyValue in NWDCookieGlobal.KDictionary)
+                        {
+                            <!-- cookie name tCookieKeyValue.key -->
+                            NWDCookieDefinition tCookie = tCookieKeyValue.Value;
+                            if (tCookie.Group != NWDCookieDefinitionGroup.Functional && tCookie.Group != NWDCookieDefinitionGroup.Consent)
+                            {
+                                if (tCookie.Exists(HttpContextAccessor.HttpContext))
+                                {
+                                    <tr>
+                                        <td>
+                                            <span class="fas fa-cookie-bite"></span>
+                                        </td>
+                                        <td>@tCookie.Name.Replace(".", ". ")</td>
+                                        <td>@tCookie.Group.ToString()</td>
+                                        <td>
+                                            <p class="mb-0">@tCookie.Title</p>
+                                            <p class="fs--1 mb-0">@tCookie.Explication</p>
+                                        </td>
+                                        <td>@Html.Raw(tCookie.GetValueAsString(HttpContextAccessor.HttpContext, true))</td>
+                                        @*<td> type = @tCookie.Kind.ToString()</td>
+                                                        <td> group @tCookie.Group.ToString()</td>*@
+                                        <td>
+                                            installed
+                                        </td>
+                                        <td>
+                                            <div class="btn-group">
+                                                @if (tCookie.Deletable == true)
+                                                {
+                                                    <button class="btn btn-primary" type="button" onclick="@Html.Raw(tCookie.DeleteOnClick()) window.location.reload();">
+                                                        <span data-bs-toggle="tooltip" data-bs-placement="top" title="delete" data-bs-original-title="delete" aria-label="delete">
+                                                            <span class="fas fa-trash"></span>
+                                                        </span>
+                                                    </button>
+                                                }
+                                                @if (tCookie.ManualEditable == true)
+                                                {
+                                                    <button class="btn btn-primary" type="button" onclick="@Html.Raw(tCookie.InstallOnClick()) window.location.reload();">
+                                                        <span data-bs-toggle="tooltip" data-bs-placement="top" title="reset" data-bs-original-title="reset" aria-label="reset">
+                                                            <span class="fas fa-medkit"></span>
+                                                        </span>
+                                                    </button>
+                                                }
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group">
+                                                @Html.Raw(tCookie.RawForm(HttpContextAccessor.HttpContext))
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td>
+                                            <span class="fas fa-cookie"></span>
+                                        </td>
+                                        <td>@tCookie.Name.Replace(".", ". ")</td>
+                                        <td>@tCookie.Group.ToString()</td>
+                                        <td>
+                                            <p class="mb-0">@tCookie.Title</p>
+                                            <p class="fs--1 mb-0">@tCookie.Explication</p>
+                                        </td>
+                                        <td></td>
+                                        <td>
+                                            not installed
+                                        </td>
+                                        <td>
+                                            <div class="input-group">
+                                                <button class="btn btn-primary" type="button" onclick="@Html.Raw(tCookie.InstallOnClick()) window.location.reload();">
+                                                    <span data-bs-toggle="tooltip" data-bs-placement="top" title="install" data-bs-original-title="install" aria-label="install">
+                                                        <span class="fas fa-cookie"></span>
+                                                    </span>
+                                                </button>
+                                            </div>
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                }
+                            }
+                        }
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>

@@ -1,0 +1,147 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Title>NWDFoundation</Title>
+    <Authors>idéMobi</Authors>
+    <Copyright>idéMobi</Copyright>
+    <PackageTags>Net-Worked-Data foundation</PackageTags>
+    <PackageVersion>1.1.181</PackageVersion>
+    <LangVersion>9.0</LangVersion>
+    <PackageProjectUrl>https://gitlab.hephaiscode.com/NetWorkedData/NWDFoundation</PackageProjectUrl>
+    <PackageLicense>https://gitlab.hephaiscode.com/NetWorkedData/NWDFoundation/-/blob/main/LICENSE.md</PackageLicense>
+    <RepositoryUrl>https://gitlab.hephaiscode.com/NetWorkedData/NWDFoundation</RepositoryUrl>
+    <RepositoryType>GitLab CE</RepositoryType>
+    <Nullable>enable</Nullable>
+    <AssemblyVersion>1.1.181</AssemblyVersion>
+    <FileVersion>1.1.181</FileVersion>
+    <NeutralLanguage>en</NeutralLanguage>
+    <PackageIcon>NWDFoundation.png</PackageIcon>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
+    <RunAnalyzersDuringLiveAnalysis>true</RunAnalyzersDuringLiveAnalysis>
+    <RunAnalyzers>true</RunAnalyzers>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <None Update="NWDFoundation.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Remove="**/*.meta" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\NWDUnity\Assets\NWDNuGet\NWDFoundation\Configuration\*.cs">
+      <Link>Configuration-from-Unity/%(FileName)%(Extension)</Link>
+    </Compile>
+    <Compile Include="..\..\NWDUnity\Assets\NWDNuGet\NWDFoundation\Configuration\Databases\*.cs">
+      <Link>Configuration-from-Unity/Databases-from-Unity/%(FileName)%(Extension)</Link>
+    </Compile>
+    <Compile Include="..\..\NWDUnity\Assets\NWDNuGet\NWDFoundation\Configuration\Environments\*.cs">
+      <Link>Configuration-from-Unity/Environments-from-Unity/%(FileName)%(Extension)</Link>
+    </Compile>
+    <Compile Include="..\..\NWDUnity\Assets\NWDNuGet\NWDFoundation\Configuration\Servers\*.cs">
+      <Link>Configuration-from-Unity/Servers-from-Unity/%(FileName)%(Extension)</Link>
+    </Compile>
+	  <Compile Include="..\..\NWDUnity\Assets\NWDNuGet\NWDFoundation\Configuration\Permissions\*.cs">
+		  <Link>Configuration-from-Unity/Permissions-from-Unity/%(FileName)%(Extension)</Link>
+	  </Compile>
+    <Compile Include="..\..\NWDUnity\Assets\NWDNuGet\NWDFoundation\Constants\*.cs">
+      <Link>Constants-from-Unity/%(FileName)%(Extension)</Link>
+    </Compile>
+    
+    <Compile Include="..\..\NWDUnity\Assets\NWDNuGet\NWDFoundation\Exchanges\*.cs">
+      <Link>Exchanges-from-Unity/%(FileName)%(Extension)</Link>
+    </Compile>
+    <Compile Include="..\..\NWDUnity\Assets\NWDNuGet\NWDFoundation\Exchanges\Payloads\*.cs">
+      <Link>Exchanges-from-Unity/Payloads-from-Unity/%(FileName)%(Extension)</Link>
+    </Compile>
+    
+    <Compile Include="..\..\NWDUnity\Assets\NWDNuGet\NWDFoundation\Facades\*.cs">
+      <Link>Facades-from-Unity/%(FileName)%(Extension)</Link>
+    </Compile>
+    <Compile Include="..\..\NWDUnity\Assets\NWDNuGet\NWDFoundation\Facades\Back\*.cs">
+      <Link>Facades-from-Unity/Back-from-Unity/%(FileName)%(Extension)</Link>
+    </Compile>
+    <Compile Include="..\..\NWDUnity\Assets\NWDNuGet\NWDFoundation\Facades\Models\*.cs">
+      <Link>Facades-from-Unity/Models-from-Unity/%(FileName)%(Extension)</Link>
+    </Compile>
+    
+    <Compile Include="..\..\NWDUnity\Assets\NWDNuGet\NWDFoundation\Tools\*.cs">
+      <Link>Tools-from-Unity/%(FileName)%(Extension)</Link>
+    </Compile>
+    <Compile Include="..\..\NWDUnity\Assets\NWDNuGet\NWDFoundation\Logger\*.cs">
+      <Link>Logger-from-Unity/%(FileName)%(Extension)</Link>
+    </Compile>
+    <Compile Include="..\..\NWDUnity\Assets\NWDNuGet\NWDFoundation\Localization\*.cs">
+      <Link>Localization-from-Unity/%(FileName)%(Extension)</Link>
+    </Compile>
+
+
+    <Compile Include="..\..\NWDUnity\Assets\NWDNuGet\NWDFoundation\Models\*.cs">
+      <Link>Models-from-Unity/%(FileName)%(Extension)</Link>
+    </Compile>
+    <Compile Include="..\..\NWDUnity\Assets\NWDNuGet\NWDFoundation\Models\AccountData\*.cs">
+      <Link>Models-from-Unity/AccountData-from-Unity/%(FileName)%(Extension)</Link>
+    </Compile>
+    <Compile Include="..\..\NWDUnity\Assets\NWDNuGet\NWDFoundation\Models\Enums\*.cs">
+      <Link>Models-from-Unity/Enums-from-Unity/%(FileName)%(Extension)</Link>
+    </Compile>
+    <Compile Include="..\..\NWDUnity\Assets\NWDNuGet\NWDFoundation\Models\Facades\*.cs">
+      <Link>Models-from-Unity/Facades-from-Unity/%(FileName)%(Extension)</Link>
+    </Compile>
+    <Compile Include="..\..\NWDUnity\Assets\NWDNuGet\NWDFoundation\Models\Facades\Assets\*.cs">
+      <Link>Models-from-Unity/Facades-from-Unity/Assets-from-Unity/%(FileName)%(Extension)</Link>
+    </Compile>
+    <Compile Include="..\..\NWDUnity\Assets\NWDNuGet\NWDFoundation\Models\PlayerData\*.cs">
+      <Link>Models-from-Unity/PlayerData-from-Unity/%(FileName)%(Extension)</Link>
+    </Compile>
+    <Compile Include="..\..\NWDUnity\Assets\NWDNuGet\NWDFoundation\Models\Project\*.cs">
+      <Link>Models-from-Unity/Project-from-Unity/%(FileName)%(Extension)</Link>
+    </Compile>
+    <Compile Include="..\..\NWDUnity\Assets\NWDNuGet\NWDFoundation\Models\References\*.cs">
+      <Link>Models-from-Unity/References-from-Unity/%(FileName)%(Extension)</Link>
+    </Compile>
+    <Compile Include="..\..\NWDUnity\Assets\NWDNuGet\NWDFoundation\Models\StudioData\*.cs">
+      <Link>Models-from-Unity/StudioData-from-Unity/%(FileName)%(Extension)</Link>
+    </Compile>
+	  <Compile Include="..\..\NWDUnity\Assets\NWDNuGet\NWDFoundation\Models\SubModel\*.cs">
+		  <Link>Models-from-Unity/SubModel-from-Unity/%(FileName)%(Extension)</Link>
+	  </Compile>
+    <Compile Include="..\..\NWDUnity\Assets\NWDNuGet\NWDFoundation\Models\VolatileData\*.cs">
+      <Link>Models-from-Unity/VolatileData-from-Unity/%(FileName)%(Extension)</Link>
+    </Compile>
+    <Compile Include="..\..\NWDUnity\Assets\NWDNuGet\NWDFoundation\Models\Website\*.cs">
+      <Link>Models-from-Unity/Website-from-Unity/%(FileName)%(Extension)</Link>
+    </Compile>
+    
+    
+    
+    <Compile Include="..\..\NWDUnity\Assets\NWDNuGet\NWDFoundation\WebEdition\*.cs">
+      <Link>WebEdition-from-Unity/%(FileName)%(Extension)</Link>
+    </Compile>
+    <Compile Include="..\..\NWDUnity\Assets\NWDNuGet\NWDFoundation\WebEdition\Attributes\*.cs">
+      <Link>WebEdition-from-Unity/Attributes-from-Unity/%(FileName)%(Extension)</Link>
+    </Compile>
+    <Compile Include="..\..\NWDUnity\Assets\NWDNuGet\NWDFoundation\WebEdition\Enums\*.cs">
+      <Link>WebEdition-from-Unity/Enums-from-Unity/%(FileName)%(Extension)</Link>
+    </Compile>
+    <Compile Include="..\..\NWDUnity\Assets\NWDNuGet\NWDFoundation\WebEdition\Facades\*.cs">
+      <Link>WebEdition-from-Unity/Facades-from-Unity/%(FileName)%(Extension)</Link>
+    </Compile>
+    <Compile Include="..\..\NWDUnity\Assets\NWDNuGet\NWDFoundation\WebEdition\Models\*.cs">
+      <Link>WebEdition-from-Unity/Models-from-Unity/%(FileName)%(Extension)</Link>
+    </Compile>
+    
+    <Compile Include="..\..\NWDUnity\Assets\NWDNuGet\NWDFoundation\NWDVersionDll.cs">
+      <Link>NWDVersionDll.cs</Link>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+  
+  
+</Project>

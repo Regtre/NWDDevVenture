@@ -1,0 +1,8 @@
+@using NWDWebRuntime.Models
+@model IEnumerable<NWDModal>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@foreach (NWDModal tModal in Model)
+{
+    <partial name="_ModalStandard" model="@tModal"/>
+}

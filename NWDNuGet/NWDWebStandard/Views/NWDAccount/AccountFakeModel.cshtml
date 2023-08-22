@@ -1,0 +1,24 @@
+﻿@using Microsoft.AspNetCore.Http
+@model NWDWebRuntime.Models.NWDAccountInfo
+@inject IHttpContextAccessor HttpContextAccessor
+
+@if (HttpContextAccessor.HttpContext != null)
+{
+    <div class="card mb-3">
+        <div class="card-header bg-light border-bottom"><h5>Gravatar</h5></div>
+        <div class="card-body">
+        @using (@Html.BeginForm("ModifyAccountInfo","NWDAccount"))
+            {
+                @Html.TextBox("Email", new { @class = "form-control", placeholder = "Email", onclick="document.getElementById('GravatarHash').value = CryptoJS.MD5(sEmail.trim().toLowerCase());" })  })
+                @Html.HiddenFor(m => m.GravatarHash, new { id = "GravatarHash" })
+                @Html.TextBoxFor(m => m.Nickname, new { @class = "form-control", placeholder = "Nickname" })
+                <button type="submit">Save Data</button>
+            }
+        <button onclick="getGravatarImage('AccountImg',$('#sEmail').val())" class="mt-2 btn btn-outline-primary">Submit</button>
+        </div>
+    </div>
+}
+
+<script>
+function getGravatarImage(ImgId, sEmail) {document.getElementById(ImgId).src = "https://www.gravatar.com/avatar/" + CryptoJS.MD5(sEmail.trim().toLowerCase());}
+</script>
